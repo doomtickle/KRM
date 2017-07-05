@@ -63,7 +63,7 @@ __construct	app/Http/Controllers/HomeController.php	/^    public function __cons
 __construct	app/Http/Controllers/TaskController.php	/^    public function __construct()$/;"	f
 __currentLoopData	storage/framework/views/0e63e22d6b1cd46e782394a9c913181b368c4ad5.php	/^            <?php $__currentLoopData = $clients; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $client): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>$/;"	v
 __currentLoopData	storage/framework/views/0e63e22d6b1cd46e782394a9c913181b368c4ad5.php	/^            <?php $__currentLoopData = $users; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $user): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>$/;"	v
-__currentLoopData	storage/framework/views/3e33acf2e83d95f1af73f68ae99c3380780e971b.php	/^            <?php $__currentLoopData = $tasks; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $task): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>$/;"	v
+__currentLoopData	storage/framework/views/3e33acf2e83d95f1af73f68ae99c3380780e971b.php	/^<?php $__currentLoopData = $tasks; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $task): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>$/;"	v
 __webpack_require__	public/js/app.js	/^\/******\/ 	function __webpack_require__(moduleId) {$/;"	f
 __webpack_require__.d	public/js/app.js	/^\/******\/ 	__webpack_require__.d = function(exports, name, getter) {$/;"	f
 __webpack_require__.n	public/js/app.js	/^\/******\/ 	__webpack_require__.n = function(module) {$/;"	f
@@ -172,7 +172,7 @@ loader	bootstrap/autoload.php	/^| Composer provides a convenient, automatically 
 loader	public/index.php	/^| Composer provides a convenient, automatically generated class loader for$/;"	c
 localizePhoneNumber	app/Client.php	/^    private function localizePhoneNumber($phone)$/;"	f
 loop	storage/framework/views/0e63e22d6b1cd46e782394a9c913181b368c4ad5.php	/^            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>$/;"	v
-loop	storage/framework/views/3e33acf2e83d95f1af73f68ae99c3380780e971b.php	/^            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>$/;"	v
+loop	storage/framework/views/3e33acf2e83d95f1af73f68ae99c3380780e971b.php	/^<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>$/;"	v
 map	app/Providers/RouteServiceProvider.php	/^    public function map()$/;"	f
 mapApiRoutes	app/Providers/RouteServiceProvider.php	/^    protected function mapApiRoutes()$/;"	f
 mapWebRoutes	app/Providers/RouteServiceProvider.php	/^    protected function mapWebRoutes()$/;"	f
