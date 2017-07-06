@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\Task;
 use App\User;
 use App\Client;
 use Tests\TestCase;
@@ -32,6 +33,21 @@ class ClientTest extends TestCase
     {
         $client = factory(Client::class)->create();
         $this->get('/client/'. $client->id)->assertStatus(200);
+    }
+
+    /** @test */
+    public function a_client_has_tasks()
+    {
+        $client = factory(Client::class)->create();
+        $task = factory(Task::class)->create([
+            'client_id' => $client->id,
+            'assigned_to' => $this->user->id,
+            'created_by' => $this->user->id
+        ]);
+
+        $eager = Client::with('tasks')->find($client->id);
+
+        $this->assertEquals($task->id, $eager->tasks()->first()->id);
     }
 
 }

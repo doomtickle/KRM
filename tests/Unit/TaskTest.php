@@ -24,7 +24,7 @@ class TaskTest extends TestCase
     }
 
     /** @test */
-    public function it_should_have_a_task_page()
+    public function it_should_have_a_create_task_page()
     {
        $this->get('/task/create')->assertStatus(200);
     }
@@ -39,6 +39,36 @@ class TaskTest extends TestCase
 
         $this->get('/'. $this->user->id .'/tasks')
             ->assertStatus(200);
+    }
+
+
+    /** @test */
+    public function a_task_belongs_to_a_user()
+    {
+        $task = factory(Task::class)->create([
+            'assigned_to' => $this->user->id,
+            'created_by' => $this->user->id
+        ]);
+
+        $user = User::with('tasks')->find($this->user->id);
+
+        $this->assertEquals($task->id, $this->user->tasks()->first()->id);
+        
+    }
+
+    /** @test */
+    public function a_task_belongs_to_a_client()
+    {
+
+        $task = factory(Task::class)->create([
+            'assigned_to' => $this->user->id,
+            'created_by' => $this->user->id
+        ]);
+
+        $client = Client::with('tasks')->find(1);
+
+        $this->assertEquals($task->id, $client->tasks()->first()->id);
+        
     }
 
 }

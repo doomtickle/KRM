@@ -42,3 +42,10 @@ $factory->define(App\Task::class, function (Faker\Generator $faker) {
         'description' => $faker->sentence(),
     ];
 });
+
+/** @var \Illuminate\Database\Eloquent\Factory $factory */
+$factory->define(App\Note::class, function (Faker\Generator $faker) {
+    return [
+        'body' => $faker->sentence(),
+    ];
+});

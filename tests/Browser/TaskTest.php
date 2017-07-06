@@ -51,11 +51,26 @@ class TaskTest extends DuskTestCase
         $user   = factory(User::class)->create();
         $task   = factory(Task::class)->create([
             'assigned_to' => $user->id,
-            'created_by' => $user->id
+            'created_by'  => $user->id
         ]);
         $this->browse(function (Browser $browser) use($user, $task) {
             $browser->loginAs($user)
                     ->visit('/'. $user->id .'/tasks')
+                    ->assertSee($task->description);
+        });
+    }
+
+    /** @test */
+    public function a_task_has_a_single_page()
+    {
+        $user = factory(User::class)->create();
+        $task = factory(Task::class)->create([
+            'assigned_to' => $user->id,
+            'created_by'  => $user->id
+        ]);
+        $this->browse(function (Browser $browser) use($user, $task) {
+            $browser->loginAs($user)
+                    ->visit('/task/'. $task->id)
                     ->assertSee($task->description);
         });
     }

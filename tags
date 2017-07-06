@@ -13,6 +13,7 @@ ClientTest	tests/Browser/ClientTest.php	/^class ClientTest extends DuskTestCase$
 ClientTest	tests/Unit/ClientTest.php	/^class ClientTest extends TestCase$/;"	c
 Controller	app/Http/Controllers/Controller.php	/^class Controller extends BaseController$/;"	c
 CreateClientsTable	database/migrations/2017_07_04_142430_create_clients_table.php	/^class CreateClientsTable extends Migration$/;"	c
+CreateNotesTable	database/migrations/2017_07_06_165241_create_notes_table.php	/^class CreateNotesTable extends Migration$/;"	c
 CreatePasswordResetsTable	database/migrations/2014_10_12_100000_create_password_resets_table.php	/^class CreatePasswordResetsTable extends Migration$/;"	c
 CreateTasksTable	database/migrations/2017_07_04_183143_create_tasks_table.php	/^class CreateTasksTable extends Migration$/;"	c
 CreateUsersTable	database/migrations/2014_10_12_000000_create_users_table.php	/^class CreateUsersTable extends Migration$/;"	c
@@ -39,6 +40,9 @@ Kernel	app/Console/Kernel.php	/^class Kernel extends ConsoleKernel$/;"	c
 Kernel	app/Http/Kernel.php	/^class Kernel extends HttpKernel$/;"	c
 LARAVEL_START	bootstrap/autoload.php	/^define('LARAVEL_START', microtime(true));$/;"	d
 LoginController	app/Http/Controllers/Auth/LoginController.php	/^class LoginController extends Controller$/;"	c
+Note	app/Note.php	/^class Note extends Model$/;"	c
+NoteController	app/Http/Controllers/NoteController.php	/^class NoteController extends Controller$/;"	c
+NoteTest	tests/Unit/NoteTest.php	/^class NoteTest extends TestCase$/;"	c
 Page	tests/Browser/Pages/Page.php	/^abstract class Page extends BasePage$/;"	c
 RedirectIfAuthenticated	app/Http/Middleware/RedirectIfAuthenticated.php	/^class RedirectIfAuthenticated$/;"	c
 RegisterController	app/Http/Controllers/Auth/RegisterController.php	/^class RegisterController extends Controller$/;"	c
@@ -69,6 +73,13 @@ __webpack_require__.d	public/js/app.js	/^\/******\/ 	__webpack_require__.d = fun
 __webpack_require__.n	public/js/app.js	/^\/******\/ 	__webpack_require__.n = function(module) {$/;"	f
 __webpack_require__.o	public/js/app.js	/^\/******\/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };$/;"	f
 _flatpickr	public/js/app.js	/^function _flatpickr(nodeList, config) {$/;"	f
+a_client_has_tasks	tests/Unit/ClientTest.php	/^    public function a_client_has_tasks()$/;"	f
+a_note_belongs_to_a_client	tests/Unit/NoteTest.php	/^    public function a_note_belongs_to_a_client()$/;"	f
+a_note_belongs_to_a_task	tests/Unit/NoteTest.php	/^    public function a_note_belongs_to_a_task()$/;"	f
+a_note_belongs_to_a_user	tests/Unit/NoteTest.php	/^    public function a_note_belongs_to_a_user()$/;"	f
+a_task_belongs_to_a_client	tests/Unit/TaskTest.php	/^    public function a_task_belongs_to_a_client()$/;"	f
+a_task_belongs_to_a_user	tests/Unit/TaskTest.php	/^    public function a_task_belongs_to_a_user()$/;"	f
+a_task_has_a_single_page	tests/Browser/TaskTest.php	/^    public function a_task_has_a_single_page()$/;"	f
 a_user_can_create_a_client	tests/Browser/ClientTest.php	/^    public function a_user_can_create_a_client()$/;"	f
 a_user_can_create_a_task	tests/Browser/TaskTest.php	/^    public function a_user_can_create_a_task()$/;"	f
 a_user_can_see_the_client_page	tests/Browser/ClientTest.php	/^    public function a_user_can_see_the_client_page()$/;"	f
@@ -104,10 +115,13 @@ changeYear	public/js/app.js	/^	function changeYear(newYear) {$/;"	f
 clear	public/js/app.js	/^	function clear(triggerChangeEvent) {$/;"	f
 clearNode	public/js/app.js	/^	function clearNode(node) {$/;"	f
 client	app/Http/Controllers/ClientController.php	/^        $client = Client::create([$/;"	v
+client	app/Note.php	/^    public function client()$/;"	f
 client	app/Task.php	/^    public function client()$/;"	f
 client	database/factories/ModelFactory.php	/^    $client = factory(Client::class)->create();$/;"	v
 client	tests/Browser/TaskTest.php	/^        $client = factory(Client::class)->create();$/;"	v
 client	tests/Unit/ClientTest.php	/^        $client = factory(Client::class)->create();$/;"	v
+client	tests/Unit/NoteTest.php	/^        $client = factory(Client::class)->create();$/;"	v
+client	tests/Unit/TaskTest.php	/^        $client = Client::with('tasks')->find(1);$/;"	v
 clients	resources/views/forms/createTask.blade.php	/^$clients = App\\Client::all();$/;"	v
 clients	storage/framework/views/0e63e22d6b1cd46e782394a9c913181b368c4ad5.php	/^$clients = App\\Client::all();$/;"	v
 close	public/js/app.js	/^	function close() {$/;"	f
@@ -116,6 +130,7 @@ commands	app/Console/Kernel.php	/^    protected function commands()$/;"	f
 compareDates	public/js/app.js	/^	function compareDates(date1, date2, timeless) {$/;"	f
 create	app/Http/Controllers/Auth/RegisterController.php	/^    protected function create(array $data)$/;"	f
 create	app/Http/Controllers/ClientController.php	/^    public function create()$/;"	f
+create	app/Http/Controllers/NoteController.php	/^    public function create()$/;"	f
 create	app/Http/Controllers/TaskController.php	/^    public function create()$/;"	f
 createApplication	tests/CreatesApplication.php	/^    public function createApplication()$/;"	f
 createDay	public/js/app.js	/^	function createDay(className, date, dayNumber, i) {$/;"	f
@@ -126,6 +141,7 @@ createdBy	app/Http/Controllers/TaskController.php	/^       $createdBy = \\Auth::
 date_orig	public/js/app.js	/^		var date_orig = date;$/;"	v
 debounce	public/js/app.js	/^	function debounce(func, wait, immediate) {$/;"	f
 destroy	app/Http/Controllers/ClientController.php	/^    public function destroy(Client $client)$/;"	f
+destroy	app/Http/Controllers/NoteController.php	/^    public function destroy(Note $note)$/;"	f
 destroy	app/Http/Controllers/TaskController.php	/^    public function destroy(Task $task)$/;"	f
 destroy	public/js/app.js	/^	function destroy() {$/;"	f
 documentClick	public/js/app.js	/^	function documentClick(e) {$/;"	f
@@ -134,8 +150,14 @@ down	database/migrations/2014_10_12_000000_create_users_table.php	/^    public f
 down	database/migrations/2014_10_12_100000_create_password_resets_table.php	/^    public function down()$/;"	f
 down	database/migrations/2017_07_04_142430_create_clients_table.php	/^    public function down()$/;"	f
 down	database/migrations/2017_07_04_183143_create_tasks_table.php	/^    public function down()$/;"	f
+down	database/migrations/2017_07_06_165241_create_notes_table.php	/^    public function down()$/;"	f
 driver	tests/DuskTestCase.php	/^    protected function driver()$/;"	f
+eager	tests/Unit/ClientTest.php	/^        $eager = Client::with('tasks')->find($client->id);$/;"	v
+eager	tests/Unit/NoteTest.php	/^        $eager = $note->with('client')->first();$/;"	v
+eager	tests/Unit/NoteTest.php	/^        $eager = $note->with('task')->find($note->id);$/;"	v
+eager	tests/Unit/NoteTest.php	/^        $eager = $note->with('user')->first();$/;"	v
 edit	app/Http/Controllers/ClientController.php	/^    public function edit(Client $client)$/;"	f
+edit	app/Http/Controllers/NoteController.php	/^    public function edit(Note $note)$/;"	f
 edit	app/Http/Controllers/TaskController.php	/^    public function edit(Task $task)$/;"	f
 elements	tests/Browser/Pages/HomePage.php	/^    public function elements()$/;"	f
 except	app/Http/Middleware/EncryptCookies.php	/^    protected $except = [$/;"	v
@@ -150,19 +172,21 @@ focusOnDay	public/js/app.js	/^	function focusOnDay(currentIndex, offset) {$/;"	f
 getPhoneAttribute	app/Client.php	/^    public function getPhoneAttribute($phone)$/;"	f
 guard	app/Http/Middleware/RedirectIfAuthenticated.php	/^    public function handle($request, Closure $next, $guard = null)$/;"	v
 guarded	app/Client.php	/^    protected $guarded = [];$/;"	v
+guarded	app/Note.php	/^	protected $guarded = [];$/;"	v
 guarded	app/Task.php	/^    protected $guarded = [];$/;"	v
 handle	app/Http/Middleware/RedirectIfAuthenticated.php	/^    public function handle($request, Closure $next, $guard = null)$/;"	f
 hidden	app/User.php	/^    protected $hidden = [$/;"	v
 incrementNumInput	public/js/app.js	/^	function incrementNumInput(e, delta, inputElem) {$/;"	f
 index	app/Http/Controllers/ClientController.php	/^    public function index()$/;"	f
 index	app/Http/Controllers/HomeController.php	/^    public function index()$/;"	f
+index	app/Http/Controllers/NoteController.php	/^    public function index()$/;"	f
 index	app/Http/Controllers/TaskController.php	/^    public function index()$/;"	f
 isCalendarElem	public/js/app.js	/^	function isCalendarElem(elem) {$/;"	f
 isDateInRange	public/js/app.js	/^	function isDateInRange(date) {$/;"	f
 isDateSelected	public/js/app.js	/^	function isDateSelected(date) {$/;"	f
 isEnabled	public/js/app.js	/^	function isEnabled(date, timeless) {$/;"	f
 it_should_have_a_client_create_page	tests/Unit/ClientTest.php	/^    public function it_should_have_a_client_create_page()$/;"	f
-it_should_have_a_task_page	tests/Unit/TaskTest.php	/^    public function it_should_have_a_task_page()$/;"	f
+it_should_have_a_create_task_page	tests/Unit/TaskTest.php	/^    public function it_should_have_a_create_task_page()$/;"	f
 jQuery.fn.flatpickr	public/js/app.js	/^	jQuery.fn.flatpickr = function (config) {$/;"	f
 joinChar	public/js/app.js	/^		var joinChar = self.config.mode !== "range" ? "; " : self.l10n.rangeSeparator;$/;"	v
 jumpToDate	public/js/app.js	/^	function jumpToDate(jumpDate) {$/;"	f
@@ -181,6 +205,9 @@ middlewareGroups	app/Http/Kernel.php	/^    protected $middlewareGroups = [$/;"	v
 minMaxDateSetter	public/js/app.js	/^	function minMaxDateSetter(type) {$/;"	f
 mouseDelta	public/js/app.js	/^	function mouseDelta(e) {$/;"	f
 namespace	app/Providers/RouteServiceProvider.php	/^    protected $namespace = 'App\\Http\\Controllers';$/;"	v
+note	tests/Unit/NoteTest.php	/^        $note = factory(Note::class)->create([$/;"	v
+notes	app/Client.php	/^    public function notes()$/;"	f
+notes	app/Task.php	/^    public function notes()$/;"	f
 numbers_only	app/Client.php	/^        $numbers_only = preg_replace("\/[^\\d]\/", "", $phone);$/;"	v
 onClick	public/js/app.js	/^	function onClick(handler) {$/;"	f
 onKeyDown	public/js/app.js	/^	function onKeyDown(e) {$/;"	f
@@ -229,6 +256,7 @@ setHours	public/js/app.js	/^	function setHours(hours, minutes, seconds) {$/;"	f
 setHoursFromDate	public/js/app.js	/^	function setHoursFromDate(dateObj) {$/;"	f
 setSelectedDate	public/js/app.js	/^	function setSelectedDate(inputDate, format) {$/;"	f
 setUp	tests/Unit/ClientTest.php	/^    protected function setUp()$/;"	f
+setUp	tests/Unit/NoteTest.php	/^    protected function setUp()$/;"	f
 setUp	tests/Unit/TaskTest.php	/^    protected function setUp()$/;"	f
 setupDates	public/js/app.js	/^	function setupDates() {$/;"	f
 setupFormats	public/js/app.js	/^	function setupFormats() {$/;"	f
@@ -237,13 +265,21 @@ setupInputs	public/js/app.js	/^	function setupInputs() {$/;"	f
 setupLocale	public/js/app.js	/^	function setupLocale() {$/;"	f
 setupMobile	public/js/app.js	/^	function setupMobile() {$/;"	f
 show	app/Http/Controllers/ClientController.php	/^    public function show(Client $client)$/;"	f
+show	app/Http/Controllers/NoteController.php	/^    public function show(Note $note)$/;"	f
 show	app/Http/Controllers/TaskController.php	/^    public function show(Task $task)$/;"	f
 show	app/Http/Controllers/UsersTasksController.php	/^    public function show($id)$/;"	f
 siteElements	tests/Browser/Pages/Page.php	/^    public static function siteElements()$/;"	f
 store	app/Http/Controllers/ClientController.php	/^    public function store(Request $request)$/;"	f
+store	app/Http/Controllers/NoteController.php	/^    public function store(Request $request)$/;"	f
 store	app/Http/Controllers/TaskController.php	/^    public function store(Request $request)$/;"	f
+task	app/Http/Controllers/TaskController.php	/^        $task = Task::with(['user', 'client'])->find($task->id);$/;"	v
+task	app/Note.php	/^	public function task() {$/;"	f
 task	tests/Browser/TaskTest.php	/^        $task   = factory(Task::class)->create([$/;"	v
+task	tests/Browser/TaskTest.php	/^        $task = factory(Task::class)->create([$/;"	v
+task	tests/Unit/ClientTest.php	/^        $task = factory(Task::class)->create([$/;"	v
+task	tests/Unit/NoteTest.php	/^        $task   = factory(Task::class)->create([$/;"	v
 task	tests/Unit/TaskTest.php	/^        $task = factory(Task::class)->create([$/;"	v
+tasks	app/Client.php	/^    public function tasks()$/;"	f
 tasks	app/Http/Controllers/UsersTasksController.php	/^        $tasks = Task::with('client')->where('assigned_to', $id)->get();$/;"	v
 tasks	app/User.php	/^    public function tasks()$/;"	f
 testBasicTest	tests/Feature/ExampleTest.php	/^    public function testBasicTest()$/;"	f
@@ -258,12 +294,15 @@ up	database/migrations/2014_10_12_000000_create_users_table.php	/^    public fun
 up	database/migrations/2014_10_12_100000_create_password_resets_table.php	/^    public function up()$/;"	f
 up	database/migrations/2017_07_04_142430_create_clients_table.php	/^    public function up()$/;"	f
 up	database/migrations/2017_07_04_183143_create_tasks_table.php	/^    public function up()$/;"	f
+up	database/migrations/2017_07_06_165241_create_notes_table.php	/^    public function up()$/;"	f
 update	app/Http/Controllers/ClientController.php	/^    public function update(Request $request, Client $client)$/;"	f
+update	app/Http/Controllers/NoteController.php	/^    public function update(Request $request, Note $note)$/;"	f
 update	app/Http/Controllers/TaskController.php	/^    public function update(Request $request, Task $task)$/;"	f
 updateNavigationCurrentMonth	public/js/app.js	/^	function updateNavigationCurrentMonth() {$/;"	f
 updateValue	public/js/app.js	/^	function updateValue(triggerChange) {$/;"	f
 uri	server.php	/^$uri = urldecode($/;"	v
 url	tests/Browser/Pages/HomePage.php	/^    public function url()$/;"	f
+user	app/Note.php	/^    public function user()$/;"	f
 user	app/Task.php	/^    public function user()$/;"	f
 user	database/factories/ModelFactory.php	/^    $user = factory(User::class)->create();$/;"	v
 user	tests/Browser/ClientTest.php	/^        $user = factory(User::class)->create();$/;"	v
@@ -271,7 +310,10 @@ user	tests/Browser/TaskTest.php	/^        $user   = factory(User::class)->create
 user	tests/Browser/TaskTest.php	/^        $user = factory(User::class)->create();$/;"	v
 user	tests/Unit/ClientTest.php	/^        $this->user = factory('App\\User')->create();$/;"	v
 user	tests/Unit/HomeTest.php	/^        $user = factory(User::class)->create();$/;"	v
+user	tests/Unit/NoteTest.php	/^        $this->user = factory(User::class)->create();$/;"	v
+user	tests/Unit/NoteTest.php	/^    protected $user;$/;"	v
 user	tests/Unit/TaskTest.php	/^        $this->user = factory('App\\User')->create();$/;"	v
+user	tests/Unit/TaskTest.php	/^        $user = User::with('tasks')->find($this->user->id);$/;"	v
 userId	app/Http/Controllers/ClientController.php	/^        $userId = \\Auth::user()->id;$/;"	v
 users	resources/views/forms/createTask.blade.php	/^$users = App\\User::all();$/;"	v
 users	storage/framework/views/0e63e22d6b1cd46e782394a9c913181b368c4ad5.php	/^$users = App\\User::all();$/;"	v

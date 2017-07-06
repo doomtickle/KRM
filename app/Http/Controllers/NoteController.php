@@ -2,18 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Task;
-use App\User;
-use App\Client;
+use App\Note;
 use Illuminate\Http\Request;
 
-class TaskController extends Controller
+class NoteController extends Controller
 {
-
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
     /**
      * Display a listing of the resource.
      *
@@ -31,7 +24,7 @@ class TaskController extends Controller
      */
     public function create()
     {
-        return view('tasks.create');
+        //
     }
 
     /**
@@ -42,40 +35,27 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-
-       $createdBy = \Auth::user()->id; 
-
-       Task::create([
-            'client_id' => $request->client_id,
-            'assigned_to' => $request->assigned_to,
-            'due_date' => $request->due_date,
-            'description' => $request->description,
-            'created_by' => $createdBy
-        ]);
-
-       return redirect('/home')->with('status', 'Success');
+        //
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Task  $task
+     * @param  \App\Note  $note
      * @return \Illuminate\Http\Response
      */
-    public function show(Task $task)
+    public function show(Note $note)
     {
-        $task = Task::with(['user', 'client'])->find($task->id);
-
-        return view('tasks.show', compact('task'));
+        //
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Task  $task
+     * @param  \App\Note  $note
      * @return \Illuminate\Http\Response
      */
-    public function edit(Task $task)
+    public function edit(Note $note)
     {
         //
     }
@@ -84,10 +64,10 @@ class TaskController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Task  $task
+     * @param  \App\Note  $note
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Task $task)
+    public function update(Request $request, Note $note)
     {
         //
     }
@@ -95,10 +75,10 @@ class TaskController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Task  $task
+     * @param  \App\Note  $note
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Task $task)
+    public function destroy(Note $note)
     {
         //
     }
