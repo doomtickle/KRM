@@ -805,6 +805,7 @@ new Vue({
     data: {
         notes: [],
         body: ''
+
     },
 
     methods: {
@@ -819,6 +820,8 @@ new Vue({
             }).then(function (response) {
                 _this.notes.push(response.data);
                 _this.body = '';
+            }).catch(function (error) {
+                alert("show the div");
             });
         },
         getTaskId: function getTaskId() {

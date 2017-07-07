@@ -15,14 +15,19 @@
                         <li>Description: {{ $task->description }}</li>
                     </ul>
                     <div id="note-section" class="note-section">
-                        <form action="/note" method="post" @submit.prevent>
+                        <div class="alert alert-danger" role="alert" v-if="isActive">
+                            <p>Whoops! Something went wrong. Did you make sure your note had a body?</p>
+                        </div>
+                        <form action="/note" method="post" @submit.prevent >
                             <div class="form-group">
                                 {{ csrf_field() }}
-                                {{--<input type="hidden" name="task_id" value="{{ $task->id }}" v-model="task_id">--}}
-                                {{--<input type="hidden" name="client_id" value="{{ $task->client->id }}" v-model="client_id">--}}
-                                {{--<input type="hidden" name="user_id" value="{{ $task->user->id }}" v-model="user_id">--}}
-                                <textarea class="form-control" rows="3" name="body"
-                                          placeholder="Enter the body of the note"  v-model="body"></textarea>
+                                <textarea class="form-control"
+                                          rows="3"
+                                          name="body"
+                                          placeholder="Enter the body of the note"
+                                          v-model="body">
+
+                                </textarea>
                             </div>
                             <button class="btn btn-primary" @click="addNote(
                                             {{ $task->user->id }},

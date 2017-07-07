@@ -24,6 +24,7 @@ new Vue({
     data: {
         notes: [],
         body: '',
+
     },
 
     methods: {
@@ -38,6 +39,9 @@ new Vue({
                     this.notes.push(response.data);
                     this.body = '';
                 })
+                .catch(function (error) {
+                    alert("show the div");
+                });
 
         },
         getTaskId() {
