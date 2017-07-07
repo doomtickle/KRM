@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\NoteRequest;
 use App\Note;
 use Illuminate\Http\Request;
 
@@ -14,7 +15,9 @@ class NoteController extends Controller
      */
     public function index()
     {
-        //
+        $notes = Note::all();
+
+        return response()->json($notes);
     }
 
     /**
@@ -30,12 +33,14 @@ class NoteController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param NoteRequest|Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(NoteRequest $request)
     {
-        //
+        $note = Note::create($request->all());
+
+        return response()->json($note);
     }
 
     /**

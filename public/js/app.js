@@ -780,7 +780,6 @@ module.exports = __webpack_require__(41);
 /* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
-
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -800,13 +799,46 @@ var flatpickr = __webpack_require__(36);
 
 Vue.component('example', __webpack_require__(37));
 
-var app = new Vue({
-  el: '#app'
+new Vue({
+    el: '#note-section',
+
+    data: {
+        notes: [],
+        body: ''
+    },
+
+    methods: {
+        addNote: function addNote(userId, clientId, taskId) {
+            var _this = this;
+
+            axios.post('/note', {
+                user_id: userId,
+                client_id: clientId,
+                task_id: taskId,
+                body: this.body
+            }).then(function (response) {
+                _this.notes.push(response.data);
+                _this.body = '';
+            });
+        },
+        getTaskId: function getTaskId() {
+            var url = window.location.href.split('/');
+            return url.pop();
+        }
+    },
+
+    mounted: function mounted() {
+        var _this2 = this;
+
+        axios.get('/task/' + this.getTaskId() + '/notes/').then(function (response) {
+            return _this2.notes = response.data;
+        });
+    }
 });
 
 flatpickr("#due_date", {
-  altInput: true,
-  allowInput: true
+    altInput: true,
+    allowInput: true
 });
 
 /***/ }),
