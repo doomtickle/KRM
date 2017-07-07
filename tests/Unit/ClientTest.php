@@ -16,10 +16,12 @@ class ClientTest extends TestCase
     use WithoutMiddleware;
     use DatabaseTransactions;
 
+    protected $user;
+
     protected function setUp()
     {
         parent::setUp();
-        $this->user = factory('App\User')->create();
+        $this->user = factory(User::class)->create();
         $this->actingAs($this->user);
     }
     /** @test */
@@ -48,6 +50,7 @@ class ClientTest extends TestCase
         $eager = Client::with('tasks')->find($client->id);
 
         $this->assertEquals($task->id, $eager->tasks()->first()->id);
+        $this->assertDatabaseHas('tasks', ['client_id' => $client->id]);
     }
 
 }

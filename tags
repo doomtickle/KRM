@@ -308,7 +308,8 @@ user	database/factories/ModelFactory.php	/^    $user = factory(User::class)->cre
 user	tests/Browser/ClientTest.php	/^        $user = factory(User::class)->create();$/;"	v
 user	tests/Browser/TaskTest.php	/^        $user   = factory(User::class)->create();$/;"	v
 user	tests/Browser/TaskTest.php	/^        $user = factory(User::class)->create();$/;"	v
-user	tests/Unit/ClientTest.php	/^        $this->user = factory('App\\User')->create();$/;"	v
+user	tests/Unit/ClientTest.php	/^        $this->user = factory(User::class)->create();$/;"	v
+user	tests/Unit/ClientTest.php	/^    protected $user;$/;"	v
 user	tests/Unit/HomeTest.php	/^        $user = factory(User::class)->create();$/;"	v
 user	tests/Unit/NoteTest.php	/^        $this->user = factory(User::class)->create();$/;"	v
 user	tests/Unit/NoteTest.php	/^    protected $user;$/;"	v
