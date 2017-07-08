@@ -15,9 +15,6 @@
                         <li>Description: {{ $task->description }}</li>
                     </ul>
                     <div id="note-section" class="note-section">
-                        <div class="alert alert-danger" role="alert" v-if="isActive">
-                            <p>Whoops! Something went wrong. Did you make sure your note had a body?</p>
-                        </div>
                         <form action="/note" method="post" @submit.prevent >
                             <div class="form-group">
                                 {{ csrf_field() }}
@@ -36,7 +33,7 @@
 
                         </form>
                         <ul>
-                            <li v-for="note in notes" v-text="note.body"></li>
+                            <li v-for="note in notes">@{{ note.body }}</li>
                         </ul>
                     </div>
                 </div>

@@ -16,15 +16,12 @@ const flatpickr = require("flatpickr");
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.component('example', require('./components/Example.vue'));
-
-new Vue({
-    el: '#note-section',
+const app = new Vue({
+    el: '#app',
 
     data: {
         notes: [],
         body: '',
-
     },
 
     methods: {
@@ -39,17 +36,12 @@ new Vue({
                     this.notes.push(response.data);
                     this.body = '';
                 })
-                .catch(function (error) {
-                    alert("show the div");
-                });
-
         },
         getTaskId() {
             var url = window.location.href.split('/');
             return url.pop();
         }
     },
-
     mounted() {
         axios.get('/task/' + this.getTaskId() + '/notes/').then(response => this.notes = response.data);
     }
