@@ -1,11 +1,11 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
-class NoteTest extends TestCase
+class ReadNotesTest extends TestCase
 {
     use DatabaseMigrations;
 
@@ -13,43 +13,31 @@ class NoteTest extends TestCase
     {
         parent::setUp();
 
-        $this->client = create('App\Client');
         $this->user   = create('App\User');
+        $this->client = create('App\Client');
         $this->task   = create('App\Task', [
             'assigned_to' => $this->user->id,
             'created_by'  => $this->user->id
         ]);
     }
-
     /** @test */
-    public function a_note_belongs_to_a_task()
+    public function an_unauthenticated_user_cannot_view_a_note()
     {
-        $note = $this->createNote();
-
-        $eager = $note->with('task')->find($note->id);
-
-        $this->assertInstanceOf('App\Task', $eager->task()->first());
+        $this->withExceptionHandling()->get('/task/1/notes')
+            ->assertRedirect('/login');
     }
 
     /** @test */
-    public function a_note_belongs_to_a_client()
+    public function an_authenticated_user_can_view_a_note()
     {
+        $this->signIn();
 
         $note = $this->createNote();
 
-        $eager = $note->with('client')->first();
-
-        $this->assertInstanceOf('App\Client', $eager->client()->first());
-    }
-
-    /** @test */
-    public function a_note_belongs_to_a_user()
-    {
-        $note = $this->createNote();
-
-        $eager = $note->with('user')->first();
-
-        $this->assertInstanceOf('App\User', $eager->user()->first());
+        $this->get("/task/{$this->task->id}/notes")
+                ->assertJson([
+                    ['body' => $note->body]
+                ]);
 
     }
 
@@ -74,5 +62,4 @@ class NoteTest extends TestCase
 
         return $note;
     }
-
 }

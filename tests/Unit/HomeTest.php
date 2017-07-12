@@ -9,7 +9,6 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class HomeTest extends TestCase
 {
-    use DatabaseTransactions;
     use DatabaseMigrations;
     /** @test */
     public function users_should_see_the_home_page()

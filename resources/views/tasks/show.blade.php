@@ -33,7 +33,7 @@
 
                         </form>
                         <ul>
-                            <li v-for="note in notes">@{{ note.body }}</li>
+                            <li v-for="note in notes" v-text="note.body"></li>
                         </ul>
                     </div>
                 </div>

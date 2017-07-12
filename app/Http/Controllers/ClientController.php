@@ -18,7 +18,9 @@ class ClientController extends Controller
      */
     public function index()
     {
-        //
+        $clients = Client::latest()->get();
+
+        return view('clients.index', compact('clients'));
     }
 
     /**
@@ -56,11 +58,13 @@ class ClientController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Client  $client
+     * @param $id
      * @return \Illuminate\Http\Response
+     * @internal param Client $client
      */
-    public function show(Client $client)
+    public function show($id)
     {
+        $client = Client::find($id);
         return view('clients.show', compact('client'));
     }
 

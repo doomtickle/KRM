@@ -48,6 +48,11 @@
                                         Add a client
                                     </a>
                                 </li>
+                                <li>
+                                    <a href="{{ route('client.index') }}">
+                                        View all clients
+                                    </a>
+                                </li>
                             </ul>
                         </li>
                         <li class="dropdown">
