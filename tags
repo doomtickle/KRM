@@ -14,6 +14,7 @@ ClientTest	tests/Unit/ClientTest.php	/^class ClientTest extends TestCase$/;"	c
 Controller	app/Http/Controllers/Controller.php	/^class Controller extends BaseController$/;"	c
 CreateClientsTable	database/migrations/2017_07_04_142430_create_clients_table.php	/^class CreateClientsTable extends Migration$/;"	c
 CreateNotesTable	database/migrations/2017_07_06_165241_create_notes_table.php	/^class CreateNotesTable extends Migration$/;"	c
+CreateNotesTest	tests/Feature/CreateNotesTest.php	/^class CreateNotesTest extends TestCase$/;"	c
 CreatePasswordResetsTable	database/migrations/2014_10_12_100000_create_password_resets_table.php	/^class CreatePasswordResetsTable extends Migration$/;"	c
 CreateTasksTable	database/migrations/2017_07_04_183143_create_tasks_table.php	/^class CreateTasksTable extends Migration$/;"	c
 CreateUsersTable	database/migrations/2014_10_12_000000_create_users_table.php	/^class CreateUsersTable extends Migration$/;"	c
@@ -23,8 +24,6 @@ Date.fp_incr	public/js/app.js	/^Date.prototype.fp_incr = function (days) {$/;"	m
 DuskTestCase	tests/DuskTestCase.php	/^abstract class DuskTestCase extends BaseTestCase$/;"	c
 EncryptCookies	app/Http/Middleware/EncryptCookies.php	/^class EncryptCookies extends BaseEncrypter$/;"	c
 EventServiceProvider	app/Providers/EventServiceProvider.php	/^class EventServiceProvider extends ServiceProvider$/;"	c
-ExampleTest	tests/Feature/ExampleTest.php	/^class ExampleTest extends TestCase$/;"	c
-ExampleTest	tests/Unit/ExampleTest.php	/^class ExampleTest extends TestCase$/;"	c
 FlatpickrInstance	public/js/app.js	/^FlatpickrInstance.prototype = {$/;"	c
 FlatpickrInstance.formats	public/js/app.js	/^	formats: {$/;"	p
 ForgotPasswordController	app/Http/Controllers/Auth/ForgotPasswordController.php	/^class ForgotPasswordController extends Controller$/;"	c
@@ -46,6 +45,9 @@ NoteRequest	app/Http/Requests/NoteRequest.php	/^class NoteRequest extends FormRe
 NoteTest	tests/Browser/NoteTest.php	/^class NoteTest extends DuskTestCase$/;"	c
 NoteTest	tests/Unit/NoteTest.php	/^class NoteTest extends TestCase$/;"	c
 Page	tests/Browser/Pages/Page.php	/^abstract class Page extends BasePage$/;"	c
+ReadClientsTest	tests/Feature/ReadClientsTest.php	/^class ReadClientsTest extends TestCase$/;"	c
+ReadNotesTest	tests/Feature/ReadNotesTest.php	/^class ReadNotesTest extends TestCase$/;"	c
+ReadTasksTest	tests/Feature/ReadTasksTest.php	/^class ReadTasksTest extends TestCase$/;"	c
 RedirectIfAuthenticated	app/Http/Middleware/RedirectIfAuthenticated.php	/^class RedirectIfAuthenticated$/;"	c
 RegisterController	app/Http/Controllers/Auth/RegisterController.php	/^class RegisterController extends Controller$/;"	c
 ResetPasswordController	app/Http/Controllers/Auth/ResetPasswordController.php	/^class ResetPasswordController extends Controller$/;"	c
@@ -68,9 +70,13 @@ __construct	app/Http/Controllers/Auth/ResetPasswordController.php	/^    public f
 __construct	app/Http/Controllers/ClientController.php	/^    public function __construct()$/;"	f
 __construct	app/Http/Controllers/HomeController.php	/^    public function __construct()$/;"	f
 __construct	app/Http/Controllers/TaskController.php	/^    public function __construct()$/;"	f
+__construct	app/Http/Controllers/TaskNotesController.php	/^    public function __construct()$/;"	f
+__construct	tests/TestCase.php	/^            public function __construct() {}$/;"	f
 __currentLoopData	storage/framework/views/0e63e22d6b1cd46e782394a9c913181b368c4ad5.php	/^            <?php $__currentLoopData = $clients; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $client): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>$/;"	v
 __currentLoopData	storage/framework/views/0e63e22d6b1cd46e782394a9c913181b368c4ad5.php	/^            <?php $__currentLoopData = $users; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $user): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>$/;"	v
-__currentLoopData	storage/framework/views/3e33acf2e83d95f1af73f68ae99c3380780e971b.php	/^<?php $__currentLoopData = $tasks; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $task): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>$/;"	v
+__currentLoopData	storage/framework/views/85ebce4bfdd90407708623542d3defe5f9789617.php	/^                    <?php $__currentLoopData = $task->notes()->get(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $note): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>$/;"	v
+__currentLoopData	storage/framework/views/85ebce4bfdd90407708623542d3defe5f9789617.php	/^<?php $__currentLoopData = $tasks; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $task): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>$/;"	v
+__currentLoopData	storage/framework/views/eac0d7a84fb333f6304abbb13c2c4363ea40fdb1.php	/^                <?php $__currentLoopData = $clients; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $client): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>$/;"	v
 __webpack_require__	public/js/app.js	/^\/******\/ 	function __webpack_require__(moduleId) {$/;"	f
 __webpack_require__.d	public/js/app.js	/^\/******\/ 	__webpack_require__.d = function(exports, name, getter) {$/;"	f
 __webpack_require__.n	public/js/app.js	/^\/******\/ 	__webpack_require__.n = function(module) {$/;"	f
@@ -84,16 +90,20 @@ a_task_belongs_to_a_client	tests/Unit/TaskTest.php	/^    public function a_task_
 a_task_belongs_to_a_user	tests/Unit/TaskTest.php	/^    public function a_task_belongs_to_a_user()$/;"	f
 a_task_has_a_single_page	tests/Browser/TaskTest.php	/^    public function a_task_has_a_single_page()$/;"	f
 a_user_can_add_a_note	tests/Browser/NoteTest.php	/^    public function a_user_can_add_a_note()$/;"	f
-a_user_can_add_a_note	tests/Unit/NoteTest.php	/^    public function a_user_can_add_a_note()$/;"	f
 a_user_can_create_a_client	tests/Browser/ClientTest.php	/^    public function a_user_can_create_a_client()$/;"	f
 a_user_can_create_a_task	tests/Browser/TaskTest.php	/^    public function a_user_can_create_a_task()$/;"	f
 a_user_can_see_the_client_page	tests/Browser/ClientTest.php	/^    public function a_user_can_see_the_client_page()$/;"	f
 a_user_can_see_the_task_page	tests/Browser/TaskTest.php	/^    public function a_user_can_see_the_task_page()$/;"	f
 a_user_can_see_their_tasks	tests/Browser/TaskTest.php	/^    public function a_user_can_see_their_tasks()$/;"	f
-a_user_can_view_a_client	tests/Unit/ClientTest.php	/^    public function a_user_can_view_a_client()$/;"	f
-a_user_can_view_their_tasks_page	tests/Unit/TaskTest.php	/^    public function a_user_can_view_their_tasks_page()$/;"	f
 afterDayAnim	public/js/app.js	/^	function afterDayAnim(fn) {$/;"	f
 aliases	config/app.php	/^    | This array of class aliases will be registered when this application$/;"	c
+an_authenticated_user_can_add_a_note	tests/Feature/CreateNotesTest.php	/^    public function an_authenticated_user_can_add_a_note()$/;"	f
+an_authenticated_user_can_browse_tasks	tests/Feature/ReadTasksTest.php	/^    public function an_authenticated_user_can_browse_tasks()$/;"	f
+an_authenticated_user_can_view_a_client	tests/Feature/ReadClientsTest.php	/^    public function an_authenticated_user_can_view_a_client()$/;"	f
+an_authenticated_user_can_view_a_note	tests/Feature/ReadNotesTest.php	/^    public function an_authenticated_user_can_view_a_note()$/;"	f
+an_authenticated_user_can_view_all_clients	tests/Feature/ReadClientsTest.php	/^    public function an_authenticated_user_can_view_all_clients()$/;"	f
+an_unauthenticated_user_cannot_view_a_client	tests/Feature/ReadClientsTest.php	/^    public function an_unauthenticated_user_cannot_view_a_client()$/;"	f
+an_unauthenticated_user_cannot_view_a_note	tests/Feature/ReadNotesTest.php	/^    public function an_unauthenticated_user_cannot_view_a_note()$/;"	f
 animateDays	public/js/app.js	/^	function animateDays(e) {$/;"	f
 animateMonths	public/js/app.js	/^	function animateMonths(e) {$/;"	f
 app	bootstrap/app.php	/^$app = new Illuminate\\Foundation\\Application($/;"	v
@@ -102,6 +112,8 @@ app	tests/CreatesApplication.php	/^        $app = require __DIR__.'\/..\/bootstr
 arrayify	public/js/app.js	/^	function arrayify(obj) {$/;"	f
 as	config/mail.php	/^    | Laravel supports both SMTP and PHP's "mail" function as drivers for the$/;"	f
 assert	tests/Browser/Pages/HomePage.php	/^    public function assert(Browser $browser)$/;"	f
+attributes	tests/utilities/functions.php	/^function create($class, $attributes = [])$/;"	v
+attributes	tests/utilities/functions.php	/^function make($class, $attributes = [])$/;"	v
 authorize	app/Http/Requests/NoteRequest.php	/^    public function authorize()$/;"	f
 bind	public/js/app.js	/^	function bind(element, event, handler) {$/;"	f
 bindEvents	public/js/app.js	/^	function bindEvents() {$/;"	f
@@ -121,14 +133,18 @@ changeYear	public/js/app.js	/^	function changeYear(newYear) {$/;"	f
 clear	public/js/app.js	/^	function clear(triggerChangeEvent) {$/;"	f
 clearNode	public/js/app.js	/^	function clearNode(node) {$/;"	f
 client	app/Http/Controllers/ClientController.php	/^        $client = Client::create([$/;"	v
+client	app/Http/Controllers/ClientController.php	/^        $client = Client::find($id);$/;"	v
 client	app/Note.php	/^    public function client()$/;"	f
 client	app/Task.php	/^    public function client()$/;"	f
 client	database/factories/ModelFactory.php	/^    $client = factory(Client::class)->create();$/;"	v
 client	tests/Browser/TaskTest.php	/^        $client = factory(Client::class)->create();$/;"	v
+client	tests/Feature/CreateNotesTest.php	/^        $this->client = create('App\\Client');$/;"	v
+client	tests/Feature/ReadClientsTest.php	/^        $client = create('App\\Client');$/;"	v
+client	tests/Feature/ReadClientsTest.php	/^        $client = make('App\\Client');$/;"	v
+client	tests/Feature/ReadNotesTest.php	/^        $this->client = create('App\\Client');$/;"	v
 client	tests/Unit/ClientTest.php	/^        $client = factory(Client::class)->create();$/;"	v
-client	tests/Unit/NoteTest.php	/^        $this->client = factory(Client::class)->create();$/;"	v
-client	tests/Unit/NoteTest.php	/^    protected $client;$/;"	v
-client	tests/Unit/TaskTest.php	/^        $client = Client::with('tasks')->find(1);$/;"	v
+client	tests/Unit/NoteTest.php	/^        $this->client = create('App\\Client');$/;"	v
+clients	app/Http/Controllers/ClientController.php	/^        $clients = Client::latest()->get();$/;"	v
 clients	resources/views/forms/createTask.blade.php	/^$clients = App\\Client::all();$/;"	v
 clients	storage/framework/views/0e63e22d6b1cd46e782394a9c913181b368c4ad5.php	/^$clients = App\\Client::all();$/;"	v
 close	public/js/app.js	/^	function close() {$/;"	f
@@ -139,10 +155,14 @@ create	app/Http/Controllers/Auth/RegisterController.php	/^    protected function
 create	app/Http/Controllers/ClientController.php	/^    public function create()$/;"	f
 create	app/Http/Controllers/NoteController.php	/^    public function create()$/;"	f
 create	app/Http/Controllers/TaskController.php	/^    public function create()$/;"	f
+create	tests/utilities/functions.php	/^function create($class, $attributes = [])$/;"	f
 createApplication	tests/CreatesApplication.php	/^    public function createApplication()$/;"	f
 createDay	public/js/app.js	/^	function createDay(className, date, dayNumber, i) {$/;"	f
 createElement	public/js/app.js	/^	function createElement(tag, className, content) {$/;"	f
 createEvent	public/js/app.js	/^	function createEvent(name) {$/;"	f
+createNote	tests/Feature/CreateNotesTest.php	/^    protected function createNote()$/;"	f
+createNote	tests/Feature/ReadNotesTest.php	/^    protected function createNote()$/;"	f
+createNote	tests/Unit/NoteTest.php	/^    protected function createNote()$/;"	f
 createNumberInput	public/js/app.js	/^	function createNumberInput(inputClassName) {$/;"	f
 createdBy	app/Http/Controllers/TaskController.php	/^       $createdBy = \\Auth::user()->id; $/;"	v
 date_orig	public/js/app.js	/^		var date_orig = date;$/;"	v
@@ -151,6 +171,7 @@ destroy	app/Http/Controllers/ClientController.php	/^    public function destroy(
 destroy	app/Http/Controllers/NoteController.php	/^    public function destroy(Note $note)$/;"	f
 destroy	app/Http/Controllers/TaskController.php	/^    public function destroy(Task $task)$/;"	f
 destroy	public/js/app.js	/^	function destroy() {$/;"	f
+disableExceptionHandling	tests/TestCase.php	/^    protected function disableExceptionHandling()$/;"	f
 documentClick	public/js/app.js	/^	function documentClick(e) {$/;"	f
 dontReport	app/Exceptions/Handler.php	/^    protected $dontReport = [$/;"	v
 down	database/migrations/2014_10_12_000000_create_users_table.php	/^    public function down()$/;"	f
@@ -170,6 +191,7 @@ elements	tests/Browser/Pages/HomePage.php	/^    public function elements()$/;"	f
 except	app/Http/Middleware/EncryptCookies.php	/^    protected $except = [$/;"	v
 except	app/Http/Middleware/TrimStrings.php	/^    protected $except = [$/;"	v
 except	app/Http/Middleware/VerifyCsrfToken.php	/^    protected $except = [$/;"	v
+extends	tests/TestCase.php	/^        $this->app->instance(ExceptionHandler::class, new class extends Handler {$/;"	c
 fillable	app/User.php	/^    protected $fillable = [$/;"	v
 flatpickr	public/js/app.js	/^function flatpickr(selector, config) {$/;"	f
 flatpickr.l10ns.en	public/js/app.js	/^	en: {$/;"	p
@@ -193,8 +215,7 @@ isCalendarElem	public/js/app.js	/^	function isCalendarElem(elem) {$/;"	f
 isDateInRange	public/js/app.js	/^	function isDateInRange(date) {$/;"	f
 isDateSelected	public/js/app.js	/^	function isDateSelected(date) {$/;"	f
 isEnabled	public/js/app.js	/^	function isEnabled(date, timeless) {$/;"	f
-it_should_have_a_client_create_page	tests/Unit/ClientTest.php	/^    public function it_should_have_a_client_create_page()$/;"	f
-it_should_have_a_create_task_page	tests/Unit/TaskTest.php	/^    public function it_should_have_a_create_task_page()$/;"	f
+it_should_have_a_client_create_page	tests/Feature/ReadClientsTest.php	/^    public function it_should_have_a_client_create_page()$/;"	f
 jQuery.fn.flatpickr	public/js/app.js	/^	jQuery.fn.flatpickr = function (config) {$/;"	f
 joinChar	public/js/app.js	/^		var joinChar = self.config.mode !== "range" ? "; " : self.l10n.rangeSeparator;$/;"	v
 jumpToDate	public/js/app.js	/^	function jumpToDate(jumpDate) {$/;"	f
@@ -204,7 +225,13 @@ loader	bootstrap/autoload.php	/^| Composer provides a convenient, automatically 
 loader	public/index.php	/^| Composer provides a convenient, automatically generated class loader for$/;"	c
 localizePhoneNumber	app/Client.php	/^    private function localizePhoneNumber($phone)$/;"	f
 loop	storage/framework/views/0e63e22d6b1cd46e782394a9c913181b368c4ad5.php	/^            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>$/;"	v
-loop	storage/framework/views/3e33acf2e83d95f1af73f68ae99c3380780e971b.php	/^<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>$/;"	v
+loop	storage/framework/views/85ebce4bfdd90407708623542d3defe5f9789617.php	/^                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>$/;"	v
+loop	storage/framework/views/85ebce4bfdd90407708623542d3defe5f9789617.php	/^<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>$/;"	v
+loop	storage/framework/views/eac0d7a84fb333f6304abbb13c2c4363ea40fdb1.php	/^                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>$/;"	v
+make	tests/utilities/functions.php	/^function make($class, $attributes = [])$/;"	f
+makeNote	tests/Feature/CreateNotesTest.php	/^    protected function makeNote()$/;"	f
+makeNote	tests/Feature/ReadNotesTest.php	/^    protected function makeNote()$/;"	f
+makeNote	tests/Unit/NoteTest.php	/^    protected function makeNote()$/;"	f
 map	app/Providers/RouteServiceProvider.php	/^    public function map()$/;"	f
 mapApiRoutes	app/Providers/RouteServiceProvider.php	/^    protected function mapApiRoutes()$/;"	f
 mapWebRoutes	app/Providers/RouteServiceProvider.php	/^    protected function mapWebRoutes()$/;"	f
@@ -214,12 +241,21 @@ minMaxDateSetter	public/js/app.js	/^	function minMaxDateSetter(type) {$/;"	f
 mouseDelta	public/js/app.js	/^	function mouseDelta(e) {$/;"	f
 namespace	app/Providers/RouteServiceProvider.php	/^    protected $namespace = 'App\\Http\\Controllers';$/;"	v
 note	app/Http/Controllers/NoteController.php	/^        $note = Note::create($request->all());$/;"	v
-note	tests/Unit/NoteTest.php	/^        $note = factory(Note::class)->create([$/;"	v
+note	tests/Feature/CreateNotesTest.php	/^        $note = $this->makeNote();$/;"	v
+note	tests/Feature/CreateNotesTest.php	/^        $note = create('App\\Note', [$/;"	v
+note	tests/Feature/CreateNotesTest.php	/^        $note = make('App\\Note', [$/;"	v
+note	tests/Feature/ReadNotesTest.php	/^        $note = $this->createNote();$/;"	v
+note	tests/Feature/ReadNotesTest.php	/^        $note = create('App\\Note', [$/;"	v
+note	tests/Feature/ReadNotesTest.php	/^        $note = make('App\\Note', [$/;"	v
+note	tests/Unit/NoteTest.php	/^        $note = $this->createNote();$/;"	v
+note	tests/Unit/NoteTest.php	/^        $note = create('App\\Note', [$/;"	v
+note	tests/Unit/NoteTest.php	/^        $note = make('App\\Note', [$/;"	v
 notes	app/Client.php	/^    public function notes()$/;"	f
 notes	app/Http/Controllers/NoteController.php	/^        $notes = Note::all();$/;"	v
 notes	app/Http/Controllers/TaskNotesController.php	/^        $notes = Note::where('task_id', $id)->get();$/;"	v
 notes	app/Task.php	/^    public function notes()$/;"	f
 numbers_only	app/Client.php	/^        $numbers_only = preg_replace("\/[^\\d]\/", "", $phone);$/;"	v
+oldExceptionHandler	tests/TestCase.php	/^        $this->oldExceptionHandler = $this->app->make(ExceptionHandler::class);$/;"	v
 onClick	public/js/app.js	/^	function onClick(handler) {$/;"	f
 onKeyDown	public/js/app.js	/^	function onKeyDown(e) {$/;"	f
 onMonthNavClick	public/js/app.js	/^	function onMonthNavClick(e) {$/;"	f
@@ -249,11 +285,12 @@ redirectTo	app/Http/Controllers/Auth/ResetPasswordController.php	/^    protected
 redraw	public/js/app.js	/^	function redraw() {$/;"	f
 register	app/Providers/AppServiceProvider.php	/^    public function register()$/;"	f
 render	app/Exceptions/Handler.php	/^    public function render($request, Exception $exception)$/;"	f
+render	tests/TestCase.php	/^            public function render($request, \\Exception $e) {$/;"	f
 report	app/Exceptions/Handler.php	/^    public function report(Exception $exception)$/;"	f
+report	tests/TestCase.php	/^            public function report(\\Exception $e) {}$/;"	f
 request	public/index.php	/^    $request = Illuminate\\Http\\Request::capture()$/;"	v
 response	public/index.php	/^$response = $kernel->handle($/;"	v
-response	tests/Feature/ExampleTest.php	/^        $response = $this->get('\/');$/;"	v
-response	tests/Unit/NoteTest.php	/^        $response = $this->json('POST', '\/note', [$/;"	v
+response	tests/Feature/ReadClientsTest.php	/^        $response = $this->get('\/client\/' . $client->id);$/;"	v
 return	public/js/app.js	/^\/******\/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };$/;"	c
 return.hasOwnProperty	public/js/app.js	/^\/******\/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };$/;"	m
 routeMiddleware	app/Http/Kernel.php	/^    protected $routeMiddleware = [$/;"	v
@@ -268,6 +305,9 @@ setDate	public/js/app.js	/^	function setDate(date, triggerChange, format) {$/;"	
 setHours	public/js/app.js	/^	function setHours(hours, minutes, seconds) {$/;"	f
 setHoursFromDate	public/js/app.js	/^	function setHoursFromDate(dateObj) {$/;"	f
 setSelectedDate	public/js/app.js	/^	function setSelectedDate(inputDate, format) {$/;"	f
+setUp	tests/Feature/CreateNotesTest.php	/^    protected function setUp()$/;"	f
+setUp	tests/Feature/ReadNotesTest.php	/^    protected function setUp()$/;"	f
+setUp	tests/TestCase.php	/^    protected function setUp()$/;"	f
 setUp	tests/Unit/ClientTest.php	/^    protected function setUp()$/;"	f
 setUp	tests/Unit/NoteTest.php	/^    protected function setUp()$/;"	f
 setUp	tests/Unit/TaskTest.php	/^    protected function setUp()$/;"	f
@@ -277,10 +317,11 @@ setupHelperFunctions	public/js/app.js	/^	function setupHelperFunctions() {$/;"	f
 setupInputs	public/js/app.js	/^	function setupInputs() {$/;"	f
 setupLocale	public/js/app.js	/^	function setupLocale() {$/;"	f
 setupMobile	public/js/app.js	/^	function setupMobile() {$/;"	f
-show	app/Http/Controllers/ClientController.php	/^    public function show(Client $client)$/;"	f
+show	app/Http/Controllers/ClientController.php	/^    public function show($id)$/;"	f
 show	app/Http/Controllers/NoteController.php	/^    public function show(Note $note)$/;"	f
 show	app/Http/Controllers/TaskController.php	/^    public function show(Task $task)$/;"	f
 show	app/Http/Controllers/UsersTasksController.php	/^    public function show($id)$/;"	f
+signIn	tests/TestCase.php	/^    protected function signIn($user = null)$/;"	f
 siteElements	tests/Browser/Pages/Page.php	/^    public static function siteElements()$/;"	f
 store	app/Http/Controllers/ClientController.php	/^    public function store(Request $request)$/;"	f
 store	app/Http/Controllers/NoteController.php	/^    public function store(NoteRequest $request)$/;"	f
@@ -290,15 +331,15 @@ task	app/Note.php	/^	public function task() {$/;"	f
 task	tests/Browser/NoteTest.php	/^        $task = factory(Task::class)->create([$/;"	v
 task	tests/Browser/TaskTest.php	/^        $task   = factory(Task::class)->create([$/;"	v
 task	tests/Browser/TaskTest.php	/^        $task = factory(Task::class)->create([$/;"	v
-task	tests/Unit/ClientTest.php	/^        $task = factory(Task::class)->create([$/;"	v
-task	tests/Unit/NoteTest.php	/^        $this->task   = factory(Task::class)->create([$/;"	v
-task	tests/Unit/NoteTest.php	/^    protected $task;$/;"	v
-task	tests/Unit/TaskTest.php	/^        $task = factory(Task::class)->create([$/;"	v
+task	tests/Feature/CreateNotesTest.php	/^        $this->task   = create('App\\Task', [$/;"	v
+task	tests/Feature/ReadNotesTest.php	/^        $this->task   = create('App\\Task', [$/;"	v
+task	tests/Feature/ReadTasksTest.php	/^        $task = create('App\\Task', [$/;"	v
+task	tests/Unit/NoteTest.php	/^        $this->task   = create('App\\Task', [$/;"	v
+task	tests/Unit/TaskTest.php	/^        $this->task = create('App\\Task',[$/;"	v
 tasks	app/Client.php	/^    public function tasks()$/;"	f
+tasks	app/Http/Controllers/TaskController.php	/^        $tasks = Task::latest()->with(['user', 'client'])->get();$/;"	v
 tasks	app/Http/Controllers/UsersTasksController.php	/^        $tasks = Task::with('client')->where('assigned_to', $id)->get();$/;"	v
 tasks	app/User.php	/^    public function tasks()$/;"	f
-testBasicTest	tests/Feature/ExampleTest.php	/^    public function testBasicTest()$/;"	f
-testBasicTest	tests/Unit/ExampleTest.php	/^    public function testBasicTest()$/;"	f
 timeIncrement	public/js/app.js	/^	function timeIncrement(e) {$/;"	f
 timeWrapper	public/js/app.js	/^	function timeWrapper(e) {$/;"	f
 toggle	public/js/app.js	/^	function toggle() {$/;"	f
@@ -324,16 +365,19 @@ user	tests/Browser/ClientTest.php	/^        $user = factory(User::class)->create
 user	tests/Browser/NoteTest.php	/^        $user = factory(User::class)->create();$/;"	v
 user	tests/Browser/TaskTest.php	/^        $user   = factory(User::class)->create();$/;"	v
 user	tests/Browser/TaskTest.php	/^        $user = factory(User::class)->create();$/;"	v
+user	tests/Feature/CreateNotesTest.php	/^        $this->user   = create('App\\User');$/;"	v
+user	tests/Feature/ReadNotesTest.php	/^        $this->user   = create('App\\User');$/;"	v
+user	tests/Feature/ReadTasksTest.php	/^        $user = create('App\\User');$/;"	v
+user	tests/TestCase.php	/^        $user = $user ?: create('App\\User');$/;"	v
 user	tests/Unit/ClientTest.php	/^        $this->user = factory(User::class)->create();$/;"	v
 user	tests/Unit/ClientTest.php	/^    protected $user;$/;"	v
 user	tests/Unit/HomeTest.php	/^        $user = factory(User::class)->create();$/;"	v
-user	tests/Unit/NoteTest.php	/^        $this->user = factory(User::class)->create();$/;"	v
-user	tests/Unit/NoteTest.php	/^    protected $user;$/;"	v
-user	tests/Unit/TaskTest.php	/^        $this->user = factory('App\\User')->create();$/;"	v
-user	tests/Unit/TaskTest.php	/^        $user = User::with('tasks')->find($this->user->id);$/;"	v
+user	tests/Unit/NoteTest.php	/^        $this->user   = create('App\\User');$/;"	v
+user	tests/Unit/TaskTest.php	/^        $this->user = create('App\\User');$/;"	v
 userId	app/Http/Controllers/ClientController.php	/^        $userId = \\Auth::user()->id;$/;"	v
 users	resources/views/forms/createTask.blade.php	/^$users = App\\User::all();$/;"	v
 users	storage/framework/views/0e63e22d6b1cd46e782394a9c913181b368c4ad5.php	/^$users = App\\User::all();$/;"	v
 users_should_see_the_home_page	tests/Unit/HomeTest.php	/^    public function users_should_see_the_home_page()$/;"	f
 validator	app/Http/Controllers/Auth/RegisterController.php	/^    protected function validator(array $data)$/;"	f
 var.selText	public/js/app.js	/^			var selText = function selText(e) {$/;"	f
+withExceptionHandling	tests/TestCase.php	/^    protected function withExceptionHandling()$/;"	f

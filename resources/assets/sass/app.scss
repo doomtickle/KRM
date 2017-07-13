@@ -1,19 +1,26 @@
-
 // Fonts
-@import url("https://fonts.googleapis.com/css?family=Raleway:300,400,600");
-
+@import url('https://fonts.googleapis.com/css?family=Libre+Franklin:200,300,400|Open+Sans');
 // Variables
 @import "variables";
-
 // Bootstrap
 @import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
 
-.shadow{
-    -webkit-box-shadow: 21px 13px 24px -3px rgba(0,0,0,0.13);
-    -moz-box-shadow: 21px 13px 24px -3px rgba(0,0,0,0.13);
-    box-shadow: 21px 13px 24px -3px rgba(0,0,0,0.13);
+html, body {
+  font-family: 'Open Sans', sans-serif;
 }
 
-.heading-link{
-    text-decoration: underline;
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Libre Franklin', sans-serif;
+  font-weight: 200;
+
+}
+
+.shadow {
+  -webkit-box-shadow: 21px 13px 24px -3px rgba(0, 0, 0, 0.13);
+  -moz-box-shadow: 21px 13px 24px -3px rgba(0, 0, 0, 0.13);
+  box-shadow: 21px 13px 24px -3px rgba(0, 0, 0, 0.13);
+}
+
+.heading-link {
+  text-decoration: underline;
 }

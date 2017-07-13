@@ -925,7 +925,7 @@ span.flatpickr-day.nextMonthDay.selected {
   border-right: 0;
 }
 
-@import url(https://fonts.googleapis.com/css?family=Raleway:300,400,600);@charset "UTF-8";
+@import url(https://fonts.googleapis.com/css?family=Libre+Franklin:200,300,400|Open+Sans);@charset "UTF-8";
 
 /*!
  * Bootstrap v3.3.7 (http://getbootstrap.com)
@@ -9275,6 +9275,21 @@ button.close {
   .hidden-print {
     display: none !important;
   }
+}
+
+html,
+body {
+  font-family: 'Open Sans', sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Libre Franklin', sans-serif;
+  font-weight: 200;
 }
 
 .shadow {
