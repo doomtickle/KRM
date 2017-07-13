@@ -19,6 +19,8 @@
     "vue": "^2.1.10"
   },
   "dependencies": {
-    "flatpickr": "^3.0.6"
+    "bulma": "^0.4.3",
+    "flatpickr": "^3.0.6",
+    "font-awesome": "^4.7.0"
   }
 }

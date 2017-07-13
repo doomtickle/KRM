@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Client;
+use App\Task;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -9,7 +11,6 @@ class HomeController extends Controller
     /**
      * Create a new controller instance.
      *
-     * @return void
      */
     public function __construct()
     {
@@ -23,6 +24,10 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $clients = Client::latest()->get();
+        $allTasks = Task::latest()->get();
+        $myTasks = Task::where('assigned_to', \Auth::user()->id)->get();
+
+        return view('home', compact('clients', 'allTasks', 'myTasks'));
     }
 }

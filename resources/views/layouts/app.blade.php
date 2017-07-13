@@ -15,105 +15,73 @@
 </head>
 <body>
 <div id="app">
-    <nav class="navbar navbar-default navbar-static-top">
-        <div class="container">
-            <div class="navbar-header">
-
-                <!-- Collapsed Hamburger -->
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
-                        data-target="#app-navbar-collapse">
-                    <span class="sr-only">Toggle Navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-
-                <!-- Branding Image -->
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
-                </a>
-            </div>
-
-            <div class="collapse navbar-collapse" id="app-navbar-collapse">
-                <!-- Left Side Of Navbar -->
-                <ul class="nav navbar-nav">
-                    <li class="dropdown">
-                        @if(\Auth::check())
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
-                               aria-expanded="false">
-                                Clients <span class="caret"></span>
-                            </a>
-
-                            <ul class="dropdown-menu" role="menu">
-                                <li>
-                                    <a href="{{ route('client.create') }}">
-                                        Add a client
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('client.index') }}">
-                                        View all clients
-                                    </a>
-                                </li>
-                            </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                            Tasks <span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li>
-                                <a href="/{{ \Auth::user()->id }}/tasks">My Tasks</a>
-                            </li>
-                            <li>
-                                <a href="{{ route('task.create') }}">
-                                    Create a task
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('task.index') }}">
-                                    All Tasks
-                                </a>
-                            </li>
-                        </ul>
-                        @endif
-                    </li>
-                </ul>
-
-                <!-- Right Side Of Navbar -->
-                <ul class="nav navbar-nav navbar-right">
-                    <!-- Authentication Links -->
-                    @if (Auth::guest())
-                        <li><a href="{{ route('login') }}">Login</a></li>
-                        <li><a href="{{ route('register') }}">Register</a></li>
-                    @else
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
-                               aria-expanded="false">
-                                {{ Auth::user()->name }} <span class="caret"></span>
-                            </a>
-
-                            <ul class="dropdown-menu" role="menu">
-                                <li>
-                                    <a href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                document.getElementById('logout-form').submit();">
-                                        Logout
-                                    </a>
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST"
-                                          style="display: none;">
-                                        {{ csrf_field() }}
-                                    </form>
-                                </li>
-                            </ul>
-                        </li>
-                    @endif
-                </ul>
+    <nav class="navbar main-nav">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="/">
+                <figure class="image">
+                    <img src="{{ asset('img/kma-logo.png') }}" alt="KMA CRM" style=" margin-top: 20px;"
+                         class="nav-logo">
+                </figure>
+            </a>
+            <div class="navbar-burger burger" data-target="navMenuExample">
+                <span></span>
+                <span></span>
+                <span></span>
             </div>
         </div>
-    </nav>
 
+        @if(\Auth::check())
+            <div id="navMenuExample" class="navbar-menu">
+                <div class="navbar-start">
+                    <div class="navbar-item has-dropdown is-hoverable">
+                        <a class="navbar-link is-active" href="{{ route('client.index') }}">
+                            Clients
+                        </a>
+                        <div class="navbar-dropdown ">
+                            <a class="navbar-item " href="{{ route('client.create') }}">
+                                Add Client
+                            </a>
+                        </div>
+                    </div>
+                    <div class="navbar-item has-dropdown is-hoverable">
+                        <a class="navbar-link " href="{{ route('task.index') }}">Tasks</a>
+                        <div id="taskDropdown" class="navbar-dropdown " data-style="width: 18rem;">
+
+                            <a class="navbar-item" href="{{ route('user.tasks', auth()->user()->id) }}">
+                                My Tasks
+                            </a>
+
+                            <a class="navbar-item" href="{{ route('task.create') }}">
+                                Add Task
+                            </a>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="navbar-end">
+                    <div class="navbar-item has-dropdown is-hoverable has-text-centered">
+                        <a class="navbar-link" href="#" target="_blank">
+                            {{ auth()->user()->name }}
+                        </a>
+                        <div class="navbar-dropdown" data-style="width: 72rem;">
+                            <a href="{{ route('logout') }}"
+                               class="button is-danger"
+                               onclick="event.preventDefault();
+                                     document.getElementById('logout-form').submit();">
+                                Logout
+                            </a>
+
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                {{ csrf_field() }}
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
+    </nav>
     @yield('content')
 </div>
 

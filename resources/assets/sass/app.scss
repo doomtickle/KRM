@@ -1,18 +1,54 @@
 // Fonts
 @import url('https://fonts.googleapis.com/css?family=Libre+Franklin:200,300,400|Open+Sans');
-// Variables
-@import "variables";
-// Bootstrap
-@import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
 
-html, body {
+// Bulma
+
+@import "node_modules/bulma/sass/utilities/initial-variables";
+
+$primary: $blue;
+$info: $turquoise;
+
+@import "node_modules/bulma/bulma";
+@import "node_modules/font-awesome/scss/font-awesome";
+
+html {
+  height: 100%;
+  overflow: auto;
+}
+
+body {
+  min-height:100%;
   font-family: 'Open Sans', sans-serif;
+}
+
+.home-container--cards{
+  padding: 70px 0;
+}
+
+.hero-head{
+  padding-top:60px;
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Libre Franklin', sans-serif;
   font-weight: 200;
 
+}
+
+.card-header{
+  align-items: center;
+}
+
+.main-nav {
+  height: 80px;
+}
+
+.nav-logo {
+  max-width: 150px;
+}
+
+.navbar-item img {
+  max-height: initial;
 }
 
 .shadow {

@@ -74,6 +74,7 @@ __construct	app/Http/Controllers/TaskNotesController.php	/^    public function _
 __construct	tests/TestCase.php	/^            public function __construct() {}$/;"	f
 __currentLoopData	storage/framework/views/0e63e22d6b1cd46e782394a9c913181b368c4ad5.php	/^            <?php $__currentLoopData = $clients; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $client): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>$/;"	v
 __currentLoopData	storage/framework/views/0e63e22d6b1cd46e782394a9c913181b368c4ad5.php	/^            <?php $__currentLoopData = $users; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $user): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>$/;"	v
+__currentLoopData	storage/framework/views/82b8892353067b598dba87ed88caff2d5bb064e8.php	/^                    <?php $__currentLoopData = $myTasks; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $task): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>$/;"	v
 __currentLoopData	storage/framework/views/85ebce4bfdd90407708623542d3defe5f9789617.php	/^                    <?php $__currentLoopData = $task->notes()->get(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $note): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>$/;"	v
 __currentLoopData	storage/framework/views/85ebce4bfdd90407708623542d3defe5f9789617.php	/^<?php $__currentLoopData = $tasks; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $task): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>$/;"	v
 __currentLoopData	storage/framework/views/eac0d7a84fb333f6304abbb13c2c4363ea40fdb1.php	/^                <?php $__currentLoopData = $clients; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $client): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>$/;"	v
@@ -97,6 +98,7 @@ a_user_can_see_the_task_page	tests/Browser/TaskTest.php	/^    public function a_
 a_user_can_see_their_tasks	tests/Browser/TaskTest.php	/^    public function a_user_can_see_their_tasks()$/;"	f
 afterDayAnim	public/js/app.js	/^	function afterDayAnim(fn) {$/;"	f
 aliases	config/app.php	/^    | This array of class aliases will be registered when this application$/;"	c
+allTasks	app/Http/Controllers/HomeController.php	/^        $allTasks = Task::latest()->get();$/;"	v
 an_authenticated_user_can_add_a_note	tests/Feature/CreateNotesTest.php	/^    public function an_authenticated_user_can_add_a_note()$/;"	f
 an_authenticated_user_can_browse_tasks	tests/Feature/ReadTasksTest.php	/^    public function an_authenticated_user_can_browse_tasks()$/;"	f
 an_authenticated_user_can_view_a_client	tests/Feature/ReadClientsTest.php	/^    public function an_authenticated_user_can_view_a_client()$/;"	f
@@ -145,6 +147,7 @@ client	tests/Feature/ReadNotesTest.php	/^        $this->client = create('App\\Cl
 client	tests/Unit/ClientTest.php	/^        $client = factory(Client::class)->create();$/;"	v
 client	tests/Unit/NoteTest.php	/^        $this->client = create('App\\Client');$/;"	v
 clients	app/Http/Controllers/ClientController.php	/^        $clients = Client::latest()->get();$/;"	v
+clients	app/Http/Controllers/HomeController.php	/^        $clients = Client::latest()->get();$/;"	v
 clients	resources/views/forms/createTask.blade.php	/^$clients = App\\Client::all();$/;"	v
 clients	storage/framework/views/0e63e22d6b1cd46e782394a9c913181b368c4ad5.php	/^$clients = App\\Client::all();$/;"	v
 close	public/js/app.js	/^	function close() {$/;"	f
@@ -225,6 +228,7 @@ loader	bootstrap/autoload.php	/^| Composer provides a convenient, automatically 
 loader	public/index.php	/^| Composer provides a convenient, automatically generated class loader for$/;"	c
 localizePhoneNumber	app/Client.php	/^    private function localizePhoneNumber($phone)$/;"	f
 loop	storage/framework/views/0e63e22d6b1cd46e782394a9c913181b368c4ad5.php	/^            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>$/;"	v
+loop	storage/framework/views/82b8892353067b598dba87ed88caff2d5bb064e8.php	/^                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>$/;"	v
 loop	storage/framework/views/85ebce4bfdd90407708623542d3defe5f9789617.php	/^                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>$/;"	v
 loop	storage/framework/views/85ebce4bfdd90407708623542d3defe5f9789617.php	/^<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>$/;"	v
 loop	storage/framework/views/eac0d7a84fb333f6304abbb13c2c4363ea40fdb1.php	/^                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>$/;"	v
@@ -239,6 +243,7 @@ middleware	app/Http/Kernel.php	/^    protected $middleware = [$/;"	v
 middlewareGroups	app/Http/Kernel.php	/^    protected $middlewareGroups = [$/;"	v
 minMaxDateSetter	public/js/app.js	/^	function minMaxDateSetter(type) {$/;"	f
 mouseDelta	public/js/app.js	/^	function mouseDelta(e) {$/;"	f
+myTasks	app/Http/Controllers/HomeController.php	/^        $myTasks = Task::where('assigned_to', \\Auth::user()->id)->get();$/;"	v
 namespace	app/Providers/RouteServiceProvider.php	/^    protected $namespace = 'App\\Http\\Controllers';$/;"	v
 note	app/Http/Controllers/NoteController.php	/^        $note = Note::create($request->all());$/;"	v
 note	tests/Feature/CreateNotesTest.php	/^        $note = $this->makeNote();$/;"	v

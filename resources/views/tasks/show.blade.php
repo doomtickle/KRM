@@ -15,7 +15,7 @@
                         <li>Description: {{ $task->description }}</li>
                     </ul>
                     <div id="note-section" class="note-section">
-                        <form action="/note" method="post" @submit.prevent >
+                        <form action="/note" method="post" @submit.prevent>
                             <div class="form-group">
                                 {{ csrf_field() }}
                                 <textarea class="form-control"
@@ -29,7 +29,8 @@
                             <button class="btn btn-primary" @click="addNote(
                                             {{ $task->user->id }},
                                             {{ $task->client->id }},
-                                            {{ $task->id }} )">Add Note</button>
+                                            {{ $task->id }} )">Add Note
+                            </button>
 
                         </form>
                         <ul>
@@ -40,4 +41,8 @@
             </div>
         </div>
     </div>
+@endsection
+@section('scripts.footer')
+    <script>
+    </script>
 @endsection
