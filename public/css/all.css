@@ -12584,6 +12584,14 @@ html {
   overflow: auto;
 }
 
+.login-box {
+  margin-top: 80px;
+}
+
+.space-background {
+  background-image: url("/img/space.jpg");
+}
+
 body {
   min-height: 100%;
   font-family: 'Open Sans', sans-serif;
