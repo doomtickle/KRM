@@ -64,9 +64,8 @@
                                         class="fa fa-trash"></i></span></button>
                     </p>
                     <p v-text="note.body"></p>
-                    <hr>
                 </div>
-
+<hr>
                 <form action="/note" method="post" @submit.prevent>
                     <div class="field">
                         {{ csrf_field() }}
