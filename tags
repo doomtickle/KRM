@@ -72,12 +72,9 @@ __construct	app/Http/Controllers/HomeController.php	/^    public function __cons
 __construct	app/Http/Controllers/TaskController.php	/^    public function __construct()$/;"	f
 __construct	app/Http/Controllers/TaskNotesController.php	/^    public function __construct()$/;"	f
 __construct	tests/TestCase.php	/^            public function __construct() {}$/;"	f
-__currentLoopData	storage/framework/views/0e63e22d6b1cd46e782394a9c913181b368c4ad5.php	/^            <?php $__currentLoopData = $clients; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $client): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>$/;"	v
-__currentLoopData	storage/framework/views/0e63e22d6b1cd46e782394a9c913181b368c4ad5.php	/^            <?php $__currentLoopData = $users; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $user): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>$/;"	v
-__currentLoopData	storage/framework/views/82b8892353067b598dba87ed88caff2d5bb064e8.php	/^                    <?php $__currentLoopData = $myTasks; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $task): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>$/;"	v
-__currentLoopData	storage/framework/views/85ebce4bfdd90407708623542d3defe5f9789617.php	/^                    <?php $__currentLoopData = $task->notes()->get(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $note): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>$/;"	v
+__currentLoopData	storage/framework/views/0e63e22d6b1cd46e782394a9c913181b368c4ad5.php	/^                    <?php $__currentLoopData = $clients; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $client): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>$/;"	v
+__currentLoopData	storage/framework/views/0e63e22d6b1cd46e782394a9c913181b368c4ad5.php	/^                    <?php $__currentLoopData = $users; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $user): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>$/;"	v
 __currentLoopData	storage/framework/views/85ebce4bfdd90407708623542d3defe5f9789617.php	/^<?php $__currentLoopData = $tasks; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $task): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>$/;"	v
-__currentLoopData	storage/framework/views/eac0d7a84fb333f6304abbb13c2c4363ea40fdb1.php	/^                <?php $__currentLoopData = $clients; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $client): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>$/;"	v
 __webpack_require__	public/js/app.js	/^\/******\/ 	function __webpack_require__(moduleId) {$/;"	f
 __webpack_require__.d	public/js/app.js	/^\/******\/ 	__webpack_require__.d = function(exports, name, getter) {$/;"	f
 __webpack_require__.n	public/js/app.js	/^\/******\/ 	__webpack_require__.n = function(module) {$/;"	f
@@ -148,8 +145,8 @@ client	tests/Unit/ClientTest.php	/^        $client = factory(Client::class)->cre
 client	tests/Unit/NoteTest.php	/^        $this->client = create('App\\Client');$/;"	v
 clients	app/Http/Controllers/ClientController.php	/^        $clients = Client::latest()->get();$/;"	v
 clients	app/Http/Controllers/HomeController.php	/^        $clients = Client::latest()->get();$/;"	v
-clients	resources/views/forms/createTask.blade.php	/^$clients = App\\Client::all();$/;"	v
-clients	storage/framework/views/0e63e22d6b1cd46e782394a9c913181b368c4ad5.php	/^$clients = App\\Client::all();$/;"	v
+clients	resources/views/forms/createTask.blade.php	/^    $clients = App\\Client::all();$/;"	v
+clients	storage/framework/views/0e63e22d6b1cd46e782394a9c913181b368c4ad5.php	/^    $clients = App\\Client::all();$/;"	v
 close	public/js/app.js	/^	function close() {$/;"	f
 commands	app/Console/Kernel.php	/^    protected $commands = [$/;"	v
 commands	app/Console/Kernel.php	/^    protected function commands()$/;"	f
@@ -227,11 +224,8 @@ listen	app/Providers/EventServiceProvider.php	/^    protected $listen = [$/;"	v
 loader	bootstrap/autoload.php	/^| Composer provides a convenient, automatically generated class loader$/;"	c
 loader	public/index.php	/^| Composer provides a convenient, automatically generated class loader for$/;"	c
 localizePhoneNumber	app/Client.php	/^    private function localizePhoneNumber($phone)$/;"	f
-loop	storage/framework/views/0e63e22d6b1cd46e782394a9c913181b368c4ad5.php	/^            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>$/;"	v
-loop	storage/framework/views/82b8892353067b598dba87ed88caff2d5bb064e8.php	/^                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>$/;"	v
-loop	storage/framework/views/85ebce4bfdd90407708623542d3defe5f9789617.php	/^                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>$/;"	v
+loop	storage/framework/views/0e63e22d6b1cd46e782394a9c913181b368c4ad5.php	/^                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>$/;"	v
 loop	storage/framework/views/85ebce4bfdd90407708623542d3defe5f9789617.php	/^<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>$/;"	v
-loop	storage/framework/views/eac0d7a84fb333f6304abbb13c2c4363ea40fdb1.php	/^                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>$/;"	v
 make	tests/utilities/functions.php	/^function make($class, $attributes = [])$/;"	f
 makeNote	tests/Feature/CreateNotesTest.php	/^    protected function makeNote()$/;"	f
 makeNote	tests/Feature/ReadNotesTest.php	/^    protected function makeNote()$/;"	f
@@ -243,7 +237,6 @@ middleware	app/Http/Kernel.php	/^    protected $middleware = [$/;"	v
 middlewareGroups	app/Http/Kernel.php	/^    protected $middlewareGroups = [$/;"	v
 minMaxDateSetter	public/js/app.js	/^	function minMaxDateSetter(type) {$/;"	f
 mouseDelta	public/js/app.js	/^	function mouseDelta(e) {$/;"	f
-myTasks	app/Http/Controllers/HomeController.php	/^        $myTasks = Task::where('assigned_to', \\Auth::user()->id)->get();$/;"	v
 namespace	app/Providers/RouteServiceProvider.php	/^    protected $namespace = 'App\\Http\\Controllers';$/;"	v
 note	app/Http/Controllers/NoteController.php	/^        $note = Note::create($request->all());$/;"	v
 note	tests/Feature/CreateNotesTest.php	/^        $note = $this->makeNote();$/;"	v
@@ -342,6 +335,7 @@ task	tests/Feature/ReadTasksTest.php	/^        $task = create('App\\Task', [$/;"
 task	tests/Unit/NoteTest.php	/^        $this->task   = create('App\\Task', [$/;"	v
 task	tests/Unit/TaskTest.php	/^        $this->task = create('App\\Task',[$/;"	v
 tasks	app/Client.php	/^    public function tasks()$/;"	f
+tasks	app/Http/Controllers/HomeController.php	/^        $tasks = Task::where('assigned_to', \\Auth::user()->id)->get();$/;"	v
 tasks	app/Http/Controllers/TaskController.php	/^        $tasks = Task::latest()->with(['user', 'client'])->get();$/;"	v
 tasks	app/Http/Controllers/UsersTasksController.php	/^        $tasks = Task::with('client')->where('assigned_to', $id)->get();$/;"	v
 tasks	app/User.php	/^    public function tasks()$/;"	f
@@ -380,8 +374,8 @@ user	tests/Unit/HomeTest.php	/^        $user = factory(User::class)->create();$/
 user	tests/Unit/NoteTest.php	/^        $this->user   = create('App\\User');$/;"	v
 user	tests/Unit/TaskTest.php	/^        $this->user = create('App\\User');$/;"	v
 userId	app/Http/Controllers/ClientController.php	/^        $userId = \\Auth::user()->id;$/;"	v
-users	resources/views/forms/createTask.blade.php	/^$users = App\\User::all();$/;"	v
-users	storage/framework/views/0e63e22d6b1cd46e782394a9c913181b368c4ad5.php	/^$users = App\\User::all();$/;"	v
+users	resources/views/forms/createTask.blade.php	/^    $users = App\\User::all();$/;"	v
+users	storage/framework/views/0e63e22d6b1cd46e782394a9c913181b368c4ad5.php	/^    $users = App\\User::all();$/;"	v
 users_should_see_the_home_page	tests/Unit/HomeTest.php	/^    public function users_should_see_the_home_page()$/;"	f
 validator	app/Http/Controllers/Auth/RegisterController.php	/^    protected function validator(array $data)$/;"	f
 var.selText	public/js/app.js	/^			var selText = function selText(e) {$/;"	f

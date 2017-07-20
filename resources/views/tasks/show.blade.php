@@ -14,7 +14,6 @@
                     <div class="column is-one-fourth">
 
 
-
                     </div>
                 </div>
             </div>
@@ -30,19 +29,22 @@
                         <p>{{ $task->description }}</p>
                         <h2 class="title is-3 is-primary">Actions</h2>
                         <form class="columns action-buttons" action="#" method="post" @submit.prevent>
-                            <button title="Mark this task complete. No follow up is necessary." class="column is-4 button is-huge is-info is-outlined">
+                            <button title="Mark this task complete. No follow up is necessary."
+                                    class="column is-4 button is-huge is-info is-outlined">
                                 <span class="icon">
                                     <i class="fa fa-check-square-o"></i>
                                 </span>
                                 <span class="button-note">Mark this task complete. No follow up is necessary.</span>
                             </button>
-                            <button title="Schedule follow up for a team member." class="column is-4 button is-huge is-info is-outlined">
+                            <button title="Schedule follow up for a team member."
+                                    class="column is-4 button is-huge is-info is-outlined">
                                 <span class="icon">
                                     <i class="fa fa-share-square-o"></i>
                                 </span>
                                 <span class="button-note">Schedule follow up for a team member.</span>
                             </button>
-                            <button title="Schedule another follow-up for yourself." class="column is-4 button is-huge is-info is-outlined">
+                            <button title="Schedule another follow-up for yourself."
+                                    class="column is-4 button is-huge is-info is-outlined">
                                 <span class="icon">
                                     <i class="fa fa-refresh"></i>
                                 </span>
@@ -55,14 +57,20 @@
             <div class="column is-6 ">
 
                 <div v-for="note in notes" class="task-note">
-                    <p><strong>@{{ note.created_at }}</strong> <button class="button is-info is-outlined is-small"><span class="icon" ><i class="fa fa-pencil"></i></span></button> <button class="button is-outlined is-info is-small"><span class="icon" ><i class="fa fa-trash"></i></span></button></p>
+                    <p><strong>@{{ note.created_at }}</strong>
+                        <button class="button is-info is-outlined is-small"><span class="icon"><i
+                                        class="fa fa-pencil"></i></span></button>
+                        <button class="button is-outlined is-info is-small"><span class="icon"><i
+                                        class="fa fa-trash"></i></span></button>
+                    </p>
                     <p v-text="note.body"></p>
                 </div>
 <hr>
                 <form action="/note" method="post" @submit.prevent>
                     <div class="field">
                         {{ csrf_field() }}
-                        <textarea class="textarea" rows="3" name="body" placeholder="Add a note to this task" v-model="body"></textarea>
+                        <textarea class="textarea" rows="3" name="body" placeholder="Add a note to this task"
+                                  v-model="body"></textarea>
                     </div>
                     <div class="field">
                         <button class="button is-info" @click="addNote(
