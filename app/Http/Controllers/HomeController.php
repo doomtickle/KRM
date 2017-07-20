@@ -26,8 +26,8 @@ class HomeController extends Controller
     {
         $clients = Client::latest()->get();
         $allTasks = Task::latest()->get();
-        $myTasks = Task::where('assigned_to', \Auth::user()->id)->get();
+        $tasks = Task::where('assigned_to', \Auth::user()->id)->get();
 
-        return view('home', compact('clients', 'allTasks', 'myTasks'));
+        return view('home', compact('clients', 'allTasks', 'tasks'));
     }
 }

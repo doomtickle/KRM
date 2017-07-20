@@ -5,8 +5,11 @@
 
 @import "node_modules/bulma/sass/utilities/initial-variables";
 
-$primary: $blue;
-$info: $turquoise;
+$primary: #CBD156;
+$info: #2c5e70;
+$turquoise: #2f7788;
+$light-gray: #ddd;
+$red: #d9534f;
 
 @import "node_modules/bulma/bulma";
 @import "node_modules/font-awesome/scss/font-awesome";
@@ -67,4 +70,28 @@ h1, h2, h3, h4, h5, h6 {
 
 .heading-link {
   text-decoration: underline;
+}
+
+.is-danger {
+  background-color: $danger;
+  border-color: $danger !important;
+  color: $white;
+}
+
+.is-turquoise {
+  background-color: $turquoise;
+  border-color: $info !important;
+  color: $white;
+}
+
+.card.main-task-card .card-content {
+  min-height: 150px;
+}
+
+.section a {
+  color: $info;
+}
+
+.card-header {
+  border-top:3px solid $primary;
 }
