@@ -1,34 +1,33 @@
 @foreach($tasks as $task)
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h4>Client: <a href="/client/{{ $task->client->id }}">{{ $task->client->name }}</a></h4>
-            <p>Assigned to:
-                <a href="#">
-                    {{ $task->user->name }}
+    <div class="column is-3" draggable="true">
+        <div class="card main-task-card">
+            <header class="card-header is-flex">
+                <p class="card-header-title">
+                    <a href="{{ route('client.show', $task->client->id) }}">{{ $task->client->name }}</a>
+                </p>
+                <p>
+                                        <span class="is-pulled-right">
+                                            <small>Due: {{ Carbon\Carbon::parse($task->due_date)->format('F d, Y') }}
+                                            </small>
+                                        </span>
+                </p>
+                <a class="card-header-icon">
+                                      <span class="icon">
+                                        <i class="fa fa-angle-down"></i>
+                                      </span>
                 </a>
-                <span class="pull-right">Due: {{ $task->due_date }}</span>
-            </p>
-        </div>
-
-        <div class="panel-body">
-            <p><strong>Description: </strong>{{ $task->description }}</p>
-            <p>
-                <small>
-                                    <span class="pull-right">
-                                        Created by: <a href="#">{{ App\User::find($task->created_by)->name }}</a>
-                                    </span>
-                </small>
-            </p>
-            @if($task->notes()->get()->count() > 0)
-                <p>&nbsp;</p>
-                <hr>
-                <h4>Notes:</h4>
-                <ul>
-                    @foreach($task->notes()->get() as $note)
-                        <li>{{ $note->body }}</li>
-                    @endforeach
-                </ul>
-            @endif
+            </header>
+            <div class="card-content">
+                <div class="content">
+                    <p>{{ $task->description }}</p>
+                    <p><span class="is-pulled-right"><small>Created by: {{ App\User::find($task->created_by)->name }}</small></span></p>
+                </div>
+            </div>
+            <footer class="card-footer">
+                <a href="{{ route('task.show', $task->id) }}" class="card-footer-item">View</a>
+                <a class="card-footer-item">Pass On</a>
+                <a class="card-footer-item">Complete</a>
+            </footer>
         </div>
     </div>
 @endforeach

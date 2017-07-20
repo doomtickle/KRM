@@ -1,21 +1,35 @@
-<div class="form-group">
-    <label for="name">Name</label>
-    <input type="text" name="name" class="form-control" id="name" placeholder="Enter Client Name">
+<div class="field">
+    <label class="label" for="name">Name</label>
+    <p class="control">
+        <input type="text" name="name" class="input" id="name" placeholder="Enter Client Name">
+    </p>
 </div>
-<div class="form-group">
-    <label for="company">Company</label>
-    <input type="text" name="company" class="form-control" id="company" placeholder="Enter Company Name">
+<div class="field">
+    <label class="label" for="company">Company</label>
+    <p class="control">
+        <input type="text" name="company" class="input" id="company" placeholder="Enter Company Name">
+    </p>
 </div>
-<div class="form-group">
-    <label for="email">Email address</label>
-    <input type="email" name="email" class="form-control" id="email" placeholder="Enter email">
+<div class="field">
+    <label class="label" for="email">Email Address</label>
+    <p class="control">
+        <input type="email" name="email" class="input" id="email" placeholder="Enter email">
+    </p>
 </div>
-<div class="form-group">
-    <label for="phone">Phone Number</label>
-    <input type="tel" name="phone" class="form-control" id="phone" placeholder="###-###-####">
+<div class="field">
+    <label class="label" for="phone">Phone Number</label>
+    <p class="control">
+        <input type="tel" name="phone" class="input" id="phone" placeholder="###-###-####">
+    </p>
 </div>
-<div class="form-group">
-    <label for="comments">Comments</label>
-    <textarea class="form-control" name="comment" id="comments" rows="3"></textarea>
-</div>        
-<button type="submit" class="btn btn-primary">Submit</button>
+<div class="field">
+    <label class="label" for="comments">Comments</label>
+    <p class="control">
+        <textarea class="textarea" name="comment" id="comments" rows="3"></textarea>
+    </p>
+</div>
+<div class="field">
+    <p class="control">
+        <button type="submit" class="button is-info">Submit</button>
+    </p>
+</div>
