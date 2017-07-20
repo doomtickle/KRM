@@ -17,10 +17,9 @@
 <div id="app">
     <nav class="navbar main-nav">
         <div class="navbar-brand">
-            <a class="navbar-item" href="/">
+            <a style="padding:1rem 1.5rem;" href="/">
                 <figure class="image">
-                    <img src="{{ asset('img/kma-logo.png') }}" alt="KMA CRM" style=" margin-top: 20px;"
-                         class="nav-logo">
+                    <img src="{{ asset('img/kma-logo.png') }}" alt="KMA CRM" class="nav-logo">
                 </figure>
             </a>
             <div class="navbar-burger burger" data-target="navMenuExample">

@@ -1,18 +1,13 @@
-// Fonts
-@import url('https://fonts.googleapis.com/css?family=Libre+Franklin:200,300,400|Open+Sans');
-
 // Bulma
-
 @import "node_modules/bulma/sass/utilities/initial-variables";
 
-$primary: #CBD156;
-$info: #2c5e70;
-$turquoise: #2f7788;
-$light-gray: #ddd;
-$red: #d9534f;
+@import "variables";
 
 @import "node_modules/bulma/bulma";
 @import "node_modules/font-awesome/scss/font-awesome";
+
+@import url('https://fonts.googleapis.com/css?family=Heebo:300,400,700');
+$family-primary: 'Heebo', sans-serif;
 
 html {
   height: 100%;
@@ -29,7 +24,6 @@ html {
 
 body {
   min-height:100%;
-  font-family: 'Open Sans', sans-serif;
 }
 
 .home-container--cards{
@@ -38,12 +32,6 @@ body {
 
 .hero-head{
   padding-top:60px;
-}
-
-h1, h2, h3, h4, h5, h6 {
-  font-family: 'Libre Franklin', sans-serif;
-  font-weight: 200;
-
 }
 
 .card-header{

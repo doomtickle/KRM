@@ -1,5 +1,5 @@
 @foreach($tasks as $task)
-    <div class="column is-3" draggable="true">
+    <div class="column is-one-third-tablet is-one-quarter-desktop" draggable="true">
         <div class="card main-task-card">
             <header class="card-header is-flex">
                 <p class="card-header-title">

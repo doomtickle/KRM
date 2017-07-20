@@ -57,9 +57,8 @@
                 <div v-for="note in notes" class="task-note">
                     <p><strong>@{{ note.created_at }}</strong> <button class="button is-info is-outlined is-small"><span class="icon" ><i class="fa fa-pencil"></i></span></button> <button class="button is-outlined is-info is-small"><span class="icon" ><i class="fa fa-trash"></i></span></button></p>
                     <p v-text="note.body"></p>
-                    <hr>
                 </div>
-
+<hr>
                 <form action="/note" method="post" @submit.prevent>
                     <div class="field">
                         {{ csrf_field() }}
