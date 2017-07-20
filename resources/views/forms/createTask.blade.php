@@ -31,7 +31,7 @@
 <div class="field">
     <label class="label" for="due_date">Follow up by date:</label>
     <p class="control">
-        <input type="text" name="due_date" class="input" id="due_date">
+        <input type="text" name="due_date" class="input date-input" id="due_date">
     </p>
 </div>
 <div class="field">
