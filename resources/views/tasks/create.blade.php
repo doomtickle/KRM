@@ -11,7 +11,7 @@
     <section id="note-section" class="section">
 
         <div class="columns">
-            <div class="column is-6 task-description">
+            <div class="column is-8 is-offset-2 task-description">
                 <div class="container is-fluid">
                     <div class="content">
                         <form action="/task" method="post">

@@ -833,9 +833,11 @@ var app = new Vue({
     }
 });
 
-flatpickr("#due_date", {
+flatpickr(".open-calendar", {
     altInput: true,
-    allowInput: true
+    allowInput: true,
+    enableTime: true,
+    inline: true
 });
 
 /***/ }),
