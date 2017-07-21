@@ -4,6 +4,7 @@ namespace Tests\Browser;
 
 use App\Task;
 use App\User;
+use Carbon\Carbon;
 use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -26,7 +27,7 @@ class NoteTest extends DuskTestCase
         $this->browse(function (Browser $browser) use ($user, $task) {
             $browser->loginAs($user)
                     ->visit('/task/' . $task->id)
-                    ->assertSee('Task ID: ' . $task->id)
+                    ->assertSee(Carbon::parse($task->due_date)->format('F d, Y'))
                     ->type('body', 'This is a test note')
                     ->press('Add Note')
                     ->waitForText('This is a test note')

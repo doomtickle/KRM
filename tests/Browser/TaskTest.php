@@ -35,8 +35,6 @@ class TaskTest extends DuskTestCase
                     ->assertSelected('client_id', $client->id)
                     ->select('assigned_to', $user->id)
                     ->assertSelected('assigned_to', $client->id)
-                    ->click('input.input.date-input.flatpickr-input.form-control.input')
-                    ->waitFor('.flatpickr-day')
                     ->click('.flatpickr-day')
                     ->type('description', 'Lorem ipsum dolor amet')
                     ->press('Submit')

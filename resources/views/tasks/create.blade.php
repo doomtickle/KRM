@@ -14,10 +14,7 @@
             <div class="column is-8 is-offset-2 task-description">
                 <div class="container is-fluid">
                     <div class="content">
-                        <form action="/task" method="post">
-                            {{ csrf_field() }}
-                            @include('forms.createTask')
-                        </form>
+                        @include('forms.createTask')
                     </div>
                 </div>
             </div>
