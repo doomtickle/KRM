@@ -7,13 +7,13 @@
             <div class="container">
                 <div class="columns login-container">
                     <div class="column is-4 is-offset-4">
-                        <form class="form-horizontal" method="POST" action="{{ route('login') }}">
+                        <form class="form" method="POST" action="{{ route('login') }}">
                             {{ csrf_field() }}
 
                             <div class="field {{ $errors->has('email') ? ' is-danger' : '' }}">
                                 <div class="control has-icons-right">
                                     <input id="email" type="email" class="input is-large" name="email" value="{{ old('email') }}" required autofocus placeholder="email address">
-                                    <span class="icon is-small is-right">
+                                    <span class="icon is-right">
                                       <i class="fa fa-envelope-o"></i>
                                     </span>
                                 </div>
@@ -27,7 +27,7 @@
                             <div class="field">
                                 <div class="control has-icons-right">
                                     <input id="password" type="password" class="input is-large {{ $errors->has('password') ? ' is-danger' : '' }} input" name="password" required placeholder="password">
-                                    <span class="icon is-small is-right">
+                                    <span class="icon is-right">
                                       <i class="fa fa-lock"></i>
                                     </span>
                                 </div>

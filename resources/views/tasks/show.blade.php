@@ -4,18 +4,10 @@
     <section class="hero is-info is-bold">
         <div class="hero-body">
             <div class="container is-fluid">
-                <div class="columns">
-                    <div class="column is-half">
-                        <h1 class="title">{{ $task->client->name }}</h1>
-                        <p class="subtitle">
-                            Assigned To: <strong>{{ $task->user->name }}</strong><br>
-                            Due: <strong>{{ \Carbon\Carbon::parse($task->due_date)->format('F d, Y') }}</strong></p>
-                    </div>
-                    <div class="column is-one-fourth">
-
-
-                    </div>
-                </div>
+                <h1 class="title">{{ $task->client->name }}</h1>
+                <p class="subtitle">
+                    Assigned To: <strong>{{ $task->user->name }}</strong><br>
+                    Due: <strong>{{ \Carbon\Carbon::parse($task->due_date)->format('F d, Y') }}</strong></p>
             </div>
         </div>
     </section>
