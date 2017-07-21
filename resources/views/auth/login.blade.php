@@ -10,44 +10,34 @@
                             <form class="form" method="POST" action="{{ route('login') }}">
                                 {{ csrf_field() }}
 
+                                @if ($errors->has('email'))
+                                    <div class="notification is-danger">
+                                        <p>{{ $errors->first('email') }}</p>
+                                    </div>
+                                @endif
+
+                                @if ($errors->has('password'))
+                                    <div class="notification is-danger">
+                                        <p>{{ $errors->first('password') }}</p>
+                                    </div>
+                                @endif
+
                                 <div class="field {{ $errors->has('email') ? ' is-danger' : '' }}">
                                     <div class="control has-icons-right">
                                         <input id="email" type="email" class="input is-large" name="email" value="{{ old('email') }}" required autofocus placeholder="email address">
-                                        @if ($errors->has('email'))
-                                            <span class="icon is-right">
-                                              <i class="fa fa-exclamation-triangle"></i>
-                                            </span>
-                                        @else
-                                            <span class="icon is-right">
-                                              <i class="fa fa-envelope-o"></i>
-                                            </span>
-                                        @endif
+                                        <span class="icon is-right">
+                                          <i class="fa fa-envelope-o"></i>
+                                        </span>
                                     </div>
-                                    @if ($errors->has('email'))
-                                        <div class="notification is-danger">
-                                            <p>{{ $errors->first('email') }}</p>
-                                        </div>
-                                    @endif
                                 </div>
 
                                 <div class="field">
                                     <div class="control has-icons-right">
                                         <input id="password" type="password" class="input is-large {{ $errors->has('password') ? ' is-danger' : '' }} input" name="password" required placeholder="password">
-                                        @if ($errors->has('password'))
-                                            <span class="icon is-right">
-                                              <i class="fa fa-exclamation-triangle"></i>
-                                            </span>
-                                        @else
-                                            <span class="icon is-right">
-                                              <i class="fa fa-lock"></i>
-                                            </span>
-                                        @endif
+                                        <span class="icon is-right">
+                                          <i class="fa fa-lock"></i>
+                                        </span>
                                     </div>
-                                    @if ($errors->has('password'))
-                                        <div class="notification is-danger">
-                                            <p>{{ $errors->first('password') }}</p>
-                                        </div>
-                                    @endif
                                 </div>
 
                                 <div class="columns">

@@ -11791,3 +11791,8 @@ button.button.button-block {
   width: 100%;
 }
 
+.label.is-large {
+  font-size: 1.5rem;
+  margin-top: 2.5rem;
+}
+

@@ -5,6 +5,7 @@
         <div class="hero-body">
             <div class="container is-fluid">
                 <h1 class="title">{{ $task->client->name }}</h1>
+                <p class="subtitle"><a href="mailto:{{ $task->client->email }}" >{{ $task->client->email }}</a> | <a href="tel:{{ $task->client->phone }}" >{{ $task->client->phone }}</a></p>
                 <p class="subtitle">
                     Assigned To: <strong>{{ $task->user->name }}</strong><br>
                     Due: <strong>{{ \Carbon\Carbon::parse($task->due_date)->format('F d, Y') }}</strong></p>
