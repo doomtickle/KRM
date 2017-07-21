@@ -25,8 +25,8 @@
             </div>
             <footer class="card-footer">
                 <a href="{{ route('task.show', $task->id) }}" class="card-footer-item">View</a>
-                <a class="card-footer-item">Pass On</a>
-                <a class="card-footer-item">Complete</a>
+                {{--<a class="card-footer-item">Pass On</a>--}}
+                {{--<a class="card-footer-item">Complete</a>--}}
             </footer>
         </div>
     </div>
