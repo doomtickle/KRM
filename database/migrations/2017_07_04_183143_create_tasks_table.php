@@ -20,6 +20,7 @@ class CreateTasksTable extends Migration
             $table->integer('assigned_to');
             $table->text('description');
             $table->date('due_date');
+            $table->boolean('complete')->default(false);
             $table->timestamps();
         });
     }
