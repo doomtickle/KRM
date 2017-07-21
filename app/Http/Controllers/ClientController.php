@@ -64,7 +64,7 @@ class ClientController extends Controller
      */
     public function show($id)
     {
-        $client = Client::find($id);
+        $client = Client::with('tasks')->find($id);
         return view('clients.show', compact('client'));
     }
 

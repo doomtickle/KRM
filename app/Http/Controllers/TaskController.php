@@ -91,9 +91,11 @@ class TaskController extends Controller
      */
     public function update(Request $request, Task $task)
     {
+
+        $task = Task::find($task->id);
         $task->update($request->all());
 
-        return response()->json(['response' => 'Success']);
+        return redirect()->action('HomeController@index');
     }
 
     /**
