@@ -8,7 +8,7 @@
                 <p class="subtitle">{{ $client->company }}</p>
                 <p class="subtitle">
                     Email: <strong><a href="mailto:{{ $client->email }}">{{ $client->email }}</a></strong><br>
-                    Due: <strong><a href="tel:{{ $client->phone }}">{{ $client->phone }}</a></strong></p>
+                    Phone: <strong><a href="tel:{{ $client->phone }}">{{ $client->phone }}</a></strong></p>
             </div>
         </div>
     </section>

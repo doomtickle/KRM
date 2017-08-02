@@ -43,7 +43,8 @@
                                 </div>
                                 <div class="column is-6-tablet is-one-third-desktop">
                                     <button title="Schedule follow up for a team member."
-                                            class="column button is-huge is-info is-outlined pass-on">
+                                            class="column button is-huge is-info is-outlined pass-on"
+                                            @click="$emit('open-modal')">
                                         <span class="icon">
                                             <i class="fa fa-share-square-o"></i>
                                         </span>
@@ -96,8 +97,5 @@
 
         </div>
     </section>
-@endsection
-@section('scripts.footer')
-    <script>
-    </script>
+    <pass-modal v-if="showModal" @open-modal="showModal = true"></pass-modal>
 @endsection

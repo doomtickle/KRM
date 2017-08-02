@@ -10,11 +10,10 @@ require('./bootstrap');
 window.Vue = require('vue');
 const flatpickr = require("flatpickr");
 
-/**
- * Next, we will create a fresh Vue application instance and attach it to
- * the page. Then, you may begin adding components to this application
- * or customize the JavaScript scaffolding to fit your unique needs.
- */
+Vue.component(
+    'pass-modal',
+    require('./components/PassModal.vue')
+);
 
 const app = new Vue({
     el: '#app',
@@ -46,6 +45,7 @@ const app = new Vue({
         axios.get('/task/' + this.getTaskId() + '/notes/').then(response => this.notes = response.data);
     }
 });
+
 
 flatpickr(".open-calendar", {
     altInput: true,
