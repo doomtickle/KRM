@@ -806,7 +806,8 @@ var app = new Vue({
 
     data: {
         notes: [],
-        body: ''
+        body: '',
+        activeModal: ''
     },
 
     methods: {
@@ -833,6 +834,7 @@ var app = new Vue({
         axios.get('/task/' + this.getTaskId() + '/notes/').then(function (response) {
             return _this2.notes = response.data;
         });
+        // console.log(this);
     }
 });
 
@@ -43774,7 +43776,7 @@ var Component = __webpack_require__(38)(
   /* moduleIdentifier (server only) */
   null
 )
-Component.options.__file = "D:\\dev\\KRM\\resources\\assets\\js\\components\\PassModal.vue"
+Component.options.__file = "C:\\Users\\bbair\\.valet\\Sites\\KRM\\resources\\assets\\js\\components\\PassModal.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] PassModal.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -43924,15 +43926,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     methods: {
         toggleModal: function toggleModal() {
             this.showModal = !this.showModal;
+            if (this.$parent.activeModal !== '') {
+                this.$parent.activeModal = '';
+            }
         }
     },
     mounted: function mounted() {
         console.log('Component mounted.');
-    },
 
-    created: function created() {
-        this.$on('toggleModal', function (value) {
-            toggleModal();
+        this.$parent.$on('toggleModal', function (modal) {
+            this.activeModal = modal;
         });
     }
 });
@@ -43942,21 +43945,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
-    directives: [{
-      name: "show",
-      rawName: "v-show",
-      value: (_vm.showModal),
-      expression: "showModal"
-    }],
+  return (this.$parent.activeModal === 'passOn') ? _c('div', {
     staticClass: "modal is-active"
   }, [_c('div', {
     staticClass: "modal-background"
   }), _vm._v(" "), _c('div', {
-    staticClass: "modal-content"
+    staticClass: "modal-content box"
   }, [_vm._v("\n        Test Stuff\n    ")]), _vm._v(" "), _c('button', {
-    staticClass: "modal-close is-large"
-  })])
+    staticClass: "modal-close is-large",
+    on: {
+      "click": _vm.toggleModal
+    }
+  })]) : _vm._e()
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {

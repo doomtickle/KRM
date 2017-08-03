@@ -22,6 +22,7 @@ const app = new Vue({
     data: {
         notes: [],
         body: '',
+        activeModal: ''
     },
 
     methods: {
@@ -43,7 +44,8 @@ const app = new Vue({
         }
     },
     mounted() {
-        axios.get('/task/' + this.getTaskId() + '/notes/').then(response => this.notes = response.data)
+        axios.get('/task/' + this.getTaskId() + '/notes/').then(response => this.notes = response.data);
+        // console.log(this);
     }
 });
 
