@@ -10,13 +10,14 @@ require('./bootstrap');
 window.Vue = require('vue');
 const flatpickr = require("flatpickr");
 
-Vue.component(
-    'pass-modal',
-    require('./components/PassModal.vue')
-);
+import PassModal from './components/PassModal.vue';
 
 const app = new Vue({
     el: '#app',
+
+    components: {
+        'passmodal': PassModal
+    },
 
     data: {
         notes: [],
@@ -32,17 +33,17 @@ const app = new Vue({
                 body: this.body
             })
                 .then(response => {
-                    this.notes.push(response.data);
-                    this.body = '';
+                    this.notes.push(response.data),
+                    this.body = ''
                 })
         },
         getTaskId() {
-            var url = window.location.href.split('/');
-            return url.pop();
+            var url = window.location.href.split('/')
+            return url.pop()
         }
     },
     mounted() {
-        axios.get('/task/' + this.getTaskId() + '/notes/').then(response => this.notes = response.data);
+        axios.get('/task/' + this.getTaskId() + '/notes/').then(response => this.notes = response.data)
     }
 });
 

@@ -1,5 +1,5 @@
 <template>
-    <div class="modal is-active">
+    <div class="modal is-active" v-show="showModal" >
         <div class="modal-background"></div>
         <div class="modal-content">
             Test Stuff
@@ -10,14 +10,26 @@
 
 <script>
     export default {
+        props: {
+            active: { default: false }
+        },
         data() {
             return {
-                showModal: false
+                showModal: this.active
             }
         },
-        mounted()
-        {
+        methods: {
+            toggleModal(){
+                this.showModal = !this.showModal;
+            }
+        },
+        mounted() {
             console.log('Component mounted.')
+        },
+        created: function() {
+            this.$on('toggleModal', function(value){
+                toggleModal();
+            });
         }
     }
 </script>

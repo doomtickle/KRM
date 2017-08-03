@@ -44,7 +44,7 @@
                                 <div class="column is-6-tablet is-one-third-desktop">
                                     <button title="Schedule follow up for a team member."
                                             class="column button is-huge is-info is-outlined pass-on"
-                                            @click="$emit('open-modal')">
+                                            @click="$emit('toggleModal')">
                                         <span class="icon">
                                             <i class="fa fa-share-square-o"></i>
                                         </span>
@@ -97,5 +97,5 @@
 
         </div>
     </section>
-    <pass-modal v-if="showModal" @open-modal="showModal = true"></pass-modal>
+    <passmodal :active="false" ></passmodal>
 @endsection
