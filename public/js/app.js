@@ -778,8 +778,12 @@ module.exports = __webpack_require__(41);
 
 /***/ }),
 /* 9 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_PassModal_vue__ = __webpack_require__(37);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_PassModal_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__components_PassModal_vue__);
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -791,14 +795,19 @@ __webpack_require__(10);
 window.Vue = __webpack_require__(35);
 var flatpickr = __webpack_require__(36);
 
-Vue.component('pass-modal', __webpack_require__(37));
+
 
 var app = new Vue({
     el: '#app',
 
+    components: {
+        'passmodal': __WEBPACK_IMPORTED_MODULE_0__components_PassModal_vue___default.a
+    },
+
     data: {
         notes: [],
-        body: ''
+        body: '',
+        activeModal: ''
     },
 
     methods: {
@@ -811,8 +820,7 @@ var app = new Vue({
                 task_id: taskId,
                 body: this.body
             }).then(function (response) {
-                _this.notes.push(response.data);
-                _this.body = '';
+                _this.notes.push(response.data), _this.body = '';
             });
         },
         getTaskId: function getTaskId() {
@@ -826,6 +834,7 @@ var app = new Vue({
         axios.get('/task/' + this.getTaskId() + '/notes/').then(function (response) {
             return _this2.notes = response.data;
         });
+        // console.log(this);
     }
 });
 
@@ -43767,7 +43776,7 @@ var Component = __webpack_require__(38)(
   /* moduleIdentifier (server only) */
   null
 )
-Component.options.__file = "/Users/daron/code/crm/resources/assets/js/components/PassModal.vue"
+Component.options.__file = "C:\\Users\\bbair\\.valet\\Sites\\KRM\\resources\\assets\\js\\components\\PassModal.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] PassModal.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -43778,9 +43787,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-67b8d6f4", Component.options)
+    hotAPI.createRecord("data-v-fa2428c4", Component.options)
   } else {
-    hotAPI.reload("data-v-67b8d6f4", Component.options)
+    hotAPI.reload("data-v-fa2428c4", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -43905,13 +43914,29 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        active: { default: false }
+    },
     data: function data() {
         return {
-            showModal: false
+            showModal: this.active
         };
+    },
+
+    methods: {
+        toggleModal: function toggleModal() {
+            this.showModal = !this.showModal;
+            if (this.$parent.activeModal !== '') {
+                this.$parent.activeModal = '';
+            }
+        }
     },
     mounted: function mounted() {
         console.log('Component mounted.');
+
+        this.$parent.$on('toggleModal', function (modal) {
+            this.activeModal = modal;
+        });
     }
 });
 
@@ -43920,23 +43945,24 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _vm._m(0)
-},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
+  return (this.$parent.activeModal === 'passOn') ? _c('div', {
     staticClass: "modal is-active"
   }, [_c('div', {
     staticClass: "modal-background"
   }), _vm._v(" "), _c('div', {
-    staticClass: "modal-content"
+    staticClass: "modal-content box"
   }, [_vm._v("\n        Test Stuff\n    ")]), _vm._v(" "), _c('button', {
-    staticClass: "modal-close is-large"
-  })])
-}]}
+    staticClass: "modal-close is-large",
+    on: {
+      "click": _vm.toggleModal
+    }
+  })]) : _vm._e()
+},staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-67b8d6f4", module.exports)
+     require("vue-hot-reload-api").rerender("data-v-fa2428c4", module.exports)
   }
 }
 

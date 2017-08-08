@@ -44,7 +44,7 @@
                                 <div class="column is-6-tablet is-one-third-desktop">
                                     <button title="Schedule follow up for a team member."
                                             class="column button is-huge is-info is-outlined pass-on"
-                                            @click="$emit('open-modal')">
+                                            @click="$emit('toggleModal','passOn')">
                                         <span class="icon">
                                             <i class="fa fa-share-square-o"></i>
                                         </span>
@@ -53,7 +53,8 @@
                                 </div>
                                 <div class="column is-6-tablet is-one-third-desktop">
                                     <button title="Schedule another follow-up for yourself."
-                                            class="column button is-huge is-warning is-outlined reschedule">
+                                            class="column button is-huge is-warning is-outlined reschedule"
+                                            @click="$emit('toggleModal','reschedule')">
                                         <span class="icon">
                                             <i class="fa fa-refresh"></i>
                                         </span>
@@ -97,5 +98,5 @@
 
         </div>
     </section>
-    <pass-modal v-if="showModal" @open-modal="showModal = true"></pass-modal>
+    <passmodal></passmodal>
 @endsection
