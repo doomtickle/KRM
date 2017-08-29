@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
-
     public function __construct()
     {
         $this->middleware('auth');
@@ -44,10 +43,9 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
+        $createdBy = \Auth::user()->id;
 
-       $createdBy = \Auth::user()->id; 
-
-       Task::create([
+        Task::create([
             'client_id' => $request->client_id,
             'assigned_to' => $request->assigned_to,
             'due_date' => $request->due_date,
@@ -55,7 +53,7 @@ class TaskController extends Controller
             'created_by' => $createdBy
         ]);
 
-       return redirect('/home')->with('status', 'Success');
+        return redirect('/home')->with('status', 'Success');
     }
 
     /**
@@ -91,7 +89,6 @@ class TaskController extends Controller
      */
     public function update(Request $request, Task $task)
     {
-
         $task = Task::find($task->id);
         $task->update($request->all());
 

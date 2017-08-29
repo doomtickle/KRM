@@ -168,7 +168,7 @@ createNote	tests/Feature/ReadNotesTest.php	/^    protected function createNote()
 createNote	tests/Unit/NoteTest.php	/^    protected function createNote()$/;"	f
 createNumberInput	public/js/app.js	/^	function createNumberInput(inputClassName) {$/;"	f
 createTask	tests/Feature/CompleteTasksTest.php	/^    private function createTask()$/;"	f
-createdBy	app/Http/Controllers/TaskController.php	/^       $createdBy = \\Auth::user()->id; $/;"	v
+createdBy	app/Http/Controllers/TaskController.php	/^        $createdBy = \\Auth::user()->id;$/;"	v
 date_orig	public/js/app.js	/^		var date_orig = date;$/;"	v
 debounce	public/js/app.js	/^	function debounce(func, wait, immediate) {$/;"	f
 destroy	app/Http/Controllers/ClientController.php	/^    public function destroy(Client $client)$/;"	f
