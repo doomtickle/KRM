@@ -11,42 +11,26 @@ window.Vue = require('vue');
 const flatpickr = require("flatpickr");
 
 import PassModal from './components/PassModal.vue';
+import AddNote from './components/AddNote.vue';
 
 const app = new Vue({
     el: '#app',
 
     components: {
-        'passmodal': PassModal
+        'passmodal': PassModal,
+        'addnote': AddNote
     },
 
     data: {
-        notes: [],
-        body: '',
         activeModal: ''
     },
 
     methods: {
-        addNote(userId, clientId, taskId) {
-            axios.post('/note', {
-                user_id: userId,
-                client_id: clientId,
-                task_id: taskId,
-                body: this.body
-            })
-                .then(response => {
-                    this.notes.push(response.data),
-                    this.body = ''
-                })
-        },
         getTaskId() {
-            var url = window.location.href.split('/')
-            return url.pop()
+            return window.location.href.split('/').pop()
         }
-    },
-    mounted() {
-        axios.get('/task/' + this.getTaskId() + '/notes/').then(response => this.notes = response.data);
-        // console.log(this);
     }
+
 });
 
 

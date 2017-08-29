@@ -68,31 +68,9 @@
             </div>
             <div class="column is-5 ">
 
-                <div v-for="note in notes" class="task-note">
-                    <p><strong>@{{ note.created_at }}</strong>
-                        {{--<button class="button is-info is-outlined is-small"><span class="icon"><i--}}
-                        {{--class="fa fa-pencil"></i></span></button>--}}
-                        <button class="button is-outlined is-danger is-small"><span class="icon"><i
-                                        class="fa fa-trash"></i></span></button>
-                    </p>
-                    <p v-text="note.body"></p>
-                    <hr>
-                </div>
-
-                <form action="/note" method="post" @submit.prevent>
-                    <div class="field">
-                        {{ csrf_field() }}
-                        <textarea class="textarea" rows="3" name="body" placeholder="Add a note to this task"
-                                  v-model="body"></textarea>
-                    </div>
-                    <div class="field">
-                        <button class="button is-info" @click="addNote(
-                                {{ $task->user->id }},
-                                {{ $task->client->id }},
-                                {{ $task->id }} )">Add Note
-                        </button>
-                    </div>
-                </form>
+                <addnote :id="getTaskId" :user-id="{{ $task->user->id }}" :client-id="{{ $task->client->id }}" :task-id="{{ $task->id }}" >
+                    {{ csrf_field() }}
+                </addnote>
 
             </div>
 
