@@ -74,5 +74,4 @@ class NoteTest extends TestCase
 
         return $note;
     }
-
 }

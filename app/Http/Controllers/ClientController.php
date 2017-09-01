@@ -18,7 +18,7 @@ class ClientController extends Controller
      */
     public function index()
     {
-        $clients = Client::latest()->get();
+        $clients = Client::orderBy('name', 'ASC')->get();
 
         return view('clients.index', compact('clients'));
     }

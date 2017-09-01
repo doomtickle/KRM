@@ -36,7 +36,6 @@ class CompleteTasksTest extends TestCase
 
         $task = Task::find($task->id);
         $this->assertEquals(1, $task->complete);
-
     }
 
     private function makeTask()

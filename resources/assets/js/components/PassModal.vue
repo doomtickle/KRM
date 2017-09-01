@@ -2,7 +2,7 @@
     <div class="modal is-active" v-if="this.$parent.activeModal === 'passOn'" >
         <div class="modal-background"></div>
         <div class="modal-content box">
-            Test Stuff
+            <slot>Testing</slot>
         </div>
         <button class="modal-close is-large" @click="toggleModal"></button>
     </div>

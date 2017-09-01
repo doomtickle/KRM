@@ -1,8 +1,8 @@
 <template>
     <div class="notes">
-        <div v-for="note in notes" class="task-note">
+        <div v-for="(note, index) in notes" class="task-note" v-show="showNote">
             <p><strong>{{ note.created_at }}</strong>
-                <button class="button is-outlined is-danger is-small">
+                <button class="button is-outlined is-danger is-small" @click="removeNote(index, note.id)">
                     <span class="icon"><i class="fa fa-trash"></i></span>
                 </button>
             </p>
@@ -29,13 +29,14 @@
         props: {
             userId: '',
             clientId: '',
-            taskId: ''
+            taskId: '',
         },
 
         data() {
             return {
                 notes: [],
-                body: ''
+                body: '',
+                showNote: true
             }
         },
 
@@ -59,11 +60,40 @@
                     })
             },
 
+            removeNote(index, id) {
+                var deletionStatus;
+                var self = this;
+                swal({
+                  title: "Are you sure?",
+                  text: "You will not be able to recover this note",
+                  type: "warning",
+                  showCancelButton: true,
+                  confirmButtonColor: "#DD6B55",
+                  confirmButtonText: "Yes, delete it!",
+                  cancelButtonText: "No, abort!",
+                  closeOnConfirm: false,
+                  closeOnCancel: false
+                },
+                function(isConfirm){
+                  if (isConfirm) {
+                    axios.delete('/note/' + id, {})
+                    .then(response => {
+                        if(response.data == 'Success'){
+                            self.notes.splice(index, 1);
+                        }else{
+                            alert("There was a problem deleting this task. Please let Daron know.");
+                        }
+                    });
+                    swal("Deleted!", "The note is gone forever.", "success");
+                  } else {
+                    swal("Cancelled", "Your note is safe :)", "error");
+                  }
+                });
+            }
         },
 
         mounted() {
             axios.get('/task/' + this.id + '/notes/').then(response => this.notes = response.data);
-            // console.log(this);
         }
 
     }

@@ -5,7 +5,7 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
-class CreateNotesTest extends TestCase
+class DeleteNotesTest extends TestCase
 {
     use DatabaseMigrations;
 
@@ -22,29 +22,31 @@ class CreateNotesTest extends TestCase
     }
 
     /** @test */
-    public function an_authenticated_user_can_add_a_note()
+    function a_note_can_be_deleted()
     {
         $this->signIn();
 
-        $note = $this->makeNote();
+        $note = $this->createNote();
 
-        $this->post('/note', $note->toArray());
-
-        $this->get("/task/{$this->task->id}/notes")
+        $this->get('/task/'. $this->task->id .'/notes')
             ->assertJson([
                 ['body' => $note->body]
             ]);
-    }
 
-    protected function makeNote()
-    {
-        $note = make('App\Note', [
-            'user_id'   => $this->user->id,
-            'client_id' => $this->client->id,
-            'task_id'   => $this->task->id
-        ]);
+        $this->get('/note')
+            ->assertJson([
+                ['body' => $note->body]
+            ]);
 
-        return $note;
+        $this->delete('/note/'. $note->id)
+            ->assertJsonFragment([
+                ['Success']
+            ]);
+
+        $notes = $this->get('/note')
+            ->assertJsonMissing([
+                ['body' => $note->body]
+            ]);
     }
 
     protected function createNote()

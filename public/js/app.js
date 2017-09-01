@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 9);
+/******/ 	return __webpack_require__(__webpack_require__.s = 13);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -70,8 +70,8 @@
 "use strict";
 
 
-var bind = __webpack_require__(3);
-var isBuffer = __webpack_require__(18);
+var bind = __webpack_require__(7);
+var isBuffer = __webpack_require__(22);
 
 /*global toString:true*/
 
@@ -378,10 +378,459 @@ module.exports = {
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
+
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+var hasClass = function hasClass(elem, className) {
+  return new RegExp(' ' + className + ' ').test(' ' + elem.className + ' ');
+};
+
+var addClass = function addClass(elem, className) {
+  if (!hasClass(elem, className)) {
+    elem.className += ' ' + className;
+  }
+};
+
+var removeClass = function removeClass(elem, className) {
+  var newClass = ' ' + elem.className.replace(/[\t\r\n]/g, ' ') + ' ';
+  if (hasClass(elem, className)) {
+    while (newClass.indexOf(' ' + className + ' ') >= 0) {
+      newClass = newClass.replace(' ' + className + ' ', ' ');
+    }
+    elem.className = newClass.replace(/^\s+|\s+$/g, '');
+  }
+};
+
+var escapeHtml = function escapeHtml(str) {
+  var div = document.createElement('div');
+  div.appendChild(document.createTextNode(str));
+  return div.innerHTML;
+};
+
+var _show = function _show(elem) {
+  elem.style.opacity = '';
+  elem.style.display = 'block';
+};
+
+var show = function show(elems) {
+  if (elems && !elems.length) {
+    return _show(elems);
+  }
+  for (var i = 0; i < elems.length; ++i) {
+    _show(elems[i]);
+  }
+};
+
+var _hide = function _hide(elem) {
+  elem.style.opacity = '';
+  elem.style.display = 'none';
+};
+
+var hide = function hide(elems) {
+  if (elems && !elems.length) {
+    return _hide(elems);
+  }
+  for (var i = 0; i < elems.length; ++i) {
+    _hide(elems[i]);
+  }
+};
+
+var isDescendant = function isDescendant(parent, child) {
+  var node = child.parentNode;
+  while (node !== null) {
+    if (node === parent) {
+      return true;
+    }
+    node = node.parentNode;
+  }
+  return false;
+};
+
+var getTopMargin = function getTopMargin(elem) {
+  elem.style.left = '-9999px';
+  elem.style.display = 'block';
+
+  var height = elem.clientHeight,
+      padding;
+  if (typeof getComputedStyle !== 'undefined') {
+    // IE 8
+    padding = parseInt(getComputedStyle(elem).getPropertyValue('padding-top'), 10);
+  } else {
+    padding = parseInt(elem.currentStyle.padding);
+  }
+
+  elem.style.left = '';
+  elem.style.display = 'none';
+  return '-' + parseInt((height + padding) / 2) + 'px';
+};
+
+var fadeIn = function fadeIn(elem, interval) {
+  if (+elem.style.opacity < 1) {
+    interval = interval || 16;
+    elem.style.opacity = 0;
+    elem.style.display = 'block';
+    var last = +new Date();
+    var tick = (function (_tick) {
+      function tick() {
+        return _tick.apply(this, arguments);
+      }
+
+      tick.toString = function () {
+        return _tick.toString();
+      };
+
+      return tick;
+    })(function () {
+      elem.style.opacity = +elem.style.opacity + (new Date() - last) / 100;
+      last = +new Date();
+
+      if (+elem.style.opacity < 1) {
+        setTimeout(tick, interval);
+      }
+    });
+    tick();
+  }
+  elem.style.display = 'block'; //fallback IE8
+};
+
+var fadeOut = function fadeOut(elem, interval) {
+  interval = interval || 16;
+  elem.style.opacity = 1;
+  var last = +new Date();
+  var tick = (function (_tick2) {
+    function tick() {
+      return _tick2.apply(this, arguments);
+    }
+
+    tick.toString = function () {
+      return _tick2.toString();
+    };
+
+    return tick;
+  })(function () {
+    elem.style.opacity = +elem.style.opacity - (new Date() - last) / 100;
+    last = +new Date();
+
+    if (+elem.style.opacity > 0) {
+      setTimeout(tick, interval);
+    } else {
+      elem.style.display = 'none';
+    }
+  });
+  tick();
+};
+
+var fireClick = function fireClick(node) {
+  // Taken from http://www.nonobtrusive.com/2011/11/29/programatically-fire-crossbrowser-click-event-with-javascript/
+  // Then fixed for today's Chrome browser.
+  if (typeof MouseEvent === 'function') {
+    // Up-to-date approach
+    var mevt = new MouseEvent('click', {
+      view: window,
+      bubbles: false,
+      cancelable: true
+    });
+    node.dispatchEvent(mevt);
+  } else if (document.createEvent) {
+    // Fallback
+    var evt = document.createEvent('MouseEvents');
+    evt.initEvent('click', false, false);
+    node.dispatchEvent(evt);
+  } else if (document.createEventObject) {
+    node.fireEvent('onclick');
+  } else if (typeof node.onclick === 'function') {
+    node.onclick();
+  }
+};
+
+var stopEventPropagation = function stopEventPropagation(e) {
+  // In particular, make sure the space bar doesn't scroll the main window.
+  if (typeof e.stopPropagation === 'function') {
+    e.stopPropagation();
+    e.preventDefault();
+  } else if (window.event && window.event.hasOwnProperty('cancelBubble')) {
+    window.event.cancelBubble = true;
+  }
+};
+
+exports.hasClass = hasClass;
+exports.addClass = addClass;
+exports.removeClass = removeClass;
+exports.escapeHtml = escapeHtml;
+exports._show = _show;
+exports.show = show;
+exports._hide = _hide;
+exports.hide = hide;
+exports.isDescendant = isDescendant;
+exports.getTopMargin = getTopMargin;
+exports.fadeIn = fadeIn;
+exports.fadeOut = fadeOut;
+exports.fireClick = fireClick;
+exports.stopEventPropagation = stopEventPropagation;
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+/*
+ * Allow user to pass their own params
+ */
+var extend = function extend(a, b) {
+  for (var key in b) {
+    if (b.hasOwnProperty(key)) {
+      a[key] = b[key];
+    }
+  }
+  return a;
+};
+
+/*
+ * Convert HEX codes to RGB values (#000000 -> rgb(0,0,0))
+ */
+var hexToRgb = function hexToRgb(hex) {
+  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result ? parseInt(result[1], 16) + ', ' + parseInt(result[2], 16) + ', ' + parseInt(result[3], 16) : null;
+};
+
+/*
+ * Check if the user is using Internet Explorer 8 (for fallbacks)
+ */
+var isIE8 = function isIE8() {
+  return window.attachEvent && !window.addEventListener;
+};
+
+/*
+ * IE compatible logging for developers
+ */
+var logStr = function logStr(string) {
+  if (window.console) {
+    // IE...
+    window.console.log('SweetAlert: ' + string);
+  }
+};
+
+/*
+ * Set hover, active and focus-states for buttons 
+ * (source: http://www.sitepoint.com/javascript-generate-lighter-darker-color)
+ */
+var colorLuminance = function colorLuminance(hex, lum) {
+  // Validate hex string
+  hex = String(hex).replace(/[^0-9a-f]/gi, '');
+  if (hex.length < 6) {
+    hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+  }
+  lum = lum || 0;
+
+  // Convert to decimal and change luminosity
+  var rgb = '#';
+  var c;
+  var i;
+
+  for (i = 0; i < 3; i++) {
+    c = parseInt(hex.substr(i * 2, 2), 16);
+    c = Math.round(Math.min(Math.max(0, c + c * lum), 255)).toString(16);
+    rgb += ('00' + c).substr(c.length);
+  }
+
+  return rgb;
+};
+
+exports.extend = extend;
+exports.hexToRgb = hexToRgb;
+exports.isIE8 = isIE8;
+exports.logStr = logStr;
+exports.colorLuminance = colorLuminance;
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _interopRequireWildcard = function (obj) { return obj && obj.__esModule ? obj : { 'default': obj }; };
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _hexToRgb = __webpack_require__(2);
+
+var _removeClass$getTopMargin$fadeIn$show$addClass = __webpack_require__(1);
+
+var _defaultParams = __webpack_require__(12);
+
+var _defaultParams2 = _interopRequireWildcard(_defaultParams);
+
+/*
+ * Add modal + overlay to DOM
+ */
+
+var _injectedHTML = __webpack_require__(42);
+
+var _injectedHTML2 = _interopRequireWildcard(_injectedHTML);
+
+var modalClass = '.sweet-alert';
+var overlayClass = '.sweet-overlay';
+
+var sweetAlertInitialize = function sweetAlertInitialize() {
+  var sweetWrap = document.createElement('div');
+  sweetWrap.innerHTML = _injectedHTML2['default'];
+
+  // Append elements to body
+  while (sweetWrap.firstChild) {
+    document.body.appendChild(sweetWrap.firstChild);
+  }
+};
+
+/*
+ * Get DOM element of modal
+ */
+var getModal = (function (_getModal) {
+  function getModal() {
+    return _getModal.apply(this, arguments);
+  }
+
+  getModal.toString = function () {
+    return _getModal.toString();
+  };
+
+  return getModal;
+})(function () {
+  var $modal = document.querySelector(modalClass);
+
+  if (!$modal) {
+    sweetAlertInitialize();
+    $modal = getModal();
+  }
+
+  return $modal;
+});
+
+/*
+ * Get DOM element of input (in modal)
+ */
+var getInput = function getInput() {
+  var $modal = getModal();
+  if ($modal) {
+    return $modal.querySelector('input');
+  }
+};
+
+/*
+ * Get DOM element of overlay
+ */
+var getOverlay = function getOverlay() {
+  return document.querySelector(overlayClass);
+};
+
+/*
+ * Add box-shadow style to button (depending on its chosen bg-color)
+ */
+var setFocusStyle = function setFocusStyle($button, bgColor) {
+  var rgbColor = _hexToRgb.hexToRgb(bgColor);
+  $button.style.boxShadow = '0 0 2px rgba(' + rgbColor + ', 0.8), inset 0 0 0 1px rgba(0, 0, 0, 0.05)';
+};
+
+/*
+ * Animation when opening modal
+ */
+var openModal = function openModal(callback) {
+  var $modal = getModal();
+  _removeClass$getTopMargin$fadeIn$show$addClass.fadeIn(getOverlay(), 10);
+  _removeClass$getTopMargin$fadeIn$show$addClass.show($modal);
+  _removeClass$getTopMargin$fadeIn$show$addClass.addClass($modal, 'showSweetAlert');
+  _removeClass$getTopMargin$fadeIn$show$addClass.removeClass($modal, 'hideSweetAlert');
+
+  window.previousActiveElement = document.activeElement;
+  var $okButton = $modal.querySelector('button.confirm');
+  $okButton.focus();
+
+  setTimeout(function () {
+    _removeClass$getTopMargin$fadeIn$show$addClass.addClass($modal, 'visible');
+  }, 500);
+
+  var timer = $modal.getAttribute('data-timer');
+
+  if (timer !== 'null' && timer !== '') {
+    var timerCallback = callback;
+    $modal.timeout = setTimeout(function () {
+      var doneFunctionExists = (timerCallback || null) && $modal.getAttribute('data-has-done-function') === 'true';
+      if (doneFunctionExists) {
+        timerCallback(null);
+      } else {
+        sweetAlert.close();
+      }
+    }, timer);
+  }
+};
+
+/*
+ * Reset the styling of the input
+ * (for example if errors have been shown)
+ */
+var resetInput = function resetInput() {
+  var $modal = getModal();
+  var $input = getInput();
+
+  _removeClass$getTopMargin$fadeIn$show$addClass.removeClass($modal, 'show-input');
+  $input.value = _defaultParams2['default'].inputValue;
+  $input.setAttribute('type', _defaultParams2['default'].inputType);
+  $input.setAttribute('placeholder', _defaultParams2['default'].inputPlaceholder);
+
+  resetInputError();
+};
+
+var resetInputError = function resetInputError(event) {
+  // If press enter => ignore
+  if (event && event.keyCode === 13) {
+    return false;
+  }
+
+  var $modal = getModal();
+
+  var $errorIcon = $modal.querySelector('.sa-input-error');
+  _removeClass$getTopMargin$fadeIn$show$addClass.removeClass($errorIcon, 'show');
+
+  var $errorContainer = $modal.querySelector('.sa-error-container');
+  _removeClass$getTopMargin$fadeIn$show$addClass.removeClass($errorContainer, 'show');
+};
+
+/*
+ * Set "margin-top"-property on modal based on its computed height
+ */
+var fixVerticalPosition = function fixVerticalPosition() {
+  var $modal = getModal();
+  $modal.style.marginTop = _removeClass$getTopMargin$fadeIn$show$addClass.getTopMargin(getModal());
+};
+
+exports.sweetAlertInitialize = sweetAlertInitialize;
+exports.getModal = getModal;
+exports.getOverlay = getOverlay;
+exports.getInput = getInput;
+exports.setFocusStyle = setFocusStyle;
+exports.openModal = openModal;
+exports.resetInput = resetInput;
+exports.resetInputError = resetInputError;
+exports.fixVerticalPosition = fixVerticalPosition;
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
 /* WEBPACK VAR INJECTION */(function(process) {
 
 var utils = __webpack_require__(0);
-var normalizeHeaderName = __webpack_require__(21);
+var normalizeHeaderName = __webpack_require__(25);
 
 var DEFAULT_CONTENT_TYPE = {
   'Content-Type': 'application/x-www-form-urlencoded'
@@ -397,10 +846,10 @@ function getDefaultAdapter() {
   var adapter;
   if (typeof XMLHttpRequest !== 'undefined') {
     // For browsers use XHR adapter
-    adapter = __webpack_require__(4);
+    adapter = __webpack_require__(8);
   } else if (typeof process !== 'undefined') {
     // For node use HTTP adapter
-    adapter = __webpack_require__(4);
+    adapter = __webpack_require__(8);
   }
   return adapter;
 }
@@ -471,305 +920,10 @@ utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
 
 module.exports = defaults;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(20)))
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports) {
-
-var g;
-
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1,eval)("this");
-} catch(e) {
-	// This works if the window reference is available
-	if(typeof window === "object")
-		g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
-
-/***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-module.exports = function bind(fn, thisArg) {
-  return function wrap() {
-    var args = new Array(arguments.length);
-    for (var i = 0; i < args.length; i++) {
-      args[i] = arguments[i];
-    }
-    return fn.apply(thisArg, args);
-  };
-};
-
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var utils = __webpack_require__(0);
-var settle = __webpack_require__(22);
-var buildURL = __webpack_require__(24);
-var parseHeaders = __webpack_require__(25);
-var isURLSameOrigin = __webpack_require__(26);
-var createError = __webpack_require__(5);
-var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(27);
-
-module.exports = function xhrAdapter(config) {
-  return new Promise(function dispatchXhrRequest(resolve, reject) {
-    var requestData = config.data;
-    var requestHeaders = config.headers;
-
-    if (utils.isFormData(requestData)) {
-      delete requestHeaders['Content-Type']; // Let the browser set it
-    }
-
-    var request = new XMLHttpRequest();
-    var loadEvent = 'onreadystatechange';
-    var xDomain = false;
-
-    // For IE 8/9 CORS support
-    // Only supports POST and GET calls and doesn't returns the response headers.
-    // DON'T do this for testing b/c XMLHttpRequest is mocked, not XDomainRequest.
-    if ("development" !== 'test' &&
-        typeof window !== 'undefined' &&
-        window.XDomainRequest && !('withCredentials' in request) &&
-        !isURLSameOrigin(config.url)) {
-      request = new window.XDomainRequest();
-      loadEvent = 'onload';
-      xDomain = true;
-      request.onprogress = function handleProgress() {};
-      request.ontimeout = function handleTimeout() {};
-    }
-
-    // HTTP basic authentication
-    if (config.auth) {
-      var username = config.auth.username || '';
-      var password = config.auth.password || '';
-      requestHeaders.Authorization = 'Basic ' + btoa(username + ':' + password);
-    }
-
-    request.open(config.method.toUpperCase(), buildURL(config.url, config.params, config.paramsSerializer), true);
-
-    // Set the request timeout in MS
-    request.timeout = config.timeout;
-
-    // Listen for ready state
-    request[loadEvent] = function handleLoad() {
-      if (!request || (request.readyState !== 4 && !xDomain)) {
-        return;
-      }
-
-      // The request errored out and we didn't get a response, this will be
-      // handled by onerror instead
-      // With one exception: request that using file: protocol, most browsers
-      // will return status as 0 even though it's a successful request
-      if (request.status === 0 && !(request.responseURL && request.responseURL.indexOf('file:') === 0)) {
-        return;
-      }
-
-      // Prepare the response
-      var responseHeaders = 'getAllResponseHeaders' in request ? parseHeaders(request.getAllResponseHeaders()) : null;
-      var responseData = !config.responseType || config.responseType === 'text' ? request.responseText : request.response;
-      var response = {
-        data: responseData,
-        // IE sends 1223 instead of 204 (https://github.com/mzabriskie/axios/issues/201)
-        status: request.status === 1223 ? 204 : request.status,
-        statusText: request.status === 1223 ? 'No Content' : request.statusText,
-        headers: responseHeaders,
-        config: config,
-        request: request
-      };
-
-      settle(resolve, reject, response);
-
-      // Clean up request
-      request = null;
-    };
-
-    // Handle low level network errors
-    request.onerror = function handleError() {
-      // Real errors are hidden from us by the browser
-      // onerror should only fire if it's a network error
-      reject(createError('Network Error', config, null, request));
-
-      // Clean up request
-      request = null;
-    };
-
-    // Handle timeout
-    request.ontimeout = function handleTimeout() {
-      reject(createError('timeout of ' + config.timeout + 'ms exceeded', config, 'ECONNABORTED',
-        request));
-
-      // Clean up request
-      request = null;
-    };
-
-    // Add xsrf header
-    // This is only done if running in a standard browser environment.
-    // Specifically not if we're in a web worker, or react-native.
-    if (utils.isStandardBrowserEnv()) {
-      var cookies = __webpack_require__(28);
-
-      // Add xsrf header
-      var xsrfValue = (config.withCredentials || isURLSameOrigin(config.url)) && config.xsrfCookieName ?
-          cookies.read(config.xsrfCookieName) :
-          undefined;
-
-      if (xsrfValue) {
-        requestHeaders[config.xsrfHeaderName] = xsrfValue;
-      }
-    }
-
-    // Add headers to the request
-    if ('setRequestHeader' in request) {
-      utils.forEach(requestHeaders, function setRequestHeader(val, key) {
-        if (typeof requestData === 'undefined' && key.toLowerCase() === 'content-type') {
-          // Remove Content-Type if data is undefined
-          delete requestHeaders[key];
-        } else {
-          // Otherwise add header to the request
-          request.setRequestHeader(key, val);
-        }
-      });
-    }
-
-    // Add withCredentials to request if needed
-    if (config.withCredentials) {
-      request.withCredentials = true;
-    }
-
-    // Add responseType to request if needed
-    if (config.responseType) {
-      try {
-        request.responseType = config.responseType;
-      } catch (e) {
-        // Expected DOMException thrown by browsers not compatible XMLHttpRequest Level 2.
-        // But, this can be suppressed for 'json' type as it can be parsed by default 'transformResponse' function.
-        if (config.responseType !== 'json') {
-          throw e;
-        }
-      }
-    }
-
-    // Handle progress if needed
-    if (typeof config.onDownloadProgress === 'function') {
-      request.addEventListener('progress', config.onDownloadProgress);
-    }
-
-    // Not all browsers support upload events
-    if (typeof config.onUploadProgress === 'function' && request.upload) {
-      request.upload.addEventListener('progress', config.onUploadProgress);
-    }
-
-    if (config.cancelToken) {
-      // Handle cancellation
-      config.cancelToken.promise.then(function onCanceled(cancel) {
-        if (!request) {
-          return;
-        }
-
-        request.abort();
-        reject(cancel);
-        // Clean up request
-        request = null;
-      });
-    }
-
-    if (requestData === undefined) {
-      requestData = null;
-    }
-
-    // Send the request
-    request.send(requestData);
-  });
-};
-
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(24)))
 
 /***/ }),
 /* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var enhanceError = __webpack_require__(23);
-
-/**
- * Create an Error with the specified message, config, error code, request and response.
- *
- * @param {string} message The error message.
- * @param {Object} config The config.
- * @param {string} [code] The error code (for example, 'ECONNABORTED').
- * @param {Object} [request] The request.
- * @param {Object} [response] The response.
- * @returns {Error} The created error.
- */
-module.exports = function createError(message, config, code, request, response) {
-  var error = new Error(message);
-  return enhanceError(error, config, code, request, response);
-};
-
-
-/***/ }),
-/* 6 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-module.exports = function isCancel(value) {
-  return !!(value && value.__CANCEL__);
-};
-
-
-/***/ }),
-/* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-/**
- * A `Cancel` is an object that is thrown when an operation is canceled.
- *
- * @class
- * @param {string=} message The message.
- */
-function Cancel(message) {
-  this.message = message;
-}
-
-Cancel.prototype.toString = function toString() {
-  return 'Cancel' + (this.message ? ': ' + this.message : '');
-};
-
-Cancel.prototype.__CANCEL__ = true;
-
-module.exports = Cancel;
-
-
-/***/ }),
-/* 8 */
 /***/ (function(module, exports) {
 
 /* globals __VUE_SSR_CONTEXT__ */
@@ -866,33 +1020,375 @@ module.exports = function normalizeComponent (
 
 
 /***/ }),
+/* 6 */
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || Function("return this")() || (1,eval)("this");
+} catch(e) {
+	// This works if the window reference is available
+	if(typeof window === "object")
+		g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function bind(fn, thisArg) {
+  return function wrap() {
+    var args = new Array(arguments.length);
+    for (var i = 0; i < args.length; i++) {
+      args[i] = arguments[i];
+    }
+    return fn.apply(thisArg, args);
+  };
+};
+
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var utils = __webpack_require__(0);
+var settle = __webpack_require__(26);
+var buildURL = __webpack_require__(28);
+var parseHeaders = __webpack_require__(29);
+var isURLSameOrigin = __webpack_require__(30);
+var createError = __webpack_require__(9);
+var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(31);
+
+module.exports = function xhrAdapter(config) {
+  return new Promise(function dispatchXhrRequest(resolve, reject) {
+    var requestData = config.data;
+    var requestHeaders = config.headers;
+
+    if (utils.isFormData(requestData)) {
+      delete requestHeaders['Content-Type']; // Let the browser set it
+    }
+
+    var request = new XMLHttpRequest();
+    var loadEvent = 'onreadystatechange';
+    var xDomain = false;
+
+    // For IE 8/9 CORS support
+    // Only supports POST and GET calls and doesn't returns the response headers.
+    // DON'T do this for testing b/c XMLHttpRequest is mocked, not XDomainRequest.
+    if ("development" !== 'test' &&
+        typeof window !== 'undefined' &&
+        window.XDomainRequest && !('withCredentials' in request) &&
+        !isURLSameOrigin(config.url)) {
+      request = new window.XDomainRequest();
+      loadEvent = 'onload';
+      xDomain = true;
+      request.onprogress = function handleProgress() {};
+      request.ontimeout = function handleTimeout() {};
+    }
+
+    // HTTP basic authentication
+    if (config.auth) {
+      var username = config.auth.username || '';
+      var password = config.auth.password || '';
+      requestHeaders.Authorization = 'Basic ' + btoa(username + ':' + password);
+    }
+
+    request.open(config.method.toUpperCase(), buildURL(config.url, config.params, config.paramsSerializer), true);
+
+    // Set the request timeout in MS
+    request.timeout = config.timeout;
+
+    // Listen for ready state
+    request[loadEvent] = function handleLoad() {
+      if (!request || (request.readyState !== 4 && !xDomain)) {
+        return;
+      }
+
+      // The request errored out and we didn't get a response, this will be
+      // handled by onerror instead
+      // With one exception: request that using file: protocol, most browsers
+      // will return status as 0 even though it's a successful request
+      if (request.status === 0 && !(request.responseURL && request.responseURL.indexOf('file:') === 0)) {
+        return;
+      }
+
+      // Prepare the response
+      var responseHeaders = 'getAllResponseHeaders' in request ? parseHeaders(request.getAllResponseHeaders()) : null;
+      var responseData = !config.responseType || config.responseType === 'text' ? request.responseText : request.response;
+      var response = {
+        data: responseData,
+        // IE sends 1223 instead of 204 (https://github.com/mzabriskie/axios/issues/201)
+        status: request.status === 1223 ? 204 : request.status,
+        statusText: request.status === 1223 ? 'No Content' : request.statusText,
+        headers: responseHeaders,
+        config: config,
+        request: request
+      };
+
+      settle(resolve, reject, response);
+
+      // Clean up request
+      request = null;
+    };
+
+    // Handle low level network errors
+    request.onerror = function handleError() {
+      // Real errors are hidden from us by the browser
+      // onerror should only fire if it's a network error
+      reject(createError('Network Error', config, null, request));
+
+      // Clean up request
+      request = null;
+    };
+
+    // Handle timeout
+    request.ontimeout = function handleTimeout() {
+      reject(createError('timeout of ' + config.timeout + 'ms exceeded', config, 'ECONNABORTED',
+        request));
+
+      // Clean up request
+      request = null;
+    };
+
+    // Add xsrf header
+    // This is only done if running in a standard browser environment.
+    // Specifically not if we're in a web worker, or react-native.
+    if (utils.isStandardBrowserEnv()) {
+      var cookies = __webpack_require__(32);
+
+      // Add xsrf header
+      var xsrfValue = (config.withCredentials || isURLSameOrigin(config.url)) && config.xsrfCookieName ?
+          cookies.read(config.xsrfCookieName) :
+          undefined;
+
+      if (xsrfValue) {
+        requestHeaders[config.xsrfHeaderName] = xsrfValue;
+      }
+    }
+
+    // Add headers to the request
+    if ('setRequestHeader' in request) {
+      utils.forEach(requestHeaders, function setRequestHeader(val, key) {
+        if (typeof requestData === 'undefined' && key.toLowerCase() === 'content-type') {
+          // Remove Content-Type if data is undefined
+          delete requestHeaders[key];
+        } else {
+          // Otherwise add header to the request
+          request.setRequestHeader(key, val);
+        }
+      });
+    }
+
+    // Add withCredentials to request if needed
+    if (config.withCredentials) {
+      request.withCredentials = true;
+    }
+
+    // Add responseType to request if needed
+    if (config.responseType) {
+      try {
+        request.responseType = config.responseType;
+      } catch (e) {
+        // Expected DOMException thrown by browsers not compatible XMLHttpRequest Level 2.
+        // But, this can be suppressed for 'json' type as it can be parsed by default 'transformResponse' function.
+        if (config.responseType !== 'json') {
+          throw e;
+        }
+      }
+    }
+
+    // Handle progress if needed
+    if (typeof config.onDownloadProgress === 'function') {
+      request.addEventListener('progress', config.onDownloadProgress);
+    }
+
+    // Not all browsers support upload events
+    if (typeof config.onUploadProgress === 'function' && request.upload) {
+      request.upload.addEventListener('progress', config.onUploadProgress);
+    }
+
+    if (config.cancelToken) {
+      // Handle cancellation
+      config.cancelToken.promise.then(function onCanceled(cancel) {
+        if (!request) {
+          return;
+        }
+
+        request.abort();
+        reject(cancel);
+        // Clean up request
+        request = null;
+      });
+    }
+
+    if (requestData === undefined) {
+      requestData = null;
+    }
+
+    // Send the request
+    request.send(requestData);
+  });
+};
+
+
+/***/ }),
 /* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(10);
-module.exports = __webpack_require__(44);
+"use strict";
+
+
+var enhanceError = __webpack_require__(27);
+
+/**
+ * Create an Error with the specified message, config, error code, request and response.
+ *
+ * @param {string} message The error message.
+ * @param {Object} config The config.
+ * @param {string} [code] The error code (for example, 'ECONNABORTED').
+ * @param {Object} [request] The request.
+ * @param {Object} [response] The response.
+ * @returns {Error} The created error.
+ */
+module.exports = function createError(message, config, code, request, response) {
+  var error = new Error(message);
+  return enhanceError(error, config, code, request, response);
+};
 
 
 /***/ }),
 /* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function isCancel(value) {
+  return !!(value && value.__CANCEL__);
+};
+
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/**
+ * A `Cancel` is an object that is thrown when an operation is canceled.
+ *
+ * @class
+ * @param {string=} message The message.
+ */
+function Cancel(message) {
+  this.message = message;
+}
+
+Cancel.prototype.toString = function toString() {
+  return 'Cancel' + (this.message ? ': ' + this.message : '');
+};
+
+Cancel.prototype.__CANCEL__ = true;
+
+module.exports = Cancel;
+
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+var defaultParams = {
+  title: '',
+  text: '',
+  type: null,
+  allowOutsideClick: false,
+  showConfirmButton: true,
+  showCancelButton: false,
+  closeOnConfirm: true,
+  closeOnCancel: true,
+  confirmButtonText: 'OK',
+  confirmButtonColor: '#8CD4F5',
+  cancelButtonText: 'Cancel',
+  imageUrl: null,
+  imageSize: null,
+  timer: null,
+  customClass: '',
+  html: false,
+  animation: true,
+  allowEscapeKey: true,
+  inputType: 'text',
+  inputPlaceholder: '',
+  inputValue: '',
+  showLoaderOnConfirm: false
+};
+
+exports['default'] = defaultParams;
+module.exports = exports['default'];
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(14);
+module.exports = __webpack_require__(61);
+
+
+/***/ }),
+/* 14 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_PassModal_vue__ = __webpack_require__(38);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_PassModal_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__components_PassModal_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_AddNote_vue__ = __webpack_require__(41);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_AddNote_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__components_AddNote_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_flatpickr_component__ = __webpack_require__(68);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_flatpickr_component___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue_flatpickr_component__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_PassModal_vue__ = __webpack_require__(47);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_PassModal_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__components_PassModal_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_AddNote_vue__ = __webpack_require__(50);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_AddNote_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__components_AddNote_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_FlatPickr_vue__ = __webpack_require__(53);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_FlatPickr_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__components_FlatPickr_vue__);
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-__webpack_require__(11);
+__webpack_require__(15);
 
-window.Vue = __webpack_require__(36);
-var flatpickr = __webpack_require__(37);
+window.Vue = __webpack_require__(40);
+__webpack_require__(41);
+
+
+
+var flatpickr = __webpack_require__(46);
+
 
 
 
@@ -901,8 +1397,9 @@ var app = new Vue({
     el: '#app',
 
     components: {
-        'passmodal': __WEBPACK_IMPORTED_MODULE_0__components_PassModal_vue___default.a,
-        'addnote': __WEBPACK_IMPORTED_MODULE_1__components_AddNote_vue___default.a
+        'passmodal': __WEBPACK_IMPORTED_MODULE_1__components_PassModal_vue___default.a,
+        'addnote': __WEBPACK_IMPORTED_MODULE_2__components_AddNote_vue___default.a,
+        'flatPickr': __WEBPACK_IMPORTED_MODULE_3__components_FlatPickr_vue___default.a
     },
 
     data: {
@@ -925,11 +1422,11 @@ flatpickr(".open-calendar", {
 });
 
 /***/ }),
-/* 11 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
-window._ = __webpack_require__(12);
+window._ = __webpack_require__(16);
 
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support
@@ -938,9 +1435,9 @@ window._ = __webpack_require__(12);
  */
 
 try {
-  window.$ = window.jQuery = __webpack_require__(14);
+  window.$ = window.jQuery = __webpack_require__(18);
 
-  __webpack_require__(15);
+  __webpack_require__(19);
 } catch (e) {}
 
 /**
@@ -949,7 +1446,7 @@ try {
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
 
-window.axios = __webpack_require__(16);
+window.axios = __webpack_require__(20);
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
@@ -983,7 +1480,7 @@ if (token) {
 // });
 
 /***/ }),
-/* 12 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, module) {var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -18072,10 +18569,10 @@ if (token) {
   }
 }.call(this));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2), __webpack_require__(13)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6), __webpack_require__(17)(module)))
 
 /***/ }),
-/* 13 */
+/* 17 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
@@ -18103,7 +18600,7 @@ module.exports = function(module) {
 
 
 /***/ }),
-/* 14 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -28363,7 +28860,7 @@ return jQuery;
 
 
 /***/ }),
-/* 15 */
+/* 19 */
 /***/ (function(module, exports) {
 
 /*!
@@ -30746,22 +31243,22 @@ if (typeof jQuery === 'undefined') {
 
 
 /***/ }),
-/* 16 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(17);
+module.exports = __webpack_require__(21);
 
 /***/ }),
-/* 17 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var utils = __webpack_require__(0);
-var bind = __webpack_require__(3);
-var Axios = __webpack_require__(19);
-var defaults = __webpack_require__(1);
+var bind = __webpack_require__(7);
+var Axios = __webpack_require__(23);
+var defaults = __webpack_require__(4);
 
 /**
  * Create an instance of Axios
@@ -30794,15 +31291,15 @@ axios.create = function create(instanceConfig) {
 };
 
 // Expose Cancel & CancelToken
-axios.Cancel = __webpack_require__(7);
-axios.CancelToken = __webpack_require__(34);
-axios.isCancel = __webpack_require__(6);
+axios.Cancel = __webpack_require__(11);
+axios.CancelToken = __webpack_require__(38);
+axios.isCancel = __webpack_require__(10);
 
 // Expose all/spread
 axios.all = function all(promises) {
   return Promise.all(promises);
 };
-axios.spread = __webpack_require__(35);
+axios.spread = __webpack_require__(39);
 
 module.exports = axios;
 
@@ -30811,7 +31308,7 @@ module.exports.default = axios;
 
 
 /***/ }),
-/* 18 */
+/* 22 */
 /***/ (function(module, exports) {
 
 /*!
@@ -30838,18 +31335,18 @@ function isSlowBuffer (obj) {
 
 
 /***/ }),
-/* 19 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var defaults = __webpack_require__(1);
+var defaults = __webpack_require__(4);
 var utils = __webpack_require__(0);
-var InterceptorManager = __webpack_require__(29);
-var dispatchRequest = __webpack_require__(30);
-var isAbsoluteURL = __webpack_require__(32);
-var combineURLs = __webpack_require__(33);
+var InterceptorManager = __webpack_require__(33);
+var dispatchRequest = __webpack_require__(34);
+var isAbsoluteURL = __webpack_require__(36);
+var combineURLs = __webpack_require__(37);
 
 /**
  * Create a new instance of Axios
@@ -30931,7 +31428,7 @@ module.exports = Axios;
 
 
 /***/ }),
-/* 20 */
+/* 24 */
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -31121,7 +31618,7 @@ process.umask = function() { return 0; };
 
 
 /***/ }),
-/* 21 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -31140,13 +31637,13 @@ module.exports = function normalizeHeaderName(headers, normalizedName) {
 
 
 /***/ }),
-/* 22 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var createError = __webpack_require__(5);
+var createError = __webpack_require__(9);
 
 /**
  * Resolve or reject a Promise based on response status.
@@ -31173,7 +31670,7 @@ module.exports = function settle(resolve, reject, response) {
 
 
 /***/ }),
-/* 23 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -31201,7 +31698,7 @@ module.exports = function enhanceError(error, config, code, request, response) {
 
 
 /***/ }),
-/* 24 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -31276,7 +31773,7 @@ module.exports = function buildURL(url, params, paramsSerializer) {
 
 
 /***/ }),
-/* 25 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -31320,7 +31817,7 @@ module.exports = function parseHeaders(headers) {
 
 
 /***/ }),
-/* 26 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -31395,7 +31892,7 @@ module.exports = (
 
 
 /***/ }),
-/* 27 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -31438,7 +31935,7 @@ module.exports = btoa;
 
 
 /***/ }),
-/* 28 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -31498,7 +31995,7 @@ module.exports = (
 
 
 /***/ }),
-/* 29 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -31557,16 +32054,16 @@ module.exports = InterceptorManager;
 
 
 /***/ }),
-/* 30 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var utils = __webpack_require__(0);
-var transformData = __webpack_require__(31);
-var isCancel = __webpack_require__(6);
-var defaults = __webpack_require__(1);
+var transformData = __webpack_require__(35);
+var isCancel = __webpack_require__(10);
+var defaults = __webpack_require__(4);
 
 /**
  * Throws a `Cancel` if cancellation has been requested.
@@ -31643,7 +32140,7 @@ module.exports = function dispatchRequest(config) {
 
 
 /***/ }),
-/* 31 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -31670,7 +32167,7 @@ module.exports = function transformData(data, headers, fns) {
 
 
 /***/ }),
-/* 32 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -31691,7 +32188,7 @@ module.exports = function isAbsoluteURL(url) {
 
 
 /***/ }),
-/* 33 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -31712,13 +32209,13 @@ module.exports = function combineURLs(baseURL, relativeURL) {
 
 
 /***/ }),
-/* 34 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var Cancel = __webpack_require__(7);
+var Cancel = __webpack_require__(11);
 
 /**
  * A `CancelToken` is an object that can be used to request cancellation of an operation.
@@ -31776,7 +32273,7 @@ module.exports = CancelToken;
 
 
 /***/ }),
-/* 35 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -31810,7 +32307,7 @@ module.exports = function spread(callback) {
 
 
 /***/ }),
-/* 36 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -41902,10 +42399,824 @@ Vue$3.compile = compileToFunctions;
 
 module.exports = Vue$3;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
 
 /***/ }),
-/* 37 */
+/* 41 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _interopRequireWildcard = function (obj) { return obj && obj.__esModule ? obj : { 'default': obj }; };
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+// SweetAlert
+// 2014-2015 (c) - Tristan Edwards
+// github.com/t4t5/sweetalert
+
+/*
+ * jQuery-like functions for manipulating the DOM
+ */
+
+var _hasClass$addClass$removeClass$escapeHtml$_show$show$_hide$hide$isDescendant$getTopMargin$fadeIn$fadeOut$fireClick$stopEventPropagation = __webpack_require__(1);
+
+/*
+ * Handy utilities
+ */
+
+var _extend$hexToRgb$isIE8$logStr$colorLuminance = __webpack_require__(2);
+
+/*
+ *  Handle sweetAlert's DOM elements
+ */
+
+var _sweetAlertInitialize$getModal$getOverlay$getInput$setFocusStyle$openModal$resetInput$fixVerticalPosition = __webpack_require__(3);
+
+// Handle button events and keyboard events
+
+var _handleButton$handleConfirm$handleCancel = __webpack_require__(43);
+
+var _handleKeyDown = __webpack_require__(44);
+
+var _handleKeyDown2 = _interopRequireWildcard(_handleKeyDown);
+
+// Default values
+
+var _defaultParams = __webpack_require__(12);
+
+var _defaultParams2 = _interopRequireWildcard(_defaultParams);
+
+var _setParameters = __webpack_require__(45);
+
+var _setParameters2 = _interopRequireWildcard(_setParameters);
+
+/*
+ * Remember state in cases where opening and handling a modal will fiddle with it.
+ * (We also use window.previousActiveElement as a global variable)
+ */
+var previousWindowKeyDown;
+var lastFocusedButton;
+
+/*
+ * Global sweetAlert function
+ * (this is what the user calls)
+ */
+var sweetAlert, swal;
+
+exports['default'] = sweetAlert = swal = function () {
+  var customizations = arguments[0];
+
+  _hasClass$addClass$removeClass$escapeHtml$_show$show$_hide$hide$isDescendant$getTopMargin$fadeIn$fadeOut$fireClick$stopEventPropagation.addClass(document.body, 'stop-scrolling');
+  _sweetAlertInitialize$getModal$getOverlay$getInput$setFocusStyle$openModal$resetInput$fixVerticalPosition.resetInput();
+
+  /*
+   * Use argument if defined or default value from params object otherwise.
+   * Supports the case where a default value is boolean true and should be
+   * overridden by a corresponding explicit argument which is boolean false.
+   */
+  function argumentOrDefault(key) {
+    var args = customizations;
+    return args[key] === undefined ? _defaultParams2['default'][key] : args[key];
+  }
+
+  if (customizations === undefined) {
+    _extend$hexToRgb$isIE8$logStr$colorLuminance.logStr('SweetAlert expects at least 1 attribute!');
+    return false;
+  }
+
+  var params = _extend$hexToRgb$isIE8$logStr$colorLuminance.extend({}, _defaultParams2['default']);
+
+  switch (typeof customizations) {
+
+    // Ex: swal("Hello", "Just testing", "info");
+    case 'string':
+      params.title = customizations;
+      params.text = arguments[1] || '';
+      params.type = arguments[2] || '';
+      break;
+
+    // Ex: swal({ title:"Hello", text: "Just testing", type: "info" });
+    case 'object':
+      if (customizations.title === undefined) {
+        _extend$hexToRgb$isIE8$logStr$colorLuminance.logStr('Missing "title" argument!');
+        return false;
+      }
+
+      params.title = customizations.title;
+
+      for (var customName in _defaultParams2['default']) {
+        params[customName] = argumentOrDefault(customName);
+      }
+
+      // Show "Confirm" instead of "OK" if cancel button is visible
+      params.confirmButtonText = params.showCancelButton ? 'Confirm' : _defaultParams2['default'].confirmButtonText;
+      params.confirmButtonText = argumentOrDefault('confirmButtonText');
+
+      // Callback function when clicking on "OK"/"Cancel"
+      params.doneFunction = arguments[1] || null;
+
+      break;
+
+    default:
+      _extend$hexToRgb$isIE8$logStr$colorLuminance.logStr('Unexpected type of argument! Expected "string" or "object", got ' + typeof customizations);
+      return false;
+
+  }
+
+  _setParameters2['default'](params);
+  _sweetAlertInitialize$getModal$getOverlay$getInput$setFocusStyle$openModal$resetInput$fixVerticalPosition.fixVerticalPosition();
+  _sweetAlertInitialize$getModal$getOverlay$getInput$setFocusStyle$openModal$resetInput$fixVerticalPosition.openModal(arguments[1]);
+
+  // Modal interactions
+  var modal = _sweetAlertInitialize$getModal$getOverlay$getInput$setFocusStyle$openModal$resetInput$fixVerticalPosition.getModal();
+
+  /*
+   * Make sure all modal buttons respond to all events
+   */
+  var $buttons = modal.querySelectorAll('button');
+  var buttonEvents = ['onclick', 'onmouseover', 'onmouseout', 'onmousedown', 'onmouseup', 'onfocus'];
+  var onButtonEvent = function onButtonEvent(e) {
+    return _handleButton$handleConfirm$handleCancel.handleButton(e, params, modal);
+  };
+
+  for (var btnIndex = 0; btnIndex < $buttons.length; btnIndex++) {
+    for (var evtIndex = 0; evtIndex < buttonEvents.length; evtIndex++) {
+      var btnEvt = buttonEvents[evtIndex];
+      $buttons[btnIndex][btnEvt] = onButtonEvent;
+    }
+  }
+
+  // Clicking outside the modal dismisses it (if allowed by user)
+  _sweetAlertInitialize$getModal$getOverlay$getInput$setFocusStyle$openModal$resetInput$fixVerticalPosition.getOverlay().onclick = onButtonEvent;
+
+  previousWindowKeyDown = window.onkeydown;
+
+  var onKeyEvent = function onKeyEvent(e) {
+    return _handleKeyDown2['default'](e, params, modal);
+  };
+  window.onkeydown = onKeyEvent;
+
+  window.onfocus = function () {
+    // When the user has focused away and focused back from the whole window.
+    setTimeout(function () {
+      // Put in a timeout to jump out of the event sequence.
+      // Calling focus() in the event sequence confuses things.
+      if (lastFocusedButton !== undefined) {
+        lastFocusedButton.focus();
+        lastFocusedButton = undefined;
+      }
+    }, 0);
+  };
+
+  // Show alert with enabled buttons always
+  swal.enableButtons();
+};
+
+/*
+ * Set default params for each popup
+ * @param {Object} userParams
+ */
+sweetAlert.setDefaults = swal.setDefaults = function (userParams) {
+  if (!userParams) {
+    throw new Error('userParams is required');
+  }
+  if (typeof userParams !== 'object') {
+    throw new Error('userParams has to be a object');
+  }
+
+  _extend$hexToRgb$isIE8$logStr$colorLuminance.extend(_defaultParams2['default'], userParams);
+};
+
+/*
+ * Animation when closing modal
+ */
+sweetAlert.close = swal.close = function () {
+  var modal = _sweetAlertInitialize$getModal$getOverlay$getInput$setFocusStyle$openModal$resetInput$fixVerticalPosition.getModal();
+
+  _hasClass$addClass$removeClass$escapeHtml$_show$show$_hide$hide$isDescendant$getTopMargin$fadeIn$fadeOut$fireClick$stopEventPropagation.fadeOut(_sweetAlertInitialize$getModal$getOverlay$getInput$setFocusStyle$openModal$resetInput$fixVerticalPosition.getOverlay(), 5);
+  _hasClass$addClass$removeClass$escapeHtml$_show$show$_hide$hide$isDescendant$getTopMargin$fadeIn$fadeOut$fireClick$stopEventPropagation.fadeOut(modal, 5);
+  _hasClass$addClass$removeClass$escapeHtml$_show$show$_hide$hide$isDescendant$getTopMargin$fadeIn$fadeOut$fireClick$stopEventPropagation.removeClass(modal, 'showSweetAlert');
+  _hasClass$addClass$removeClass$escapeHtml$_show$show$_hide$hide$isDescendant$getTopMargin$fadeIn$fadeOut$fireClick$stopEventPropagation.addClass(modal, 'hideSweetAlert');
+  _hasClass$addClass$removeClass$escapeHtml$_show$show$_hide$hide$isDescendant$getTopMargin$fadeIn$fadeOut$fireClick$stopEventPropagation.removeClass(modal, 'visible');
+
+  /*
+   * Reset icon animations
+   */
+  var $successIcon = modal.querySelector('.sa-icon.sa-success');
+  _hasClass$addClass$removeClass$escapeHtml$_show$show$_hide$hide$isDescendant$getTopMargin$fadeIn$fadeOut$fireClick$stopEventPropagation.removeClass($successIcon, 'animate');
+  _hasClass$addClass$removeClass$escapeHtml$_show$show$_hide$hide$isDescendant$getTopMargin$fadeIn$fadeOut$fireClick$stopEventPropagation.removeClass($successIcon.querySelector('.sa-tip'), 'animateSuccessTip');
+  _hasClass$addClass$removeClass$escapeHtml$_show$show$_hide$hide$isDescendant$getTopMargin$fadeIn$fadeOut$fireClick$stopEventPropagation.removeClass($successIcon.querySelector('.sa-long'), 'animateSuccessLong');
+
+  var $errorIcon = modal.querySelector('.sa-icon.sa-error');
+  _hasClass$addClass$removeClass$escapeHtml$_show$show$_hide$hide$isDescendant$getTopMargin$fadeIn$fadeOut$fireClick$stopEventPropagation.removeClass($errorIcon, 'animateErrorIcon');
+  _hasClass$addClass$removeClass$escapeHtml$_show$show$_hide$hide$isDescendant$getTopMargin$fadeIn$fadeOut$fireClick$stopEventPropagation.removeClass($errorIcon.querySelector('.sa-x-mark'), 'animateXMark');
+
+  var $warningIcon = modal.querySelector('.sa-icon.sa-warning');
+  _hasClass$addClass$removeClass$escapeHtml$_show$show$_hide$hide$isDescendant$getTopMargin$fadeIn$fadeOut$fireClick$stopEventPropagation.removeClass($warningIcon, 'pulseWarning');
+  _hasClass$addClass$removeClass$escapeHtml$_show$show$_hide$hide$isDescendant$getTopMargin$fadeIn$fadeOut$fireClick$stopEventPropagation.removeClass($warningIcon.querySelector('.sa-body'), 'pulseWarningIns');
+  _hasClass$addClass$removeClass$escapeHtml$_show$show$_hide$hide$isDescendant$getTopMargin$fadeIn$fadeOut$fireClick$stopEventPropagation.removeClass($warningIcon.querySelector('.sa-dot'), 'pulseWarningIns');
+
+  // Reset custom class (delay so that UI changes aren't visible)
+  setTimeout(function () {
+    var customClass = modal.getAttribute('data-custom-class');
+    _hasClass$addClass$removeClass$escapeHtml$_show$show$_hide$hide$isDescendant$getTopMargin$fadeIn$fadeOut$fireClick$stopEventPropagation.removeClass(modal, customClass);
+  }, 300);
+
+  // Make page scrollable again
+  _hasClass$addClass$removeClass$escapeHtml$_show$show$_hide$hide$isDescendant$getTopMargin$fadeIn$fadeOut$fireClick$stopEventPropagation.removeClass(document.body, 'stop-scrolling');
+
+  // Reset the page to its previous state
+  window.onkeydown = previousWindowKeyDown;
+  if (window.previousActiveElement) {
+    window.previousActiveElement.focus();
+  }
+  lastFocusedButton = undefined;
+  clearTimeout(modal.timeout);
+
+  return true;
+};
+
+/*
+ * Validation of the input field is done by user
+ * If something is wrong => call showInputError with errorMessage
+ */
+sweetAlert.showInputError = swal.showInputError = function (errorMessage) {
+  var modal = _sweetAlertInitialize$getModal$getOverlay$getInput$setFocusStyle$openModal$resetInput$fixVerticalPosition.getModal();
+
+  var $errorIcon = modal.querySelector('.sa-input-error');
+  _hasClass$addClass$removeClass$escapeHtml$_show$show$_hide$hide$isDescendant$getTopMargin$fadeIn$fadeOut$fireClick$stopEventPropagation.addClass($errorIcon, 'show');
+
+  var $errorContainer = modal.querySelector('.sa-error-container');
+  _hasClass$addClass$removeClass$escapeHtml$_show$show$_hide$hide$isDescendant$getTopMargin$fadeIn$fadeOut$fireClick$stopEventPropagation.addClass($errorContainer, 'show');
+
+  $errorContainer.querySelector('p').innerHTML = errorMessage;
+
+  setTimeout(function () {
+    sweetAlert.enableButtons();
+  }, 1);
+
+  modal.querySelector('input').focus();
+};
+
+/*
+ * Reset input error DOM elements
+ */
+sweetAlert.resetInputError = swal.resetInputError = function (event) {
+  // If press enter => ignore
+  if (event && event.keyCode === 13) {
+    return false;
+  }
+
+  var $modal = _sweetAlertInitialize$getModal$getOverlay$getInput$setFocusStyle$openModal$resetInput$fixVerticalPosition.getModal();
+
+  var $errorIcon = $modal.querySelector('.sa-input-error');
+  _hasClass$addClass$removeClass$escapeHtml$_show$show$_hide$hide$isDescendant$getTopMargin$fadeIn$fadeOut$fireClick$stopEventPropagation.removeClass($errorIcon, 'show');
+
+  var $errorContainer = $modal.querySelector('.sa-error-container');
+  _hasClass$addClass$removeClass$escapeHtml$_show$show$_hide$hide$isDescendant$getTopMargin$fadeIn$fadeOut$fireClick$stopEventPropagation.removeClass($errorContainer, 'show');
+};
+
+/*
+ * Disable confirm and cancel buttons
+ */
+sweetAlert.disableButtons = swal.disableButtons = function (event) {
+  var modal = _sweetAlertInitialize$getModal$getOverlay$getInput$setFocusStyle$openModal$resetInput$fixVerticalPosition.getModal();
+  var $confirmButton = modal.querySelector('button.confirm');
+  var $cancelButton = modal.querySelector('button.cancel');
+  $confirmButton.disabled = true;
+  $cancelButton.disabled = true;
+};
+
+/*
+ * Enable confirm and cancel buttons
+ */
+sweetAlert.enableButtons = swal.enableButtons = function (event) {
+  var modal = _sweetAlertInitialize$getModal$getOverlay$getInput$setFocusStyle$openModal$resetInput$fixVerticalPosition.getModal();
+  var $confirmButton = modal.querySelector('button.confirm');
+  var $cancelButton = modal.querySelector('button.cancel');
+  $confirmButton.disabled = false;
+  $cancelButton.disabled = false;
+};
+
+if (typeof window !== 'undefined') {
+  // The 'handle-click' module requires
+  // that 'sweetAlert' was set as global.
+  window.sweetAlert = window.swal = sweetAlert;
+} else {
+  _extend$hexToRgb$isIE8$logStr$colorLuminance.logStr('SweetAlert is a frontend module!');
+}
+module.exports = exports['default'];
+
+/***/ }),
+/* 42 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var injectedHTML =
+
+// Dark overlay
+"<div class=\"sweet-overlay\" tabIndex=\"-1\"></div>" +
+
+// Modal
+"<div class=\"sweet-alert\">" +
+
+// Error icon
+"<div class=\"sa-icon sa-error\">\n      <span class=\"sa-x-mark\">\n        <span class=\"sa-line sa-left\"></span>\n        <span class=\"sa-line sa-right\"></span>\n      </span>\n    </div>" +
+
+// Warning icon
+"<div class=\"sa-icon sa-warning\">\n      <span class=\"sa-body\"></span>\n      <span class=\"sa-dot\"></span>\n    </div>" +
+
+// Info icon
+"<div class=\"sa-icon sa-info\"></div>" +
+
+// Success icon
+"<div class=\"sa-icon sa-success\">\n      <span class=\"sa-line sa-tip\"></span>\n      <span class=\"sa-line sa-long\"></span>\n\n      <div class=\"sa-placeholder\"></div>\n      <div class=\"sa-fix\"></div>\n    </div>" + "<div class=\"sa-icon sa-custom\"></div>" +
+
+// Title, text and input
+"<h2>Title</h2>\n    <p>Text</p>\n    <fieldset>\n      <input type=\"text\" tabIndex=\"3\" />\n      <div class=\"sa-input-error\"></div>\n    </fieldset>" +
+
+// Input errors
+"<div class=\"sa-error-container\">\n      <div class=\"icon\">!</div>\n      <p>Not valid!</p>\n    </div>" +
+
+// Cancel and confirm buttons
+"<div class=\"sa-button-container\">\n      <button class=\"cancel\" tabIndex=\"2\">Cancel</button>\n      <div class=\"sa-confirm-button-container\">\n        <button class=\"confirm\" tabIndex=\"1\">OK</button>" +
+
+// Loading animation
+"<div class=\"la-ball-fall\">\n          <div></div>\n          <div></div>\n          <div></div>\n        </div>\n      </div>\n    </div>" +
+
+// End of modal
+"</div>";
+
+exports["default"] = injectedHTML;
+module.exports = exports["default"];
+
+/***/ }),
+/* 43 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _colorLuminance = __webpack_require__(2);
+
+var _getModal = __webpack_require__(3);
+
+var _hasClass$isDescendant = __webpack_require__(1);
+
+/*
+ * User clicked on "Confirm"/"OK" or "Cancel"
+ */
+var handleButton = function handleButton(event, params, modal) {
+  var e = event || window.event;
+  var target = e.target || e.srcElement;
+
+  var targetedConfirm = target.className.indexOf('confirm') !== -1;
+  var targetedOverlay = target.className.indexOf('sweet-overlay') !== -1;
+  var modalIsVisible = _hasClass$isDescendant.hasClass(modal, 'visible');
+  var doneFunctionExists = params.doneFunction && modal.getAttribute('data-has-done-function') === 'true';
+
+  // Since the user can change the background-color of the confirm button programmatically,
+  // we must calculate what the color should be on hover/active
+  var normalColor, hoverColor, activeColor;
+  if (targetedConfirm && params.confirmButtonColor) {
+    normalColor = params.confirmButtonColor;
+    hoverColor = _colorLuminance.colorLuminance(normalColor, -0.04);
+    activeColor = _colorLuminance.colorLuminance(normalColor, -0.14);
+  }
+
+  function shouldSetConfirmButtonColor(color) {
+    if (targetedConfirm && params.confirmButtonColor) {
+      target.style.backgroundColor = color;
+    }
+  }
+
+  switch (e.type) {
+    case 'mouseover':
+      shouldSetConfirmButtonColor(hoverColor);
+      break;
+
+    case 'mouseout':
+      shouldSetConfirmButtonColor(normalColor);
+      break;
+
+    case 'mousedown':
+      shouldSetConfirmButtonColor(activeColor);
+      break;
+
+    case 'mouseup':
+      shouldSetConfirmButtonColor(hoverColor);
+      break;
+
+    case 'focus':
+      var $confirmButton = modal.querySelector('button.confirm');
+      var $cancelButton = modal.querySelector('button.cancel');
+
+      if (targetedConfirm) {
+        $cancelButton.style.boxShadow = 'none';
+      } else {
+        $confirmButton.style.boxShadow = 'none';
+      }
+      break;
+
+    case 'click':
+      var clickedOnModal = modal === target;
+      var clickedOnModalChild = _hasClass$isDescendant.isDescendant(modal, target);
+
+      // Ignore click outside if allowOutsideClick is false
+      if (!clickedOnModal && !clickedOnModalChild && modalIsVisible && !params.allowOutsideClick) {
+        break;
+      }
+
+      if (targetedConfirm && doneFunctionExists && modalIsVisible) {
+        handleConfirm(modal, params);
+      } else if (doneFunctionExists && modalIsVisible || targetedOverlay) {
+        handleCancel(modal, params);
+      } else if (_hasClass$isDescendant.isDescendant(modal, target) && target.tagName === 'BUTTON') {
+        sweetAlert.close();
+      }
+      break;
+  }
+};
+
+/*
+ *  User clicked on "Confirm"/"OK"
+ */
+var handleConfirm = function handleConfirm(modal, params) {
+  var callbackValue = true;
+
+  if (_hasClass$isDescendant.hasClass(modal, 'show-input')) {
+    callbackValue = modal.querySelector('input').value;
+
+    if (!callbackValue) {
+      callbackValue = '';
+    }
+  }
+
+  params.doneFunction(callbackValue);
+
+  if (params.closeOnConfirm) {
+    sweetAlert.close();
+  }
+  // Disable cancel and confirm button if the parameter is true
+  if (params.showLoaderOnConfirm) {
+    sweetAlert.disableButtons();
+  }
+};
+
+/*
+ *  User clicked on "Cancel"
+ */
+var handleCancel = function handleCancel(modal, params) {
+  // Check if callback function expects a parameter (to track cancel actions)
+  var functionAsStr = String(params.doneFunction).replace(/\s/g, '');
+  var functionHandlesCancel = functionAsStr.substring(0, 9) === 'function(' && functionAsStr.substring(9, 10) !== ')';
+
+  if (functionHandlesCancel) {
+    params.doneFunction(false);
+  }
+
+  if (params.closeOnCancel) {
+    sweetAlert.close();
+  }
+};
+
+exports['default'] = {
+  handleButton: handleButton,
+  handleConfirm: handleConfirm,
+  handleCancel: handleCancel
+};
+module.exports = exports['default'];
+
+/***/ }),
+/* 44 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _stopEventPropagation$fireClick = __webpack_require__(1);
+
+var _setFocusStyle = __webpack_require__(3);
+
+var handleKeyDown = function handleKeyDown(event, params, modal) {
+  var e = event || window.event;
+  var keyCode = e.keyCode || e.which;
+
+  var $okButton = modal.querySelector('button.confirm');
+  var $cancelButton = modal.querySelector('button.cancel');
+  var $modalButtons = modal.querySelectorAll('button[tabindex]');
+
+  if ([9, 13, 32, 27].indexOf(keyCode) === -1) {
+    // Don't do work on keys we don't care about.
+    return;
+  }
+
+  var $targetElement = e.target || e.srcElement;
+
+  var btnIndex = -1; // Find the button - note, this is a nodelist, not an array.
+  for (var i = 0; i < $modalButtons.length; i++) {
+    if ($targetElement === $modalButtons[i]) {
+      btnIndex = i;
+      break;
+    }
+  }
+
+  if (keyCode === 9) {
+    // TAB
+    if (btnIndex === -1) {
+      // No button focused. Jump to the confirm button.
+      $targetElement = $okButton;
+    } else {
+      // Cycle to the next button
+      if (btnIndex === $modalButtons.length - 1) {
+        $targetElement = $modalButtons[0];
+      } else {
+        $targetElement = $modalButtons[btnIndex + 1];
+      }
+    }
+
+    _stopEventPropagation$fireClick.stopEventPropagation(e);
+    $targetElement.focus();
+
+    if (params.confirmButtonColor) {
+      _setFocusStyle.setFocusStyle($targetElement, params.confirmButtonColor);
+    }
+  } else {
+    if (keyCode === 13) {
+      if ($targetElement.tagName === 'INPUT') {
+        $targetElement = $okButton;
+        $okButton.focus();
+      }
+
+      if (btnIndex === -1) {
+        // ENTER/SPACE clicked outside of a button.
+        $targetElement = $okButton;
+      } else {
+        // Do nothing - let the browser handle it.
+        $targetElement = undefined;
+      }
+    } else if (keyCode === 27 && params.allowEscapeKey === true) {
+      $targetElement = $cancelButton;
+      _stopEventPropagation$fireClick.fireClick($targetElement, e);
+    } else {
+      // Fallback - let the browser handle it.
+      $targetElement = undefined;
+    }
+  }
+};
+
+exports['default'] = handleKeyDown;
+module.exports = exports['default'];
+
+/***/ }),
+/* 45 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _isIE8 = __webpack_require__(2);
+
+var _getModal$getInput$setFocusStyle = __webpack_require__(3);
+
+var _hasClass$addClass$removeClass$escapeHtml$_show$show$_hide$hide = __webpack_require__(1);
+
+var alertTypes = ['error', 'warning', 'info', 'success', 'input', 'prompt'];
+
+/*
+ * Set type, text and actions on modal
+ */
+var setParameters = function setParameters(params) {
+  var modal = _getModal$getInput$setFocusStyle.getModal();
+
+  var $title = modal.querySelector('h2');
+  var $text = modal.querySelector('p');
+  var $cancelBtn = modal.querySelector('button.cancel');
+  var $confirmBtn = modal.querySelector('button.confirm');
+
+  /*
+   * Title
+   */
+  $title.innerHTML = params.html ? params.title : _hasClass$addClass$removeClass$escapeHtml$_show$show$_hide$hide.escapeHtml(params.title).split('\n').join('<br>');
+
+  /*
+   * Text
+   */
+  $text.innerHTML = params.html ? params.text : _hasClass$addClass$removeClass$escapeHtml$_show$show$_hide$hide.escapeHtml(params.text || '').split('\n').join('<br>');
+  if (params.text) _hasClass$addClass$removeClass$escapeHtml$_show$show$_hide$hide.show($text);
+
+  /*
+   * Custom class
+   */
+  if (params.customClass) {
+    _hasClass$addClass$removeClass$escapeHtml$_show$show$_hide$hide.addClass(modal, params.customClass);
+    modal.setAttribute('data-custom-class', params.customClass);
+  } else {
+    // Find previously set classes and remove them
+    var customClass = modal.getAttribute('data-custom-class');
+    _hasClass$addClass$removeClass$escapeHtml$_show$show$_hide$hide.removeClass(modal, customClass);
+    modal.setAttribute('data-custom-class', '');
+  }
+
+  /*
+   * Icon
+   */
+  _hasClass$addClass$removeClass$escapeHtml$_show$show$_hide$hide.hide(modal.querySelectorAll('.sa-icon'));
+
+  if (params.type && !_isIE8.isIE8()) {
+    var _ret = (function () {
+
+      var validType = false;
+
+      for (var i = 0; i < alertTypes.length; i++) {
+        if (params.type === alertTypes[i]) {
+          validType = true;
+          break;
+        }
+      }
+
+      if (!validType) {
+        logStr('Unknown alert type: ' + params.type);
+        return {
+          v: false
+        };
+      }
+
+      var typesWithIcons = ['success', 'error', 'warning', 'info'];
+      var $icon = undefined;
+
+      if (typesWithIcons.indexOf(params.type) !== -1) {
+        $icon = modal.querySelector('.sa-icon.' + 'sa-' + params.type);
+        _hasClass$addClass$removeClass$escapeHtml$_show$show$_hide$hide.show($icon);
+      }
+
+      var $input = _getModal$getInput$setFocusStyle.getInput();
+
+      // Animate icon
+      switch (params.type) {
+
+        case 'success':
+          _hasClass$addClass$removeClass$escapeHtml$_show$show$_hide$hide.addClass($icon, 'animate');
+          _hasClass$addClass$removeClass$escapeHtml$_show$show$_hide$hide.addClass($icon.querySelector('.sa-tip'), 'animateSuccessTip');
+          _hasClass$addClass$removeClass$escapeHtml$_show$show$_hide$hide.addClass($icon.querySelector('.sa-long'), 'animateSuccessLong');
+          break;
+
+        case 'error':
+          _hasClass$addClass$removeClass$escapeHtml$_show$show$_hide$hide.addClass($icon, 'animateErrorIcon');
+          _hasClass$addClass$removeClass$escapeHtml$_show$show$_hide$hide.addClass($icon.querySelector('.sa-x-mark'), 'animateXMark');
+          break;
+
+        case 'warning':
+          _hasClass$addClass$removeClass$escapeHtml$_show$show$_hide$hide.addClass($icon, 'pulseWarning');
+          _hasClass$addClass$removeClass$escapeHtml$_show$show$_hide$hide.addClass($icon.querySelector('.sa-body'), 'pulseWarningIns');
+          _hasClass$addClass$removeClass$escapeHtml$_show$show$_hide$hide.addClass($icon.querySelector('.sa-dot'), 'pulseWarningIns');
+          break;
+
+        case 'input':
+        case 'prompt':
+          $input.setAttribute('type', params.inputType);
+          $input.value = params.inputValue;
+          $input.setAttribute('placeholder', params.inputPlaceholder);
+          _hasClass$addClass$removeClass$escapeHtml$_show$show$_hide$hide.addClass(modal, 'show-input');
+          setTimeout(function () {
+            $input.focus();
+            $input.addEventListener('keyup', swal.resetInputError);
+          }, 400);
+          break;
+      }
+    })();
+
+    if (typeof _ret === 'object') {
+      return _ret.v;
+    }
+  }
+
+  /*
+   * Custom image
+   */
+  if (params.imageUrl) {
+    var $customIcon = modal.querySelector('.sa-icon.sa-custom');
+
+    $customIcon.style.backgroundImage = 'url(' + params.imageUrl + ')';
+    _hasClass$addClass$removeClass$escapeHtml$_show$show$_hide$hide.show($customIcon);
+
+    var _imgWidth = 80;
+    var _imgHeight = 80;
+
+    if (params.imageSize) {
+      var dimensions = params.imageSize.toString().split('x');
+      var imgWidth = dimensions[0];
+      var imgHeight = dimensions[1];
+
+      if (!imgWidth || !imgHeight) {
+        logStr('Parameter imageSize expects value with format WIDTHxHEIGHT, got ' + params.imageSize);
+      } else {
+        _imgWidth = imgWidth;
+        _imgHeight = imgHeight;
+      }
+    }
+
+    $customIcon.setAttribute('style', $customIcon.getAttribute('style') + 'width:' + _imgWidth + 'px; height:' + _imgHeight + 'px');
+  }
+
+  /*
+   * Show cancel button?
+   */
+  modal.setAttribute('data-has-cancel-button', params.showCancelButton);
+  if (params.showCancelButton) {
+    $cancelBtn.style.display = 'inline-block';
+  } else {
+    _hasClass$addClass$removeClass$escapeHtml$_show$show$_hide$hide.hide($cancelBtn);
+  }
+
+  /*
+   * Show confirm button?
+   */
+  modal.setAttribute('data-has-confirm-button', params.showConfirmButton);
+  if (params.showConfirmButton) {
+    $confirmBtn.style.display = 'inline-block';
+  } else {
+    _hasClass$addClass$removeClass$escapeHtml$_show$show$_hide$hide.hide($confirmBtn);
+  }
+
+  /*
+   * Custom text on cancel/confirm buttons
+   */
+  if (params.cancelButtonText) {
+    $cancelBtn.innerHTML = _hasClass$addClass$removeClass$escapeHtml$_show$show$_hide$hide.escapeHtml(params.cancelButtonText);
+  }
+  if (params.confirmButtonText) {
+    $confirmBtn.innerHTML = _hasClass$addClass$removeClass$escapeHtml$_show$show$_hide$hide.escapeHtml(params.confirmButtonText);
+  }
+
+  /*
+   * Custom color on confirm button
+   */
+  if (params.confirmButtonColor) {
+    // Set confirm button to selected background color
+    $confirmBtn.style.backgroundColor = params.confirmButtonColor;
+
+    // Set the confirm button color to the loading ring
+    $confirmBtn.style.borderLeftColor = params.confirmLoadingButtonColor;
+    $confirmBtn.style.borderRightColor = params.confirmLoadingButtonColor;
+
+    // Set box-shadow to default focused button
+    _getModal$getInput$setFocusStyle.setFocusStyle($confirmBtn, params.confirmButtonColor);
+  }
+
+  /*
+   * Allow outside click
+   */
+  modal.setAttribute('data-allow-outside-click', params.allowOutsideClick);
+
+  /*
+   * Callback function
+   */
+  var hasDoneFunction = params.doneFunction ? true : false;
+  modal.setAttribute('data-has-done-function', hasDoneFunction);
+
+  /*
+   * Animation
+   */
+  if (!params.animation) {
+    modal.setAttribute('data-animation', 'none');
+  } else if (typeof params.animation === 'string') {
+    modal.setAttribute('data-animation', params.animation); // Custom animation
+  } else {
+    modal.setAttribute('data-animation', 'pop');
+  }
+
+  /*
+   * Timer
+   */
+  modal.setAttribute('data-timer', params.timer);
+};
+
+exports['default'] = setParameters;
+module.exports = exports['default'];
+
+/***/ }),
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -44261,15 +45572,15 @@ Date.prototype.fp_incr = function (days) {
 if (true) module.exports = flatpickr;
 
 /***/ }),
-/* 38 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var Component = __webpack_require__(8)(
+var Component = __webpack_require__(5)(
   /* script */
-  __webpack_require__(39),
+  __webpack_require__(48),
   /* template */
-  __webpack_require__(40),
+  __webpack_require__(49),
   /* styles */
   null,
   /* scopeId */
@@ -44301,7 +45612,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 39 */
+/* 48 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -44345,7 +45656,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 40 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -44355,7 +45666,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "modal-background"
   }), _vm._v(" "), _c('div', {
     staticClass: "modal-content box"
-  }, [_vm._v("\n        Test Stuff\n    ")]), _vm._v(" "), _c('button', {
+  }, [_vm._t("default", [_vm._v("Testing")])], 2), _vm._v(" "), _c('button', {
     staticClass: "modal-close is-large",
     on: {
       "click": _vm.toggleModal
@@ -44371,15 +45682,15 @@ if (false) {
 }
 
 /***/ }),
-/* 41 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var Component = __webpack_require__(8)(
+var Component = __webpack_require__(5)(
   /* script */
-  __webpack_require__(42),
+  __webpack_require__(51),
   /* template */
-  __webpack_require__(43),
+  __webpack_require__(52),
   /* styles */
   null,
   /* scopeId */
@@ -44411,7 +45722,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 42 */
+/* 51 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -44453,7 +45764,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     data: function data() {
         return {
             notes: [],
-            body: ''
+            body: '',
+            showNote: true
         };
     },
 
@@ -44476,6 +45788,34 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }).then(function (response) {
                 _this.notes.push(response.data), _this.body = '';
             });
+        },
+        removeNote: function removeNote(index, id) {
+            var deletionStatus;
+            var self = this;
+            swal({
+                title: "Are you sure?",
+                text: "You will not be able to recover this note",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, delete it!",
+                cancelButtonText: "No, abort!",
+                closeOnConfirm: false,
+                closeOnCancel: false
+            }, function (isConfirm) {
+                if (isConfirm) {
+                    axios.delete('/note/' + id, {}).then(function (response) {
+                        if (response.data == 'Success') {
+                            self.notes.splice(index, 1);
+                        } else {
+                            alert("There was a problem deleting this task. Please let Daron know.");
+                        }
+                    });
+                    swal("Deleted!", "The note is gone forever.", "success");
+                } else {
+                    swal("Cancelled", "Your note is safe :)", "error");
+                }
+            });
         }
     },
 
@@ -44485,21 +45825,33 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         axios.get('/task/' + this.id + '/notes/').then(function (response) {
             return _this2.notes = response.data;
         });
-        // console.log(this);
     }
 });
 
 /***/ }),
-/* 43 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "notes"
-  }, [_vm._l((_vm.notes), function(note) {
+  }, [_vm._l((_vm.notes), function(note, index) {
     return _c('div', {
+      directives: [{
+        name: "show",
+        rawName: "v-show",
+        value: (_vm.showNote),
+        expression: "showNote"
+      }],
       staticClass: "task-note"
-    }, [_c('p', [_c('strong', [_vm._v(_vm._s(note.created_at))]), _vm._v(" "), _vm._m(0, true)]), _vm._v(" "), _c('p', {
+    }, [_c('p', [_c('strong', [_vm._v(_vm._s(note.created_at))]), _vm._v(" "), _c('button', {
+      staticClass: "button is-outlined is-danger is-small",
+      on: {
+        "click": function($event) {
+          _vm.removeNote(index, note.id)
+        }
+      }
+    }, [_vm._m(0, true)])]), _vm._v(" "), _c('p', {
       domProps: {
         "textContent": _vm._s(note.body)
       }
@@ -44547,13 +45899,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_vm._v("\n                Add Note\n            ")])])])], 2)
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('button', {
-    staticClass: "button is-outlined is-danger is-small"
-  }, [_c('span', {
+  return _c('span', {
     staticClass: "icon"
   }, [_c('i', {
     staticClass: "fa fa-trash"
-  })])])
+  })])
 }]}
 module.exports.render._withStripped = true
 if (false) {
@@ -44564,10 +45914,121 @@ if (false) {
 }
 
 /***/ }),
-/* 44 */
+/* 53 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var Component = __webpack_require__(5)(
+  /* script */
+  __webpack_require__(54),
+  /* template */
+  __webpack_require__(60),
+  /* styles */
+  null,
+  /* scopeId */
+  null,
+  /* moduleIdentifier (server only) */
+  null
+)
+Component.options.__file = "/Users/daron/code/crm/resources/assets/js/components/FlatPickr.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] FlatPickr.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-75e155e2", Component.options)
+  } else {
+    hotAPI.reload("data-v-75e155e2", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 54 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_flatpickr_component__ = __webpack_require__(68);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_flatpickr_component___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue_flatpickr_component__);
+//
+//
+//
+//
+//
+//
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      date: null
+    };
+  },
+
+  components: {
+    flatPickr: __WEBPACK_IMPORTED_MODULE_0_vue_flatpickr_component___default.a
+  }
+});
+
+/***/ }),
+/* 55 */,
+/* 56 */,
+/* 57 */,
+/* 58 */,
+/* 59 */,
+/* 60 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', [_c('flat-pickr', {
+    attrs: {
+      "name": "due_date"
+    },
+    model: {
+      value: (_vm.date),
+      callback: function($$v) {
+        _vm.date = $$v
+      },
+      expression: "date"
+    }
+  })], 1)
+},staticRenderFns: []}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-75e155e2", module.exports)
+  }
+}
+
+/***/ }),
+/* 61 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 62 */,
+/* 63 */,
+/* 64 */,
+/* 65 */,
+/* 66 */,
+/* 67 */,
+/* 68 */
+/***/ (function(module, exports, __webpack_require__) {
+
+!function(e,t){ true?module.exports=t(__webpack_require__(46)):"function"==typeof define&&define.amd?define("VueFlatpickr",["flatpickr"],t):"object"==typeof exports?exports.VueFlatpickr=t(require("flatpickr")):e.VueFlatpickr=t(e.flatpickr)}(this,function(e){return function(e){function t(r){if(n[r])return n[r].exports;var i=n[r]={i:r,l:!1,exports:{}};return e[r].call(i.exports,i,i.exports,t),i.l=!0,i.exports}var n={};return t.m=e,t.c=n,t.d=function(e,n,r){t.o(e,n)||Object.defineProperty(e,n,{configurable:!1,enumerable:!0,get:r})},t.n=function(e){var n=e&&e.__esModule?function(){return e.default}:function(){return e};return t.d(n,"a",n),n},t.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},t.p="",t(t.s=0)}([function(e,t,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),n.d(t,"flatPickrPlugin",function(){return i});var r=n(1);n.d(t,"component",function(){return r.a});var i={install:function(e,t){var n="flat-pickr";"string"==typeof t&&(n=t),e.component(n,r.a)}};r.a.install=i.install,t.default=r.a},function(e,t,n){"use strict";var r=n(3),i=n(5),o=n(2),a=o(r.a,i.a,null,null,null);t.a=a.exports},function(e,t){e.exports=function(e,t,n,r,i){var o,a=e=e||{},u=typeof e.default;"object"!==u&&"function"!==u||(o=e,a=e.default);var s="function"==typeof a?a.options:a;t&&(s.render=t.render,s.staticRenderFns=t.staticRenderFns),r&&(s._scopeId=r);var f;if(i?(f=function(e){e=e||this.$vnode&&this.$vnode.ssrContext||this.parent&&this.parent.$vnode&&this.parent.$vnode.ssrContext,e||"undefined"==typeof __VUE_SSR_CONTEXT__||(e=__VUE_SSR_CONTEXT__),n&&n.call(this,e),e&&e._registeredComponents&&e._registeredComponents.add(i)},s._ssrRegister=f):n&&(f=n),f){var l=s.functional,c=l?s.render:s.beforeCreate;l?s.render=function(e,t){return f.call(t),c(e,t)}:s.beforeCreate=c?[].concat(c,f):[f]}return{esModule:o,exports:a,options:s}}},function(e,t,n){"use strict";var r=n(4),i=n.n(r);t.a={props:{value:{default:null,required:!0,validate:function(e){return null===e||e instanceof Date||"string"==typeof e||e instanceof String||e instanceof Array}},config:{type:Object,default:function(){return{wrap:!1}}},placeholder:{type:String,default:""},inputClass:{type:[String,Object],default:"form-control input"},name:{type:String,default:"date-time"},required:{type:Boolean,default:!1},id:{type:String}},data:function(){return{mutableValue:this.value,fp:null}},mounted:function(){if(!this.fp){var e=this.config.wrap?this.$el.parentNode:this.$el;this.fp=new i.a(e,this.config)}},beforeDestroy:function(){this.fp&&(this.fp.destroy(),this.fp=null)},watch:{config:function(e){this.fp.config=Object.assign(this.fp.config,e),this.fp.redraw(),this.fp.setDate(this.value,!0)},mutableValue:function(e){this.$emit("input",e)},value:function(e){this.fp&&this.fp.setDate(e,!0)}}}},function(t,n){t.exports=e},function(e,t,n){"use strict";var r=function(){var e=this,t=e.$createElement;return(e._self._c||t)("input",{directives:[{name:"model",rawName:"v-model",value:e.mutableValue,expression:"mutableValue"}],class:e.inputClass,attrs:{type:"text",id:e.id,name:e.name,placeholder:e.placeholder,required:e.required,"data-input":""},domProps:{value:e.mutableValue},on:{input:function(t){t.target.composing||(e.mutableValue=t.target.value)}}})},i=[],o={render:r,staticRenderFns:i};t.a=o}])});
 
 /***/ })
 /******/ ]);
