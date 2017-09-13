@@ -307,7 +307,6 @@ up	database/migrations/2017_07_06_165241_create_notes_table.php	/^    public fun
 update	app/Http/Controllers/ClientController.php	/^    public function update(Request $request, Client $client)$/;"	f
 update	app/Http/Controllers/NoteController.php	/^    public function update(Request $request, Note $note)$/;"	f
 update	app/Http/Controllers/TaskController.php	/^    public function update(Request $request, Task $task)$/;"	f
-updated	app/Http/Controllers/TaskController.php	/^        $updated = $task->update($request->all());$/;"	v
 uri	server.php	/^$uri = urldecode($/;"	v
 url	app/Mail/TaskAdded.php	/^        $url       = 'http:\/\/crm.kerigan.com\/task\/'. $this->task->id;$/;"	v
 url	tests/Browser/Pages/HomePage.php	/^    public function url()$/;"	f

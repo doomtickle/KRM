@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Client;
 use App\Task;
 use App\User;
+use App\Client;
 use App\Mail\TaskAdded;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -98,9 +98,11 @@ class TaskController extends Controller
         $task   = Task::find($task->id);
         $sendTo = User::find($request->assigned_to);
 
-        $updated = $task->update($request->all());
+        $task->update($request->all());
 
-        Mail::to($sendTo)->send(new TaskAdded($updated));
+        if (! $task->complete) {
+            Mail::to($sendTo)->send(new TaskAdded($task));
+        }
 
         return redirect()->action('HomeController@index');
     }
