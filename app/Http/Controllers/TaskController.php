@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Client;
 use App\Task;
 use App\User;
-use App\Client;
+use App\Mail\TaskAdded;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class TaskController extends Controller
 {
@@ -44,14 +46,17 @@ class TaskController extends Controller
     public function store(Request $request)
     {
         $createdBy = \Auth::user()->id;
+        $sendTo = User::find($request->assigned_to);
 
-        Task::create([
-            'client_id' => $request->client_id,
-            'assigned_to' => $request->assigned_to,
-            'due_date' => $request->due_date,
-            'description' => $request->description,
-            'created_by' => $createdBy
-        ]);
+        $task = Task::create([
+                'client_id'   => $request->client_id,
+                'assigned_to' => $request->assigned_to,
+                'due_date'    => $request->due_date,
+                'description' => $request->description,
+                'created_by'  => $createdBy
+            ]);
+
+        Mail::to($sendTo)->send(new TaskAdded($task));
 
         return redirect('/home')->with('status', 'Task added successfully!');
     }
@@ -90,8 +95,12 @@ class TaskController extends Controller
      */
     public function update(Request $request, Task $task)
     {
-        $task = Task::find($task->id);
-        $task->update($request->all());
+        $task   = Task::find($task->id);
+        $sendTo = User::find($request->assigned_to);
+
+        $updated = $task->update($request->all());
+
+        Mail::to($sendTo)->send(new TaskAdded($updated));
 
         return redirect()->action('HomeController@index');
     }

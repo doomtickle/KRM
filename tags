@@ -48,6 +48,7 @@ RegisterController	app/Http/Controllers/Auth/RegisterController.php	/^class Regi
 ResetPasswordController	app/Http/Controllers/Auth/ResetPasswordController.php	/^class ResetPasswordController extends Controller$/;"	c
 RouteServiceProvider	app/Providers/RouteServiceProvider.php	/^class RouteServiceProvider extends ServiceProvider$/;"	c
 Task	app/Task.php	/^class Task extends Model$/;"	c
+TaskAdded	app/Mail/TaskAdded.php	/^class TaskAdded extends Mailable implements ShouldQueue$/;"	c
 TaskController	app/Http/Controllers/TaskController.php	/^class TaskController extends Controller$/;"	c
 TaskNotesController	app/Http/Controllers/TaskNotesController.php	/^class TaskNotesController extends Controller$/;"	c
 TaskTest	tests/Browser/TaskTest.php	/^class TaskTest extends DuskTestCase$/;"	c
@@ -66,10 +67,11 @@ __construct	app/Http/Controllers/ClientController.php	/^    public function __co
 __construct	app/Http/Controllers/HomeController.php	/^    public function __construct()$/;"	f
 __construct	app/Http/Controllers/TaskController.php	/^    public function __construct()$/;"	f
 __construct	app/Http/Controllers/TaskNotesController.php	/^    public function __construct()$/;"	f
+__construct	app/Mail/TaskAdded.php	/^    public function __construct(Task $task)$/;"	f
 __construct	tests/TestCase.php	/^            public function __construct() {}$/;"	f
 __currentLoopData	storage/framework/views/0e63e22d6b1cd46e782394a9c913181b368c4ad5.php	/^                        <?php $__currentLoopData = $clients; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $client): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>$/;"	v
 __currentLoopData	storage/framework/views/0e63e22d6b1cd46e782394a9c913181b368c4ad5.php	/^                        <?php $__currentLoopData = $users; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $user): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>$/;"	v
-__currentLoopData	storage/framework/views/14697cea8ee2cac0766edc1d92fd6813df10e41d.php	/^                        <?php $__currentLoopData = $users; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $user): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>$/;"	v
+__currentLoopData	storage/framework/views/642c6dae366bf0de11ff80a636ee208bb57f5585.php	/^                        <?php $__currentLoopData = $users; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $user): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>$/;"	v
 __currentLoopData	storage/framework/views/85ebce4bfdd90407708623542d3defe5f9789617.php	/^<?php $__currentLoopData = $tasks; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $task): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>$/;"	v
 __currentLoopData	storage/framework/views/d00512280d4f4c12b77200edfc733746fa9d64f8.php	/^                <?php $__currentLoopData = $client->tasks; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $task): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>$/;"	v
 __currentLoopData	storage/framework/views/eac0d7a84fb333f6304abbb13c2c4363ea40fdb1.php	/^            <?php $__currentLoopData = $clients; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $client): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>$/;"	v
@@ -116,6 +118,7 @@ boot	app/Providers/AuthServiceProvider.php	/^    public function boot()$/;"	f
 boot	app/Providers/BroadcastServiceProvider.php	/^    public function boot()$/;"	f
 boot	app/Providers/EventServiceProvider.php	/^    public function boot()$/;"	f
 boot	app/Providers/RouteServiceProvider.php	/^    public function boot()$/;"	f
+build	app/Mail/TaskAdded.php	/^    public function build()$/;"	f
 buttonEvents	public/js/app.js	/^  var buttonEvents = ['onclick', 'onmouseover', 'onmouseout', 'onmousedown', 'onmouseup', 'onfocus'];$/;"	v
 client	app/Http/Controllers/ClientController.php	/^        $client = Client::create([$/;"	v
 client	app/Http/Controllers/ClientController.php	/^        $client = Client::with('tasks')->find($id);$/;"	v
@@ -138,7 +141,6 @@ commands	app/Console/Kernel.php	/^    protected $commands = [$/;"	v
 commands	app/Console/Kernel.php	/^    protected function commands()$/;"	f
 create	app/Http/Controllers/Auth/RegisterController.php	/^    protected function create(array $data)$/;"	f
 create	app/Http/Controllers/ClientController.php	/^    public function create()$/;"	f
-create	app/Http/Controllers/NoteController.php	/^    public function create()$/;"	f
 create	app/Http/Controllers/TaskController.php	/^    public function create()$/;"	f
 create	tests/utilities/functions.php	/^function create($class, $attributes = [])$/;"	f
 createApplication	tests/CreatesApplication.php	/^    public function createApplication()$/;"	f
@@ -148,6 +150,7 @@ createNote	tests/Feature/ReadNotesTest.php	/^    protected function createNote()
 createNote	tests/Unit/NoteTest.php	/^    protected function createNote()$/;"	f
 createTask	tests/Feature/CompleteTasksTest.php	/^    private function createTask()$/;"	f
 createdBy	app/Http/Controllers/TaskController.php	/^        $createdBy = \\Auth::user()->id;$/;"	v
+createdBy	app/Mail/TaskAdded.php	/^        $createdBy = User::find($this->task->created_by);$/;"	v
 destroy	app/Http/Controllers/ClientController.php	/^    public function destroy(Client $client)$/;"	f
 destroy	app/Http/Controllers/NoteController.php	/^    public function destroy(Note $note)$/;"	f
 destroy	app/Http/Controllers/TaskController.php	/^    public function destroy(Task $task)$/;"	f
@@ -194,7 +197,7 @@ loader	bootstrap/autoload.php	/^| Composer provides a convenient, automatically 
 loader	public/index.php	/^| Composer provides a convenient, automatically generated class loader for$/;"	c
 localizePhoneNumber	app/Client.php	/^    private function localizePhoneNumber($phone)$/;"	f
 loop	storage/framework/views/0e63e22d6b1cd46e782394a9c913181b368c4ad5.php	/^                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>$/;"	v
-loop	storage/framework/views/14697cea8ee2cac0766edc1d92fd6813df10e41d.php	/^                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>$/;"	v
+loop	storage/framework/views/642c6dae366bf0de11ff80a636ee208bb57f5585.php	/^                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>$/;"	v
 loop	storage/framework/views/85ebce4bfdd90407708623542d3defe5f9789617.php	/^<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>$/;"	v
 loop	storage/framework/views/d00512280d4f4c12b77200edfc733746fa9d64f8.php	/^                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>$/;"	v
 loop	storage/framework/views/eac0d7a84fb333f6304abbb13c2c4363ea40fdb1.php	/^            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>$/;"	v
@@ -254,6 +257,7 @@ routeMiddleware	app/Http/Kernel.php	/^    protected $routeMiddleware = [$/;"	v
 rules	app/Http/Requests/NoteRequest.php	/^    public function rules()$/;"	f
 run	database/seeds/DatabaseSeeder.php	/^    public function run()$/;"	f
 schedule	app/Console/Kernel.php	/^    protected function schedule(Schedule $schedule)$/;"	f
+sendTo	app/Http/Controllers/TaskController.php	/^        $sendTo = User::find($request->assigned_to);$/;"	v
 setUp	tests/Feature/CompleteTasksTest.php	/^    public function setUp()$/;"	f
 setUp	tests/Feature/CreateNotesTest.php	/^    protected function setUp()$/;"	f
 setUp	tests/Feature/DeleteNotesTest.php	/^    protected function setUp()$/;"	f
@@ -263,7 +267,6 @@ setUp	tests/Unit/ClientTest.php	/^    protected function setUp()$/;"	f
 setUp	tests/Unit/NoteTest.php	/^    protected function setUp()$/;"	f
 setUp	tests/Unit/TaskTest.php	/^    protected function setUp()$/;"	f
 show	app/Http/Controllers/ClientController.php	/^    public function show($id)$/;"	f
-show	app/Http/Controllers/NoteController.php	/^    public function show(Note $note)$/;"	f
 show	app/Http/Controllers/TaskController.php	/^    public function show(Task $task)$/;"	f
 show	app/Http/Controllers/UsersTasksController.php	/^    public function show($id)$/;"	f
 signIn	tests/TestCase.php	/^    protected function signIn($user = null)$/;"	f
@@ -272,8 +275,11 @@ store	app/Http/Controllers/ClientController.php	/^    public function store(Requ
 store	app/Http/Controllers/NoteController.php	/^    public function store(NoteRequest $request)$/;"	f
 store	app/Http/Controllers/TaskController.php	/^    public function store(Request $request)$/;"	f
 sweetAlert	public/js/app.js	/^var sweetAlert, swal;$/;"	v
-task	app/Http/Controllers/TaskController.php	/^        $task = Task::find($task->id);$/;"	v
+task	app/Http/Controllers/TaskController.php	/^        $task   = Task::find($task->id);$/;"	v
+task	app/Http/Controllers/TaskController.php	/^        $task = Task::create([$/;"	v
 task	app/Http/Controllers/TaskController.php	/^        $task = Task::with(['user', 'client'])->find($task->id);$/;"	v
+task	app/Mail/TaskAdded.php	/^        $this->task = $task;$/;"	v
+task	app/Mail/TaskAdded.php	/^    public $task;$/;"	v
 task	app/Note.php	/^	public function task() {$/;"	f
 task	tests/Browser/NoteTest.php	/^        $task = factory(Task::class)->create([$/;"	v
 task	tests/Browser/TaskTest.php	/^        $task   = factory(Task::class)->create([$/;"	v
@@ -289,8 +295,8 @@ task	tests/Unit/NoteTest.php	/^        $this->task   = create('App\\Task', [$/;"
 task	tests/Unit/TaskTest.php	/^        $this->task = create('App\\Task',[$/;"	v
 tasks	app/Client.php	/^    public function tasks()$/;"	f
 tasks	app/Http/Controllers/HomeController.php	/^        $tasks = Task::where('assigned_to', \\Auth::user()->id)->where('complete', 0)->get();$/;"	v
-tasks	app/Http/Controllers/TaskController.php	/^        $tasks = Task::latest()->with(['user', 'client'])->get();$/;"	v
-tasks	app/Http/Controllers/UsersTasksController.php	/^        $tasks = Task::with('client')->where('assigned_to', $id)->get();$/;"	v
+tasks	app/Http/Controllers/TaskController.php	/^        $tasks = Task::latest()->with(['user', 'client'])->get()->sortBy('complete');$/;"	v
+tasks	app/Http/Controllers/UsersTasksController.php	/^        $tasks = Task::with('client')->where('assigned_to', $id)->get()->sortBy('complete');$/;"	v
 tasks	app/User.php	/^    public function tasks()$/;"	f
 unauthenticated	app/Exceptions/Handler.php	/^    protected function unauthenticated($request, AuthenticationException $exception)$/;"	f
 up	database/migrations/2014_10_12_000000_create_users_table.php	/^    public function up()$/;"	f
@@ -301,7 +307,9 @@ up	database/migrations/2017_07_06_165241_create_notes_table.php	/^    public fun
 update	app/Http/Controllers/ClientController.php	/^    public function update(Request $request, Client $client)$/;"	f
 update	app/Http/Controllers/NoteController.php	/^    public function update(Request $request, Note $note)$/;"	f
 update	app/Http/Controllers/TaskController.php	/^    public function update(Request $request, Task $task)$/;"	f
+updated	app/Http/Controllers/TaskController.php	/^        $updated = $task->update($request->all());$/;"	v
 uri	server.php	/^$uri = urldecode($/;"	v
+url	app/Mail/TaskAdded.php	/^        $url       = 'http:\/\/crm.kerigan.com\/task\/'. $this->task->id;$/;"	v
 url	tests/Browser/Pages/HomePage.php	/^    public function url()$/;"	f
 user	app/Note.php	/^    public function user()$/;"	f
 user	app/Task.php	/^    public function user()$/;"	f
