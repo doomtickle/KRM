@@ -40,7 +40,7 @@ class TaskAdded extends Mailable implements ShouldQueue
         $createdBy = User::find($this->task->created_by);
         $url       = 'http://crm.kerigan.com/task/'. $this->task->id;
 
-        return $this->from('info@kerigan.com')
+        return $this->from('info@crm.kerigan.com')
                     ->markdown('emails.tasks.added')
                     ->with([
                         'createdBy' => $createdBy,

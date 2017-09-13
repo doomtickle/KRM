@@ -1,7 +1,7 @@
 @component('mail::message')
 # You have a new task in KRM.
 
-{{ $createdBy }} added a new task for you.
+{{ $createdBy->name }} added a new task for you.
 
 Click the button below to view the task
 
