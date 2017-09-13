@@ -17,6 +17,7 @@ const flatpickr = require("flatpickr");
 import PassModal from './components/PassModal.vue';
 import AddNote from './components/AddNote.vue';
 import FlatPickr from './components/FlatPickr.vue';
+import BulmaSelect from './components/Select.vue';
 
 const app = new Vue({
     el: '#app',
@@ -24,7 +25,8 @@ const app = new Vue({
     components: {
         'passmodal': PassModal,
         'addnote': AddNote,
-        'flatPickr': FlatPickr
+        'flatPickr': FlatPickr,
+        'v-select': BulmaSelect
     },
 
     data: {
@@ -43,7 +45,7 @@ const app = new Vue({
 flatpickr(".open-calendar", {
     altInput: true,
     allowInput: true,
-    enableTime: true,
+    enableTime: false,
     inline:true
 });
 

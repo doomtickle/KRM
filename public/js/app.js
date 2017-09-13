@@ -824,6 +824,103 @@ exports.fixVerticalPosition = fixVerticalPosition;
 
 /***/ }),
 /* 4 */
+/***/ (function(module, exports) {
+
+/* globals __VUE_SSR_CONTEXT__ */
+
+// this module is a runtime utility for cleaner component module output and will
+// be included in the final webpack user bundle
+
+module.exports = function normalizeComponent (
+  rawScriptExports,
+  compiledTemplate,
+  injectStyles,
+  scopeId,
+  moduleIdentifier /* server only */
+) {
+  var esModule
+  var scriptExports = rawScriptExports = rawScriptExports || {}
+
+  // ES6 modules interop
+  var type = typeof rawScriptExports.default
+  if (type === 'object' || type === 'function') {
+    esModule = rawScriptExports
+    scriptExports = rawScriptExports.default
+  }
+
+  // Vue.extend constructor export interop
+  var options = typeof scriptExports === 'function'
+    ? scriptExports.options
+    : scriptExports
+
+  // render functions
+  if (compiledTemplate) {
+    options.render = compiledTemplate.render
+    options.staticRenderFns = compiledTemplate.staticRenderFns
+  }
+
+  // scopedId
+  if (scopeId) {
+    options._scopeId = scopeId
+  }
+
+  var hook
+  if (moduleIdentifier) { // server build
+    hook = function (context) {
+      // 2.3 injection
+      context =
+        context || // cached call
+        (this.$vnode && this.$vnode.ssrContext) || // stateful
+        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional
+      // 2.2 with runInNewContext: true
+      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
+        context = __VUE_SSR_CONTEXT__
+      }
+      // inject component styles
+      if (injectStyles) {
+        injectStyles.call(this, context)
+      }
+      // register component module identifier for async chunk inferrence
+      if (context && context._registeredComponents) {
+        context._registeredComponents.add(moduleIdentifier)
+      }
+    }
+    // used by ssr in case component is cached and beforeCreate
+    // never gets called
+    options._ssrRegister = hook
+  } else if (injectStyles) {
+    hook = injectStyles
+  }
+
+  if (hook) {
+    var functional = options.functional
+    var existing = functional
+      ? options.render
+      : options.beforeCreate
+    if (!functional) {
+      // inject component registration as beforeCreate hook
+      options.beforeCreate = existing
+        ? [].concat(existing, hook)
+        : [hook]
+    } else {
+      // register for functioal component in vue file
+      options.render = function renderWithStyleInjection (h, context) {
+        hook.call(context)
+        return existing(h, context)
+      }
+    }
+  }
+
+  return {
+    esModule: esModule,
+    exports: scriptExports,
+    options: options
+  }
+}
+
+
+/***/ }),
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -921,103 +1018,6 @@ utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
 module.exports = defaults;
 
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(26)))
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports) {
-
-/* globals __VUE_SSR_CONTEXT__ */
-
-// this module is a runtime utility for cleaner component module output and will
-// be included in the final webpack user bundle
-
-module.exports = function normalizeComponent (
-  rawScriptExports,
-  compiledTemplate,
-  injectStyles,
-  scopeId,
-  moduleIdentifier /* server only */
-) {
-  var esModule
-  var scriptExports = rawScriptExports = rawScriptExports || {}
-
-  // ES6 modules interop
-  var type = typeof rawScriptExports.default
-  if (type === 'object' || type === 'function') {
-    esModule = rawScriptExports
-    scriptExports = rawScriptExports.default
-  }
-
-  // Vue.extend constructor export interop
-  var options = typeof scriptExports === 'function'
-    ? scriptExports.options
-    : scriptExports
-
-  // render functions
-  if (compiledTemplate) {
-    options.render = compiledTemplate.render
-    options.staticRenderFns = compiledTemplate.staticRenderFns
-  }
-
-  // scopedId
-  if (scopeId) {
-    options._scopeId = scopeId
-  }
-
-  var hook
-  if (moduleIdentifier) { // server build
-    hook = function (context) {
-      // 2.3 injection
-      context =
-        context || // cached call
-        (this.$vnode && this.$vnode.ssrContext) || // stateful
-        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional
-      // 2.2 with runInNewContext: true
-      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
-        context = __VUE_SSR_CONTEXT__
-      }
-      // inject component styles
-      if (injectStyles) {
-        injectStyles.call(this, context)
-      }
-      // register component module identifier for async chunk inferrence
-      if (context && context._registeredComponents) {
-        context._registeredComponents.add(moduleIdentifier)
-      }
-    }
-    // used by ssr in case component is cached and beforeCreate
-    // never gets called
-    options._ssrRegister = hook
-  } else if (injectStyles) {
-    hook = injectStyles
-  }
-
-  if (hook) {
-    var functional = options.functional
-    var existing = functional
-      ? options.render
-      : options.beforeCreate
-    if (!functional) {
-      // inject component registration as beforeCreate hook
-      options.beforeCreate = existing
-        ? [].concat(existing, hook)
-        : [hook]
-    } else {
-      // register for functioal component in vue file
-      options.render = function renderWithStyleInjection (h, context) {
-        hook.call(context)
-        return existing(h, context)
-      }
-    }
-  }
-
-  return {
-    esModule: esModule,
-    exports: scriptExports,
-    options: options
-  }
-}
-
 
 /***/ }),
 /* 6 */
@@ -3719,7 +3719,7 @@ if (true) module.exports = flatpickr;
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(16);
-module.exports = __webpack_require__(57);
+module.exports = __webpack_require__(65);
 
 
 /***/ }),
@@ -3736,6 +3736,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_AddNote_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__components_AddNote_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_FlatPickr_vue__ = __webpack_require__(54);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_FlatPickr_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__components_FlatPickr_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_Select_vue__ = __webpack_require__(57);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_Select_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__components_Select_vue__);
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -3755,13 +3757,15 @@ var flatpickr = __webpack_require__(14);
 
 
 
+
 var app = new Vue({
     el: '#app',
 
     components: {
         'passmodal': __WEBPACK_IMPORTED_MODULE_1__components_PassModal_vue___default.a,
         'addnote': __WEBPACK_IMPORTED_MODULE_2__components_AddNote_vue___default.a,
-        'flatPickr': __WEBPACK_IMPORTED_MODULE_3__components_FlatPickr_vue___default.a
+        'flatPickr': __WEBPACK_IMPORTED_MODULE_3__components_FlatPickr_vue___default.a,
+        'v-select': __WEBPACK_IMPORTED_MODULE_4__components_Select_vue___default.a
     },
 
     data: {
@@ -3779,7 +3783,7 @@ var app = new Vue({
 flatpickr(".open-calendar", {
     altInput: true,
     allowInput: true,
-    enableTime: true,
+    enableTime: false,
     inline: true
 });
 
@@ -33620,7 +33624,7 @@ module.exports = __webpack_require__(23);
 var utils = __webpack_require__(0);
 var bind = __webpack_require__(7);
 var Axios = __webpack_require__(25);
-var defaults = __webpack_require__(4);
+var defaults = __webpack_require__(5);
 
 /**
  * Create an instance of Axios
@@ -33703,7 +33707,7 @@ function isSlowBuffer (obj) {
 "use strict";
 
 
-var defaults = __webpack_require__(4);
+var defaults = __webpack_require__(5);
 var utils = __webpack_require__(0);
 var InterceptorManager = __webpack_require__(35);
 var dispatchRequest = __webpack_require__(36);
@@ -34425,7 +34429,7 @@ module.exports = InterceptorManager;
 var utils = __webpack_require__(0);
 var transformData = __webpack_require__(37);
 var isCancel = __webpack_require__(10);
-var defaults = __webpack_require__(4);
+var defaults = __webpack_require__(5);
 
 /**
  * Throws a `Cancel` if cancellation has been requested.
@@ -45582,7 +45586,7 @@ module.exports = exports['default'];
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var Component = __webpack_require__(5)(
+var Component = __webpack_require__(4)(
   /* script */
   __webpack_require__(49),
   /* template */
@@ -45594,7 +45598,7 @@ var Component = __webpack_require__(5)(
   /* moduleIdentifier (server only) */
   null
 )
-Component.options.__file = "/Users/daron/code/crm/resources/assets/js/components/PassModal.vue"
+Component.options.__file = "D:\\dev\\KRM\\resources\\assets\\js\\components\\PassModal.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] PassModal.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -45605,9 +45609,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-67b8d6f4", Component.options)
+    hotAPI.createRecord("data-v-fa2428c4", Component.options)
   } else {
-    hotAPI.reload("data-v-67b8d6f4", Component.options)
+    hotAPI.reload("data-v-fa2428c4", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -45683,7 +45687,7 @@ module.exports.render._withStripped = true
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-67b8d6f4", module.exports)
+     require("vue-hot-reload-api").rerender("data-v-fa2428c4", module.exports)
   }
 }
 
@@ -45692,7 +45696,7 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var Component = __webpack_require__(5)(
+var Component = __webpack_require__(4)(
   /* script */
   __webpack_require__(52),
   /* template */
@@ -45704,7 +45708,7 @@ var Component = __webpack_require__(5)(
   /* moduleIdentifier (server only) */
   null
 )
-Component.options.__file = "/Users/daron/code/crm/resources/assets/js/components/AddNote.vue"
+Component.options.__file = "D:\\dev\\KRM\\resources\\assets\\js\\components\\AddNote.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] AddNote.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -45715,9 +45719,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-21d8cec6", Component.options)
+    hotAPI.createRecord("data-v-4b8e5496", Component.options)
   } else {
-    hotAPI.reload("data-v-21d8cec6", Component.options)
+    hotAPI.reload("data-v-4b8e5496", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -45908,7 +45912,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "click": _vm.addNote
     }
-  }, [_vm._v("\n            Add Note\n            ")])])])], 2)
+  }, [_vm._v("\r\n            Add Note\r\n            ")])])])], 2)
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('span', {
     staticClass: "icon"
@@ -45920,7 +45924,7 @@ module.exports.render._withStripped = true
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-21d8cec6", module.exports)
+     require("vue-hot-reload-api").rerender("data-v-4b8e5496", module.exports)
   }
 }
 
@@ -45929,7 +45933,7 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var Component = __webpack_require__(5)(
+var Component = __webpack_require__(4)(
   /* script */
   __webpack_require__(55),
   /* template */
@@ -45941,7 +45945,7 @@ var Component = __webpack_require__(5)(
   /* moduleIdentifier (server only) */
   null
 )
-Component.options.__file = "/Users/daron/code/crm/resources/assets/js/components/FlatPickr.vue"
+Component.options.__file = "D:\\dev\\KRM\\resources\\assets\\js\\components\\FlatPickr.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] FlatPickr.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -45952,9 +45956,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-75e155e2", Component.options)
+    hotAPI.createRecord("data-v-2cabacfa", Component.options)
   } else {
-    hotAPI.reload("data-v-75e155e2", Component.options)
+    hotAPI.reload("data-v-2cabacfa", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -46014,12 +46018,733 @@ module.exports.render._withStripped = true
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-75e155e2", module.exports)
+     require("vue-hot-reload-api").rerender("data-v-2cabacfa", module.exports)
   }
 }
 
 /***/ }),
 /* 57 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(58)
+}
+var Component = __webpack_require__(4)(
+  /* script */
+  __webpack_require__(63),
+  /* template */
+  __webpack_require__(64),
+  /* styles */
+  injectStyle,
+  /* scopeId */
+  null,
+  /* moduleIdentifier (server only) */
+  null
+)
+Component.options.__file = "D:\\dev\\KRM\\resources\\assets\\js\\components\\Select.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] Select.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-484443ea", Component.options)
+  } else {
+    hotAPI.reload("data-v-484443ea", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 58 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(59);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(61)("3b27e919", content, false);
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-484443ea\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/sass-loader/lib/loader.js?indentedSyntax!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Select.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-484443ea\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/sass-loader/lib/loader.js?indentedSyntax!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Select.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 59 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(60)(undefined);
+// imports
+
+
+// module
+exports.push([module.i, "\n@keyframes spinAround {\nfrom {\n    transform: rotate(0deg);\n}\nto {\n    transform: rotate(359deg);\n}\n}\n.button {\n  -moz-appearance: none;\n  -webkit-appearance: none;\n  align-items: center;\n  border: 1px solid transparent;\n  border-radius: 3px;\n  box-shadow: none;\n  display: inline-flex;\n  font-size: 1rem;\n  height: 2.25em;\n  justify-content: flex-start;\n  line-height: 1.5;\n  padding-bottom: calc(0.375em - 1px);\n  padding-left: calc(0.625em - 1px);\n  padding-right: calc(0.625em - 1px);\n  padding-top: calc(0.375em - 1px);\n  position: relative;\n  vertical-align: top;\n  -webkit-touch-callout: none;\n  -webkit-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n  background-color: white;\n  border-color: #dbdbdb;\n  color: #363636;\n  cursor: pointer;\n  justify-content: center;\n  padding-left: 0.75em;\n  padding-right: 0.75em;\n  text-align: center;\n  white-space: nowrap;\n}\n.button:focus, .button.is-focused, .button:active, .button.is-active {\n    outline: none;\n}\n.button[disabled] {\n    cursor: not-allowed;\n}\n.button strong {\n    color: inherit;\n}\n.button .icon, .button .icon.is-small, .button .icon.is-medium, .button .icon.is-large {\n    height: 1.5em;\n    width: 1.5em;\n}\n.button .icon:first-child:not(:last-child) {\n    margin-left: calc(-0.375em - 1px);\n    margin-right: 0.1875em;\n}\n.button .icon:last-child:not(:first-child) {\n    margin-left: 0.1875em;\n    margin-right: calc(-0.375em - 1px);\n}\n.button .icon:first-child:last-child {\n    margin-left: calc(-0.375em - 1px);\n    margin-right: calc(-0.375em - 1px);\n}\n.button:hover, .button.is-hovered {\n    border-color: #b5b5b5;\n    color: #363636;\n}\n.button:focus, .button.is-focused {\n    border-color: #00d1b2;\n    box-shadow: 0 0 0.5em rgba(0, 209, 178, 0.25);\n    color: #363636;\n}\n.button:active, .button.is-active {\n    border-color: #4a4a4a;\n    box-shadow: inset 0 1px 2px rgba(10, 10, 10, 0.2);\n    color: #363636;\n}\n.button.is-link {\n    background-color: transparent;\n    border-color: transparent;\n    color: #4a4a4a;\n    text-decoration: underline;\n}\n.button.is-link:hover, .button.is-link.is-hovered, .button.is-link:focus, .button.is-link.is-focused, .button.is-link:active, .button.is-link.is-active {\n      background-color: whitesmoke;\n      color: #363636;\n}\n.button.is-link[disabled] {\n      background-color: transparent;\n      border-color: transparent;\n      box-shadow: none;\n}\n.button.is-white {\n    background-color: white;\n    border-color: transparent;\n    color: #0a0a0a;\n}\n.button.is-white:hover, .button.is-white.is-hovered {\n      background-color: #f9f9f9;\n      border-color: transparent;\n      color: #0a0a0a;\n}\n.button.is-white:focus, .button.is-white.is-focused {\n      border-color: transparent;\n      box-shadow: 0 0 0.5em rgba(255, 255, 255, 0.25);\n      color: #0a0a0a;\n}\n.button.is-white:active, .button.is-white.is-active {\n      background-color: #f2f2f2;\n      border-color: transparent;\n      box-shadow: inset 0 1px 2px rgba(10, 10, 10, 0.2);\n      color: #0a0a0a;\n}\n.button.is-white[disabled] {\n      background-color: white;\n      border-color: transparent;\n      box-shadow: none;\n}\n.button.is-white.is-inverted {\n      background-color: #0a0a0a;\n      color: white;\n}\n.button.is-white.is-inverted:hover {\n        background-color: black;\n}\n.button.is-white.is-inverted[disabled] {\n        background-color: #0a0a0a;\n        border-color: transparent;\n        box-shadow: none;\n        color: white;\n}\n.button.is-white.is-loading:after {\n      border-color: transparent transparent #0a0a0a #0a0a0a !important;\n}\n.button.is-white.is-outlined {\n      background-color: transparent;\n      border-color: white;\n      color: white;\n}\n.button.is-white.is-outlined:hover, .button.is-white.is-outlined:focus {\n        background-color: white;\n        border-color: white;\n        color: #0a0a0a;\n}\n.button.is-white.is-outlined.is-loading:after {\n        border-color: transparent transparent white white !important;\n}\n.button.is-white.is-outlined[disabled] {\n        background-color: transparent;\n        border-color: white;\n        box-shadow: none;\n        color: white;\n}\n.button.is-white.is-inverted.is-outlined {\n      background-color: transparent;\n      border-color: #0a0a0a;\n      color: #0a0a0a;\n}\n.button.is-white.is-inverted.is-outlined:hover, .button.is-white.is-inverted.is-outlined:focus {\n        background-color: #0a0a0a;\n        color: white;\n}\n.button.is-white.is-inverted.is-outlined[disabled] {\n        background-color: transparent;\n        border-color: #0a0a0a;\n        box-shadow: none;\n        color: #0a0a0a;\n}\n.button.is-black {\n    background-color: #0a0a0a;\n    border-color: transparent;\n    color: white;\n}\n.button.is-black:hover, .button.is-black.is-hovered {\n      background-color: #040404;\n      border-color: transparent;\n      color: white;\n}\n.button.is-black:focus, .button.is-black.is-focused {\n      border-color: transparent;\n      box-shadow: 0 0 0.5em rgba(10, 10, 10, 0.25);\n      color: white;\n}\n.button.is-black:active, .button.is-black.is-active {\n      background-color: black;\n      border-color: transparent;\n      box-shadow: inset 0 1px 2px rgba(10, 10, 10, 0.2);\n      color: white;\n}\n.button.is-black[disabled] {\n      background-color: #0a0a0a;\n      border-color: transparent;\n      box-shadow: none;\n}\n.button.is-black.is-inverted {\n      background-color: white;\n      color: #0a0a0a;\n}\n.button.is-black.is-inverted:hover {\n        background-color: #f2f2f2;\n}\n.button.is-black.is-inverted[disabled] {\n        background-color: white;\n        border-color: transparent;\n        box-shadow: none;\n        color: #0a0a0a;\n}\n.button.is-black.is-loading:after {\n      border-color: transparent transparent white white !important;\n}\n.button.is-black.is-outlined {\n      background-color: transparent;\n      border-color: #0a0a0a;\n      color: #0a0a0a;\n}\n.button.is-black.is-outlined:hover, .button.is-black.is-outlined:focus {\n        background-color: #0a0a0a;\n        border-color: #0a0a0a;\n        color: white;\n}\n.button.is-black.is-outlined.is-loading:after {\n        border-color: transparent transparent #0a0a0a #0a0a0a !important;\n}\n.button.is-black.is-outlined[disabled] {\n        background-color: transparent;\n        border-color: #0a0a0a;\n        box-shadow: none;\n        color: #0a0a0a;\n}\n.button.is-black.is-inverted.is-outlined {\n      background-color: transparent;\n      border-color: white;\n      color: white;\n}\n.button.is-black.is-inverted.is-outlined:hover, .button.is-black.is-inverted.is-outlined:focus {\n        background-color: white;\n        color: #0a0a0a;\n}\n.button.is-black.is-inverted.is-outlined[disabled] {\n        background-color: transparent;\n        border-color: white;\n        box-shadow: none;\n        color: white;\n}\n.button.is-light {\n    background-color: whitesmoke;\n    border-color: transparent;\n    color: #363636;\n}\n.button.is-light:hover, .button.is-light.is-hovered {\n      background-color: #eeeeee;\n      border-color: transparent;\n      color: #363636;\n}\n.button.is-light:focus, .button.is-light.is-focused {\n      border-color: transparent;\n      box-shadow: 0 0 0.5em rgba(245, 245, 245, 0.25);\n      color: #363636;\n}\n.button.is-light:active, .button.is-light.is-active {\n      background-color: #e8e8e8;\n      border-color: transparent;\n      box-shadow: inset 0 1px 2px rgba(10, 10, 10, 0.2);\n      color: #363636;\n}\n.button.is-light[disabled] {\n      background-color: whitesmoke;\n      border-color: transparent;\n      box-shadow: none;\n}\n.button.is-light.is-inverted {\n      background-color: #363636;\n      color: whitesmoke;\n}\n.button.is-light.is-inverted:hover {\n        background-color: #292929;\n}\n.button.is-light.is-inverted[disabled] {\n        background-color: #363636;\n        border-color: transparent;\n        box-shadow: none;\n        color: whitesmoke;\n}\n.button.is-light.is-loading:after {\n      border-color: transparent transparent #363636 #363636 !important;\n}\n.button.is-light.is-outlined {\n      background-color: transparent;\n      border-color: whitesmoke;\n      color: whitesmoke;\n}\n.button.is-light.is-outlined:hover, .button.is-light.is-outlined:focus {\n        background-color: whitesmoke;\n        border-color: whitesmoke;\n        color: #363636;\n}\n.button.is-light.is-outlined.is-loading:after {\n        border-color: transparent transparent whitesmoke whitesmoke !important;\n}\n.button.is-light.is-outlined[disabled] {\n        background-color: transparent;\n        border-color: whitesmoke;\n        box-shadow: none;\n        color: whitesmoke;\n}\n.button.is-light.is-inverted.is-outlined {\n      background-color: transparent;\n      border-color: #363636;\n      color: #363636;\n}\n.button.is-light.is-inverted.is-outlined:hover, .button.is-light.is-inverted.is-outlined:focus {\n        background-color: #363636;\n        color: whitesmoke;\n}\n.button.is-light.is-inverted.is-outlined[disabled] {\n        background-color: transparent;\n        border-color: #363636;\n        box-shadow: none;\n        color: #363636;\n}\n.button.is-dark {\n    background-color: #363636;\n    border-color: transparent;\n    color: whitesmoke;\n}\n.button.is-dark:hover, .button.is-dark.is-hovered {\n      background-color: #2f2f2f;\n      border-color: transparent;\n      color: whitesmoke;\n}\n.button.is-dark:focus, .button.is-dark.is-focused {\n      border-color: transparent;\n      box-shadow: 0 0 0.5em rgba(54, 54, 54, 0.25);\n      color: whitesmoke;\n}\n.button.is-dark:active, .button.is-dark.is-active {\n      background-color: #292929;\n      border-color: transparent;\n      box-shadow: inset 0 1px 2px rgba(10, 10, 10, 0.2);\n      color: whitesmoke;\n}\n.button.is-dark[disabled] {\n      background-color: #363636;\n      border-color: transparent;\n      box-shadow: none;\n}\n.button.is-dark.is-inverted {\n      background-color: whitesmoke;\n      color: #363636;\n}\n.button.is-dark.is-inverted:hover {\n        background-color: #e8e8e8;\n}\n.button.is-dark.is-inverted[disabled] {\n        background-color: whitesmoke;\n        border-color: transparent;\n        box-shadow: none;\n        color: #363636;\n}\n.button.is-dark.is-loading:after {\n      border-color: transparent transparent whitesmoke whitesmoke !important;\n}\n.button.is-dark.is-outlined {\n      background-color: transparent;\n      border-color: #363636;\n      color: #363636;\n}\n.button.is-dark.is-outlined:hover, .button.is-dark.is-outlined:focus {\n        background-color: #363636;\n        border-color: #363636;\n        color: whitesmoke;\n}\n.button.is-dark.is-outlined.is-loading:after {\n        border-color: transparent transparent #363636 #363636 !important;\n}\n.button.is-dark.is-outlined[disabled] {\n        background-color: transparent;\n        border-color: #363636;\n        box-shadow: none;\n        color: #363636;\n}\n.button.is-dark.is-inverted.is-outlined {\n      background-color: transparent;\n      border-color: whitesmoke;\n      color: whitesmoke;\n}\n.button.is-dark.is-inverted.is-outlined:hover, .button.is-dark.is-inverted.is-outlined:focus {\n        background-color: whitesmoke;\n        color: #363636;\n}\n.button.is-dark.is-inverted.is-outlined[disabled] {\n        background-color: transparent;\n        border-color: whitesmoke;\n        box-shadow: none;\n        color: whitesmoke;\n}\n.button.is-primary {\n    background-color: #00d1b2;\n    border-color: transparent;\n    color: #fff;\n}\n.button.is-primary:hover, .button.is-primary.is-hovered {\n      background-color: #00c4a7;\n      border-color: transparent;\n      color: #fff;\n}\n.button.is-primary:focus, .button.is-primary.is-focused {\n      border-color: transparent;\n      box-shadow: 0 0 0.5em rgba(0, 209, 178, 0.25);\n      color: #fff;\n}\n.button.is-primary:active, .button.is-primary.is-active {\n      background-color: #00b89c;\n      border-color: transparent;\n      box-shadow: inset 0 1px 2px rgba(10, 10, 10, 0.2);\n      color: #fff;\n}\n.button.is-primary[disabled] {\n      background-color: #00d1b2;\n      border-color: transparent;\n      box-shadow: none;\n}\n.button.is-primary.is-inverted {\n      background-color: #fff;\n      color: #00d1b2;\n}\n.button.is-primary.is-inverted:hover {\n        background-color: #f2f2f2;\n}\n.button.is-primary.is-inverted[disabled] {\n        background-color: #fff;\n        border-color: transparent;\n        box-shadow: none;\n        color: #00d1b2;\n}\n.button.is-primary.is-loading:after {\n      border-color: transparent transparent #fff #fff !important;\n}\n.button.is-primary.is-outlined {\n      background-color: transparent;\n      border-color: #00d1b2;\n      color: #00d1b2;\n}\n.button.is-primary.is-outlined:hover, .button.is-primary.is-outlined:focus {\n        background-color: #00d1b2;\n        border-color: #00d1b2;\n        color: #fff;\n}\n.button.is-primary.is-outlined.is-loading:after {\n        border-color: transparent transparent #00d1b2 #00d1b2 !important;\n}\n.button.is-primary.is-outlined[disabled] {\n        background-color: transparent;\n        border-color: #00d1b2;\n        box-shadow: none;\n        color: #00d1b2;\n}\n.button.is-primary.is-inverted.is-outlined {\n      background-color: transparent;\n      border-color: #fff;\n      color: #fff;\n}\n.button.is-primary.is-inverted.is-outlined:hover, .button.is-primary.is-inverted.is-outlined:focus {\n        background-color: #fff;\n        color: #00d1b2;\n}\n.button.is-primary.is-inverted.is-outlined[disabled] {\n        background-color: transparent;\n        border-color: #fff;\n        box-shadow: none;\n        color: #fff;\n}\n.button.is-info {\n    background-color: #3273dc;\n    border-color: transparent;\n    color: #fff;\n}\n.button.is-info:hover, .button.is-info.is-hovered {\n      background-color: #276cda;\n      border-color: transparent;\n      color: #fff;\n}\n.button.is-info:focus, .button.is-info.is-focused {\n      border-color: transparent;\n      box-shadow: 0 0 0.5em rgba(50, 115, 220, 0.25);\n      color: #fff;\n}\n.button.is-info:active, .button.is-info.is-active {\n      background-color: #2366d1;\n      border-color: transparent;\n      box-shadow: inset 0 1px 2px rgba(10, 10, 10, 0.2);\n      color: #fff;\n}\n.button.is-info[disabled] {\n      background-color: #3273dc;\n      border-color: transparent;\n      box-shadow: none;\n}\n.button.is-info.is-inverted {\n      background-color: #fff;\n      color: #3273dc;\n}\n.button.is-info.is-inverted:hover {\n        background-color: #f2f2f2;\n}\n.button.is-info.is-inverted[disabled] {\n        background-color: #fff;\n        border-color: transparent;\n        box-shadow: none;\n        color: #3273dc;\n}\n.button.is-info.is-loading:after {\n      border-color: transparent transparent #fff #fff !important;\n}\n.button.is-info.is-outlined {\n      background-color: transparent;\n      border-color: #3273dc;\n      color: #3273dc;\n}\n.button.is-info.is-outlined:hover, .button.is-info.is-outlined:focus {\n        background-color: #3273dc;\n        border-color: #3273dc;\n        color: #fff;\n}\n.button.is-info.is-outlined.is-loading:after {\n        border-color: transparent transparent #3273dc #3273dc !important;\n}\n.button.is-info.is-outlined[disabled] {\n        background-color: transparent;\n        border-color: #3273dc;\n        box-shadow: none;\n        color: #3273dc;\n}\n.button.is-info.is-inverted.is-outlined {\n      background-color: transparent;\n      border-color: #fff;\n      color: #fff;\n}\n.button.is-info.is-inverted.is-outlined:hover, .button.is-info.is-inverted.is-outlined:focus {\n        background-color: #fff;\n        color: #3273dc;\n}\n.button.is-info.is-inverted.is-outlined[disabled] {\n        background-color: transparent;\n        border-color: #fff;\n        box-shadow: none;\n        color: #fff;\n}\n.button.is-success {\n    background-color: #23d160;\n    border-color: transparent;\n    color: #fff;\n}\n.button.is-success:hover, .button.is-success.is-hovered {\n      background-color: #22c65b;\n      border-color: transparent;\n      color: #fff;\n}\n.button.is-success:focus, .button.is-success.is-focused {\n      border-color: transparent;\n      box-shadow: 0 0 0.5em rgba(35, 209, 96, 0.25);\n      color: #fff;\n}\n.button.is-success:active, .button.is-success.is-active {\n      background-color: #20bc56;\n      border-color: transparent;\n      box-shadow: inset 0 1px 2px rgba(10, 10, 10, 0.2);\n      color: #fff;\n}\n.button.is-success[disabled] {\n      background-color: #23d160;\n      border-color: transparent;\n      box-shadow: none;\n}\n.button.is-success.is-inverted {\n      background-color: #fff;\n      color: #23d160;\n}\n.button.is-success.is-inverted:hover {\n        background-color: #f2f2f2;\n}\n.button.is-success.is-inverted[disabled] {\n        background-color: #fff;\n        border-color: transparent;\n        box-shadow: none;\n        color: #23d160;\n}\n.button.is-success.is-loading:after {\n      border-color: transparent transparent #fff #fff !important;\n}\n.button.is-success.is-outlined {\n      background-color: transparent;\n      border-color: #23d160;\n      color: #23d160;\n}\n.button.is-success.is-outlined:hover, .button.is-success.is-outlined:focus {\n        background-color: #23d160;\n        border-color: #23d160;\n        color: #fff;\n}\n.button.is-success.is-outlined.is-loading:after {\n        border-color: transparent transparent #23d160 #23d160 !important;\n}\n.button.is-success.is-outlined[disabled] {\n        background-color: transparent;\n        border-color: #23d160;\n        box-shadow: none;\n        color: #23d160;\n}\n.button.is-success.is-inverted.is-outlined {\n      background-color: transparent;\n      border-color: #fff;\n      color: #fff;\n}\n.button.is-success.is-inverted.is-outlined:hover, .button.is-success.is-inverted.is-outlined:focus {\n        background-color: #fff;\n        color: #23d160;\n}\n.button.is-success.is-inverted.is-outlined[disabled] {\n        background-color: transparent;\n        border-color: #fff;\n        box-shadow: none;\n        color: #fff;\n}\n.button.is-warning {\n    background-color: #ffdd57;\n    border-color: transparent;\n    color: rgba(0, 0, 0, 0.7);\n}\n.button.is-warning:hover, .button.is-warning.is-hovered {\n      background-color: #ffdb4a;\n      border-color: transparent;\n      color: rgba(0, 0, 0, 0.7);\n}\n.button.is-warning:focus, .button.is-warning.is-focused {\n      border-color: transparent;\n      box-shadow: 0 0 0.5em rgba(255, 221, 87, 0.25);\n      color: rgba(0, 0, 0, 0.7);\n}\n.button.is-warning:active, .button.is-warning.is-active {\n      background-color: #ffd83d;\n      border-color: transparent;\n      box-shadow: inset 0 1px 2px rgba(10, 10, 10, 0.2);\n      color: rgba(0, 0, 0, 0.7);\n}\n.button.is-warning[disabled] {\n      background-color: #ffdd57;\n      border-color: transparent;\n      box-shadow: none;\n}\n.button.is-warning.is-inverted {\n      background-color: rgba(0, 0, 0, 0.7);\n      color: #ffdd57;\n}\n.button.is-warning.is-inverted:hover {\n        background-color: rgba(0, 0, 0, 0.7);\n}\n.button.is-warning.is-inverted[disabled] {\n        background-color: rgba(0, 0, 0, 0.7);\n        border-color: transparent;\n        box-shadow: none;\n        color: #ffdd57;\n}\n.button.is-warning.is-loading:after {\n      border-color: transparent transparent rgba(0, 0, 0, 0.7) rgba(0, 0, 0, 0.7) !important;\n}\n.button.is-warning.is-outlined {\n      background-color: transparent;\n      border-color: #ffdd57;\n      color: #ffdd57;\n}\n.button.is-warning.is-outlined:hover, .button.is-warning.is-outlined:focus {\n        background-color: #ffdd57;\n        border-color: #ffdd57;\n        color: rgba(0, 0, 0, 0.7);\n}\n.button.is-warning.is-outlined.is-loading:after {\n        border-color: transparent transparent #ffdd57 #ffdd57 !important;\n}\n.button.is-warning.is-outlined[disabled] {\n        background-color: transparent;\n        border-color: #ffdd57;\n        box-shadow: none;\n        color: #ffdd57;\n}\n.button.is-warning.is-inverted.is-outlined {\n      background-color: transparent;\n      border-color: rgba(0, 0, 0, 0.7);\n      color: rgba(0, 0, 0, 0.7);\n}\n.button.is-warning.is-inverted.is-outlined:hover, .button.is-warning.is-inverted.is-outlined:focus {\n        background-color: rgba(0, 0, 0, 0.7);\n        color: #ffdd57;\n}\n.button.is-warning.is-inverted.is-outlined[disabled] {\n        background-color: transparent;\n        border-color: rgba(0, 0, 0, 0.7);\n        box-shadow: none;\n        color: rgba(0, 0, 0, 0.7);\n}\n.button.is-danger {\n    background-color: #ff3860;\n    border-color: transparent;\n    color: #fff;\n}\n.button.is-danger:hover, .button.is-danger.is-hovered {\n      background-color: #ff2b56;\n      border-color: transparent;\n      color: #fff;\n}\n.button.is-danger:focus, .button.is-danger.is-focused {\n      border-color: transparent;\n      box-shadow: 0 0 0.5em rgba(255, 56, 96, 0.25);\n      color: #fff;\n}\n.button.is-danger:active, .button.is-danger.is-active {\n      background-color: #ff1f4b;\n      border-color: transparent;\n      box-shadow: inset 0 1px 2px rgba(10, 10, 10, 0.2);\n      color: #fff;\n}\n.button.is-danger[disabled] {\n      background-color: #ff3860;\n      border-color: transparent;\n      box-shadow: none;\n}\n.button.is-danger.is-inverted {\n      background-color: #fff;\n      color: #ff3860;\n}\n.button.is-danger.is-inverted:hover {\n        background-color: #f2f2f2;\n}\n.button.is-danger.is-inverted[disabled] {\n        background-color: #fff;\n        border-color: transparent;\n        box-shadow: none;\n        color: #ff3860;\n}\n.button.is-danger.is-loading:after {\n      border-color: transparent transparent #fff #fff !important;\n}\n.button.is-danger.is-outlined {\n      background-color: transparent;\n      border-color: #ff3860;\n      color: #ff3860;\n}\n.button.is-danger.is-outlined:hover, .button.is-danger.is-outlined:focus {\n        background-color: #ff3860;\n        border-color: #ff3860;\n        color: #fff;\n}\n.button.is-danger.is-outlined.is-loading:after {\n        border-color: transparent transparent #ff3860 #ff3860 !important;\n}\n.button.is-danger.is-outlined[disabled] {\n        background-color: transparent;\n        border-color: #ff3860;\n        box-shadow: none;\n        color: #ff3860;\n}\n.button.is-danger.is-inverted.is-outlined {\n      background-color: transparent;\n      border-color: #fff;\n      color: #fff;\n}\n.button.is-danger.is-inverted.is-outlined:hover, .button.is-danger.is-inverted.is-outlined:focus {\n        background-color: #fff;\n        color: #ff3860;\n}\n.button.is-danger.is-inverted.is-outlined[disabled] {\n        background-color: transparent;\n        border-color: #fff;\n        box-shadow: none;\n        color: #fff;\n}\n.button.is-small {\n    border-radius: 2px;\n    font-size: 0.75rem;\n}\n.button.is-medium {\n    font-size: 1.25rem;\n}\n.button.is-large {\n    font-size: 1.5rem;\n}\n.button[disabled] {\n    background-color: white;\n    border-color: #dbdbdb;\n    box-shadow: none;\n    opacity: 0.5;\n}\n.button.is-fullwidth {\n    display: flex;\n    width: 100%;\n}\n.button.is-loading {\n    color: transparent !important;\n    pointer-events: none;\n}\n.button.is-loading:after {\n      animation: spinAround 500ms infinite linear;\n      border: 2px solid #dbdbdb;\n      border-radius: 290486px;\n      border-right-color: transparent;\n      border-top-color: transparent;\n      content: \"\";\n      display: block;\n      height: 1em;\n      position: relative;\n      width: 1em;\n      position: absolute;\n      left: calc(50% - (1em / 2));\n      top: calc(50% - (1em / 2));\n      position: absolute !important;\n}\n.button.is-static {\n    background-color: whitesmoke;\n    border-color: #dbdbdb;\n    color: #7a7a7a;\n    box-shadow: none;\n    pointer-events: none;\n}\nbutton.button,\ninput[type=\"submit\"].button {\n  line-height: 1;\n  padding-bottom: 0.4em;\n  padding-top: 0.35em;\n}\n.input,\n.textarea {\n  -moz-appearance: none;\n  -webkit-appearance: none;\n  align-items: center;\n  border: 1px solid transparent;\n  border-radius: 3px;\n  box-shadow: none;\n  display: inline-flex;\n  font-size: 1rem;\n  height: 2.25em;\n  justify-content: flex-start;\n  line-height: 1.5;\n  padding-bottom: calc(0.375em - 1px);\n  padding-left: calc(0.625em - 1px);\n  padding-right: calc(0.625em - 1px);\n  padding-top: calc(0.375em - 1px);\n  position: relative;\n  vertical-align: top;\n  background-color: white;\n  border-color: #dbdbdb;\n  color: #363636;\n  box-shadow: inset 0 1px 2px rgba(10, 10, 10, 0.1);\n  max-width: 100%;\n  width: 100%;\n}\n.input:focus, .input.is-focused, .input:active, .input.is-active,\n  .textarea:focus,\n  .textarea.is-focused,\n  .textarea:active,\n  .textarea.is-active {\n    outline: none;\n}\n.input[disabled],\n  .textarea[disabled] {\n    cursor: not-allowed;\n}\n.input:hover, .input.is-hovered,\n  .textarea:hover,\n  .textarea.is-hovered {\n    border-color: #b5b5b5;\n}\n.input:focus, .input.is-focused, .input:active, .input.is-active,\n  .textarea:focus,\n  .textarea.is-focused,\n  .textarea:active,\n  .textarea.is-active {\n    border-color: #00d1b2;\n}\n.input[disabled],\n  .textarea[disabled] {\n    background-color: whitesmoke;\n    border-color: whitesmoke;\n    box-shadow: none;\n    color: #7a7a7a;\n}\n.input[disabled]::-moz-placeholder,\n    .textarea[disabled]::-moz-placeholder {\n      color: rgba(54, 54, 54, 0.3);\n}\n.input[disabled]::-webkit-input-placeholder,\n    .textarea[disabled]::-webkit-input-placeholder {\n      color: rgba(54, 54, 54, 0.3);\n}\n.input[disabled]:-moz-placeholder,\n    .textarea[disabled]:-moz-placeholder {\n      color: rgba(54, 54, 54, 0.3);\n}\n.input[disabled]:-ms-input-placeholder,\n    .textarea[disabled]:-ms-input-placeholder {\n      color: rgba(54, 54, 54, 0.3);\n}\n.input[type=\"search\"],\n  .textarea[type=\"search\"] {\n    border-radius: 290486px;\n}\n.input.is-white,\n  .textarea.is-white {\n    border-color: white;\n}\n.input.is-black,\n  .textarea.is-black {\n    border-color: #0a0a0a;\n}\n.input.is-light,\n  .textarea.is-light {\n    border-color: whitesmoke;\n}\n.input.is-dark,\n  .textarea.is-dark {\n    border-color: #363636;\n}\n.input.is-primary,\n  .textarea.is-primary {\n    border-color: #00d1b2;\n}\n.input.is-info,\n  .textarea.is-info {\n    border-color: #3273dc;\n}\n.input.is-success,\n  .textarea.is-success {\n    border-color: #23d160;\n}\n.input.is-warning,\n  .textarea.is-warning {\n    border-color: #ffdd57;\n}\n.input.is-danger,\n  .textarea.is-danger {\n    border-color: #ff3860;\n}\n.input.is-small,\n  .textarea.is-small {\n    border-radius: 2px;\n    font-size: 0.75rem;\n}\n.input.is-medium,\n  .textarea.is-medium {\n    font-size: 1.25rem;\n}\n.input.is-large,\n  .textarea.is-large {\n    font-size: 1.5rem;\n}\n.input.is-fullwidth,\n  .textarea.is-fullwidth {\n    display: block;\n    width: 100%;\n}\n.input.is-inline,\n  .textarea.is-inline {\n    display: inline;\n    width: auto;\n}\n.textarea {\n  display: block;\n  max-width: 100%;\n  min-width: 100%;\n  padding: 0.625em;\n  resize: vertical;\n}\n.textarea:not([rows]) {\n    max-height: 600px;\n    min-height: 120px;\n}\n.textarea[rows] {\n    height: unset;\n}\n.checkbox,\n.radio {\n  cursor: pointer;\n  display: inline-block;\n  line-height: 1.25;\n  position: relative;\n}\n.checkbox input,\n  .radio input {\n    cursor: pointer;\n}\n.checkbox:hover,\n  .radio:hover {\n    color: #363636;\n}\n.checkbox[disabled],\n  .radio[disabled] {\n    color: #7a7a7a;\n    cursor: not-allowed;\n}\n.radio + .radio {\n  margin-left: 0.5em;\n}\n.select, .bulma-select__container {\n  display: inline-block;\n  max-width: 100%;\n  position: relative;\n  vertical-align: top;\n}\n.select:not(.is-multiple), .bulma-select__container:not(.is-multiple) {\n    height: 2.25em;\n}\n.select:not(.is-multiple)::after, .bulma-select__container:not(.is-multiple)::after {\n      border: 1px solid #00d1b2;\n      border-right: 0;\n      border-top: 0;\n      content: \" \";\n      display: block;\n      height: 0.5em;\n      pointer-events: none;\n      position: absolute;\n      transform: rotate(-45deg);\n      width: 0.5em;\n      margin-top: -0.375em;\n      right: 1.125em;\n      top: 50%;\n      z-index: 4;\n}\n.select select, .bulma-select__container select, .select .bulma-select__placeholder, .bulma-select__container .bulma-select__placeholder {\n    -moz-appearance: none;\n    -webkit-appearance: none;\n    align-items: center;\n    border: 1px solid transparent;\n    border-radius: 3px;\n    box-shadow: none;\n    display: inline-flex;\n    font-size: 1rem;\n    height: 2.25em;\n    justify-content: flex-start;\n    line-height: 1.5;\n    padding-bottom: calc(0.375em - 1px);\n    padding-left: calc(0.625em - 1px);\n    padding-right: calc(0.625em - 1px);\n    padding-top: calc(0.375em - 1px);\n    position: relative;\n    vertical-align: top;\n    background-color: white;\n    border-color: #dbdbdb;\n    color: #363636;\n    cursor: pointer;\n    display: block;\n    font-size: 1em;\n    max-width: 100%;\n    outline: none;\n}\n.select select:focus, .bulma-select__container select:focus, .select .bulma-select__placeholder:focus, .bulma-select__container .bulma-select__placeholder:focus, .select select.is-focused, .bulma-select__container select.is-focused, .select .is-focused.bulma-select__placeholder, .bulma-select__container .is-focused.bulma-select__placeholder, .select select:active, .bulma-select__container select:active, .select .bulma-select__placeholder:active, .bulma-select__container .bulma-select__placeholder:active, .select select.is-active, .bulma-select__container select.is-active, .select .is-active.bulma-select__placeholder, .bulma-select__container .is-active.bulma-select__placeholder {\n      outline: none;\n}\n.select select[disabled], .bulma-select__container select[disabled], .select [disabled].bulma-select__placeholder, .bulma-select__container [disabled].bulma-select__placeholder {\n      cursor: not-allowed;\n}\n.select select:hover, .bulma-select__container select:hover, .select .bulma-select__placeholder:hover, .bulma-select__container .bulma-select__placeholder:hover, .select select.is-hovered, .bulma-select__container select.is-hovered, .select .is-hovered.bulma-select__placeholder, .bulma-select__container .is-hovered.bulma-select__placeholder {\n      border-color: #b5b5b5;\n}\n.select select:focus, .bulma-select__container select:focus, .select .bulma-select__placeholder:focus, .bulma-select__container .bulma-select__placeholder:focus, .select select.is-focused, .bulma-select__container select.is-focused, .select .is-focused.bulma-select__placeholder, .bulma-select__container .is-focused.bulma-select__placeholder, .select select:active, .bulma-select__container select:active, .select .bulma-select__placeholder:active, .bulma-select__container .bulma-select__placeholder:active, .select select.is-active, .bulma-select__container select.is-active, .select .is-active.bulma-select__placeholder, .bulma-select__container .is-active.bulma-select__placeholder {\n      border-color: #00d1b2;\n}\n.select select[disabled], .bulma-select__container select[disabled], .select [disabled].bulma-select__placeholder, .bulma-select__container [disabled].bulma-select__placeholder {\n      background-color: whitesmoke;\n      border-color: whitesmoke;\n      box-shadow: none;\n      color: #7a7a7a;\n}\n.select select[disabled]::-moz-placeholder, .bulma-select__container select[disabled]::-moz-placeholder, .select [disabled].bulma-select__placeholder::-moz-placeholder, .bulma-select__container [disabled].bulma-select__placeholder::-moz-placeholder {\n        color: rgba(54, 54, 54, 0.3);\n}\n.select select[disabled]::-webkit-input-placeholder, .bulma-select__container select[disabled]::-webkit-input-placeholder, .select [disabled].bulma-select__placeholder::-webkit-input-placeholder, .bulma-select__container [disabled].bulma-select__placeholder::-webkit-input-placeholder {\n        color: rgba(54, 54, 54, 0.3);\n}\n.select select[disabled]:-moz-placeholder, .bulma-select__container select[disabled]:-moz-placeholder, .select [disabled].bulma-select__placeholder:-moz-placeholder, .bulma-select__container [disabled].bulma-select__placeholder:-moz-placeholder {\n        color: rgba(54, 54, 54, 0.3);\n}\n.select select[disabled]:-ms-input-placeholder, .bulma-select__container select[disabled]:-ms-input-placeholder, .select [disabled].bulma-select__placeholder:-ms-input-placeholder, .bulma-select__container [disabled].bulma-select__placeholder:-ms-input-placeholder {\n        color: rgba(54, 54, 54, 0.3);\n}\n.select select:hover, .bulma-select__container select:hover, .select .bulma-select__placeholder:hover, .bulma-select__container .bulma-select__placeholder:hover {\n      border-color: #b5b5b5;\n}\n.select select:focus, .bulma-select__container select:focus, .select .bulma-select__placeholder:focus, .bulma-select__container .bulma-select__placeholder:focus, .select select.is-focused, .bulma-select__container select.is-focused, .select .is-focused.bulma-select__placeholder, .bulma-select__container .is-focused.bulma-select__placeholder, .select select:active, .bulma-select__container select:active, .select .bulma-select__placeholder:active, .bulma-select__container .bulma-select__placeholder:active, .select select.is-active, .bulma-select__container select.is-active, .select .is-active.bulma-select__placeholder, .bulma-select__container .is-active.bulma-select__placeholder {\n      border-color: #00d1b2;\n}\n.select select::-ms-expand, .bulma-select__container select::-ms-expand, .select .bulma-select__placeholder::-ms-expand, .bulma-select__container .bulma-select__placeholder::-ms-expand {\n      display: none;\n}\n.select select[disabled]:hover, .bulma-select__container select[disabled]:hover, .select [disabled].bulma-select__placeholder:hover, .bulma-select__container [disabled].bulma-select__placeholder:hover {\n      border-color: whitesmoke;\n}\n.select select:not([multiple]), .bulma-select__container select:not([multiple]), .select .bulma-select__placeholder:not([multiple]), .bulma-select__container .bulma-select__placeholder:not([multiple]) {\n      padding-right: 2.5em;\n}\n.select select[multiple], .bulma-select__container select[multiple], .select [multiple].bulma-select__placeholder, .bulma-select__container [multiple].bulma-select__placeholder {\n      height: unset;\n      padding: 0;\n}\n.select select[multiple] option, .bulma-select__container select[multiple] option, .select [multiple].bulma-select__placeholder option, .bulma-select__container [multiple].bulma-select__placeholder option {\n        padding: 0.5em 1em;\n}\n.select:hover::after, .bulma-select__container:hover::after {\n    border-color: #363636;\n}\n.select.is-white select, .is-white.bulma-select__container select, .select.is-white .bulma-select__placeholder, .is-white.bulma-select__container .bulma-select__placeholder {\n    border-color: white;\n}\n.select.is-black select, .is-black.bulma-select__container select, .select.is-black .bulma-select__placeholder, .is-black.bulma-select__container .bulma-select__placeholder {\n    border-color: #0a0a0a;\n}\n.select.is-light select, .is-light.bulma-select__container select, .select.is-light .bulma-select__placeholder, .is-light.bulma-select__container .bulma-select__placeholder {\n    border-color: whitesmoke;\n}\n.select.is-dark select, .is-dark.bulma-select__container select, .select.is-dark .bulma-select__placeholder, .is-dark.bulma-select__container .bulma-select__placeholder {\n    border-color: #363636;\n}\n.select.is-primary select, .is-primary.bulma-select__container select, .select.is-primary .bulma-select__placeholder, .is-primary.bulma-select__container .bulma-select__placeholder {\n    border-color: #00d1b2;\n}\n.select.is-info select, .is-info.bulma-select__container select, .select.is-info .bulma-select__placeholder, .is-info.bulma-select__container .bulma-select__placeholder {\n    border-color: #3273dc;\n}\n.select.is-success select, .is-success.bulma-select__container select, .select.is-success .bulma-select__placeholder, .is-success.bulma-select__container .bulma-select__placeholder {\n    border-color: #23d160;\n}\n.select.is-warning select, .is-warning.bulma-select__container select, .select.is-warning .bulma-select__placeholder, .is-warning.bulma-select__container .bulma-select__placeholder {\n    border-color: #ffdd57;\n}\n.select.is-danger select, .is-danger.bulma-select__container select, .select.is-danger .bulma-select__placeholder, .is-danger.bulma-select__container .bulma-select__placeholder {\n    border-color: #ff3860;\n}\n.select.is-small, .is-small.bulma-select__container {\n    border-radius: 2px;\n    font-size: 0.75rem;\n}\n.select.is-medium, .is-medium.bulma-select__container {\n    font-size: 1.25rem;\n}\n.select.is-large, .is-large.bulma-select__container {\n    font-size: 1.5rem;\n}\n.select.is-disabled::after, .is-disabled.bulma-select__container::after {\n    border-color: #7a7a7a;\n}\n.select.is-fullwidth, .is-fullwidth.bulma-select__container {\n    width: 100%;\n}\n.select.is-fullwidth select, .is-fullwidth.bulma-select__container select, .select.is-fullwidth .bulma-select__placeholder, .is-fullwidth.bulma-select__container .bulma-select__placeholder {\n      width: 100%;\n}\n.select.is-loading::after, .is-loading.bulma-select__container::after {\n    animation: spinAround 500ms infinite linear;\n    border: 2px solid #dbdbdb;\n    border-radius: 290486px;\n    border-right-color: transparent;\n    border-top-color: transparent;\n    content: \"\";\n    display: block;\n    height: 1em;\n    position: relative;\n    width: 1em;\n    margin-top: 0;\n    position: absolute;\n    right: 0.625em;\n    top: 0.625em;\n    transform: none;\n}\n.select.is-loading.is-small:after, .is-loading.is-small.bulma-select__container:after {\n    font-size: 0.75rem;\n}\n.select.is-loading.is-medium:after, .is-loading.is-medium.bulma-select__container:after {\n    font-size: 1.25rem;\n}\n.select.is-loading.is-large:after, .is-loading.is-large.bulma-select__container:after {\n    font-size: 1.5rem;\n}\n.label {\n  color: #363636;\n  display: block;\n  font-size: 1rem;\n  font-weight: 700;\n}\n.label:not(:last-child) {\n    margin-bottom: 0.5em;\n}\n.label.is-small {\n    font-size: 0.75rem;\n}\n.label.is-medium {\n    font-size: 1.25rem;\n}\n.label.is-large {\n    font-size: 1.5rem;\n}\n.help {\n  display: block;\n  font-size: 0.75rem;\n  margin-top: 0.25rem;\n}\n.help.is-white {\n    color: white;\n}\n.help.is-black {\n    color: #0a0a0a;\n}\n.help.is-light {\n    color: whitesmoke;\n}\n.help.is-dark {\n    color: #363636;\n}\n.help.is-primary {\n    color: #00d1b2;\n}\n.help.is-info {\n    color: #3273dc;\n}\n.help.is-success {\n    color: #23d160;\n}\n.help.is-warning {\n    color: #ffdd57;\n}\n.help.is-danger {\n    color: #ff3860;\n}\n.field:not(:last-child) {\n  margin-bottom: 0.75rem;\n}\n.field.has-addons {\n  display: flex;\n  justify-content: flex-start;\n}\n.field.has-addons .control:not(:last-child) {\n    margin-right: -1px;\n}\n.field.has-addons .control:first-child .button,\n  .field.has-addons .control:first-child .input,\n  .field.has-addons .control:first-child .select select,\n  .field.has-addons .control:first-child .bulma-select__container select,\n  .field.has-addons .control:first-child .select .bulma-select__placeholder,\n  .field.has-addons .control:first-child .bulma-select__container .bulma-select__placeholder {\n    border-bottom-left-radius: 3px;\n    border-top-left-radius: 3px;\n}\n.field.has-addons .control:last-child .button,\n  .field.has-addons .control:last-child .input,\n  .field.has-addons .control:last-child .select select,\n  .field.has-addons .control:last-child .bulma-select__container select,\n  .field.has-addons .control:last-child .select .bulma-select__placeholder,\n  .field.has-addons .control:last-child .bulma-select__container .bulma-select__placeholder {\n    border-bottom-right-radius: 3px;\n    border-top-right-radius: 3px;\n}\n.field.has-addons .control .button,\n  .field.has-addons .control .input,\n  .field.has-addons .control .select select,\n  .field.has-addons .control .bulma-select__container select,\n  .field.has-addons .control .select .bulma-select__placeholder,\n  .field.has-addons .control .bulma-select__container .bulma-select__placeholder {\n    border-radius: 0;\n}\n.field.has-addons .control .button:hover, .field.has-addons .control .button.is-hovered,\n    .field.has-addons .control .input:hover,\n    .field.has-addons .control .input.is-hovered,\n    .field.has-addons .control .select select:hover,\n    .field.has-addons .control .bulma-select__container select:hover,\n    .field.has-addons .control .select .bulma-select__placeholder:hover,\n    .field.has-addons .control .bulma-select__container .bulma-select__placeholder:hover,\n    .field.has-addons .control .select select.is-hovered,\n    .field.has-addons .control .bulma-select__container select.is-hovered,\n    .field.has-addons .control .select .is-hovered.bulma-select__placeholder,\n    .field.has-addons .control .bulma-select__container .is-hovered.bulma-select__placeholder {\n      z-index: 2;\n}\n.field.has-addons .control .button:focus, .field.has-addons .control .button.is-focused, .field.has-addons .control .button:active, .field.has-addons .control .button.is-active,\n    .field.has-addons .control .input:focus,\n    .field.has-addons .control .input.is-focused,\n    .field.has-addons .control .input:active,\n    .field.has-addons .control .input.is-active,\n    .field.has-addons .control .select select:focus,\n    .field.has-addons .control .bulma-select__container select:focus,\n    .field.has-addons .control .select .bulma-select__placeholder:focus,\n    .field.has-addons .control .bulma-select__container .bulma-select__placeholder:focus,\n    .field.has-addons .control .select select.is-focused,\n    .field.has-addons .control .bulma-select__container select.is-focused,\n    .field.has-addons .control .select .is-focused.bulma-select__placeholder,\n    .field.has-addons .control .bulma-select__container .is-focused.bulma-select__placeholder,\n    .field.has-addons .control .select select:active,\n    .field.has-addons .control .bulma-select__container select:active,\n    .field.has-addons .control .select .bulma-select__placeholder:active,\n    .field.has-addons .control .bulma-select__container .bulma-select__placeholder:active,\n    .field.has-addons .control .select select.is-active,\n    .field.has-addons .control .bulma-select__container select.is-active,\n    .field.has-addons .control .select .is-active.bulma-select__placeholder,\n    .field.has-addons .control .bulma-select__container .is-active.bulma-select__placeholder {\n      z-index: 3;\n}\n.field.has-addons .control .button:focus:hover, .field.has-addons .control .button.is-focused:hover, .field.has-addons .control .button:active:hover, .field.has-addons .control .button.is-active:hover,\n      .field.has-addons .control .input:focus:hover,\n      .field.has-addons .control .input.is-focused:hover,\n      .field.has-addons .control .input:active:hover,\n      .field.has-addons .control .input.is-active:hover,\n      .field.has-addons .control .select select:focus:hover,\n      .field.has-addons .control .bulma-select__container select:focus:hover,\n      .field.has-addons .control .select .bulma-select__placeholder:focus:hover,\n      .field.has-addons .control .bulma-select__container .bulma-select__placeholder:focus:hover,\n      .field.has-addons .control .select select.is-focused:hover,\n      .field.has-addons .control .bulma-select__container select.is-focused:hover,\n      .field.has-addons .control .select .is-focused.bulma-select__placeholder:hover,\n      .field.has-addons .control .bulma-select__container .is-focused.bulma-select__placeholder:hover,\n      .field.has-addons .control .select select:active:hover,\n      .field.has-addons .control .bulma-select__container select:active:hover,\n      .field.has-addons .control .select .bulma-select__placeholder:active:hover,\n      .field.has-addons .control .bulma-select__container .bulma-select__placeholder:active:hover,\n      .field.has-addons .control .select select.is-active:hover,\n      .field.has-addons .control .bulma-select__container select.is-active:hover,\n      .field.has-addons .control .select .is-active.bulma-select__placeholder:hover,\n      .field.has-addons .control .bulma-select__container .is-active.bulma-select__placeholder:hover {\n        z-index: 4;\n}\n.field.has-addons .control.is-expanded {\n    flex-grow: 1;\n}\n.field.has-addons.has-addons-centered {\n    justify-content: center;\n}\n.field.has-addons.has-addons-right {\n    justify-content: flex-end;\n}\n.field.has-addons.has-addons-fullwidth .control {\n    flex-grow: 1;\n    flex-shrink: 0;\n}\n.field.is-grouped {\n  display: flex;\n  justify-content: flex-start;\n}\n.field.is-grouped > .control {\n    flex-shrink: 0;\n}\n.field.is-grouped > .control:not(:last-child) {\n      margin-bottom: 0;\n      margin-right: 0.75rem;\n}\n.field.is-grouped > .control.is-expanded {\n      flex-grow: 1;\n      flex-shrink: 1;\n}\n.field.is-grouped.is-grouped-centered {\n    justify-content: center;\n}\n.field.is-grouped.is-grouped-right {\n    justify-content: flex-end;\n}\n@media screen and (min-width: 769px), print {\n.field.is-horizontal {\n    display: flex;\n}\n}\n.field-label .label {\n  font-size: inherit;\n}\n@media screen and (max-width: 768px) {\n.field-label {\n    margin-bottom: 0.5rem;\n}\n}\n@media screen and (min-width: 769px), print {\n.field-label {\n    flex-basis: 0;\n    flex-grow: 1;\n    flex-shrink: 0;\n    margin-right: 1.5rem;\n    text-align: right;\n}\n.field-label.is-small {\n      font-size: 0.75rem;\n      padding-top: 0.375em;\n}\n.field-label.is-normal {\n      padding-top: 0.375em;\n}\n.field-label.is-medium {\n      font-size: 1.25rem;\n      padding-top: 0.375em;\n}\n.field-label.is-large {\n      font-size: 1.5rem;\n      padding-top: 0.375em;\n}\n}\n.field-body .field .field {\n  margin-bottom: 0;\n}\n@media screen and (min-width: 769px), print {\n.field-body {\n    display: flex;\n    flex-basis: 0;\n    flex-grow: 5;\n    flex-shrink: 1;\n}\n.field-body .field {\n      margin-bottom: 0;\n}\n.field-body > .field {\n      flex-shrink: 1;\n}\n.field-body > .field:not(.is-narrow) {\n        flex-grow: 1;\n}\n.field-body > .field:not(:last-child) {\n        margin-right: 0.75rem;\n}\n}\n.control {\n  font-size: 1rem;\n  position: relative;\n  text-align: left;\n}\n.control.has-icon .icon {\n    color: #dbdbdb;\n    height: 2.25em;\n    pointer-events: none;\n    position: absolute;\n    top: 0;\n    width: 2.25em;\n    z-index: 4;\n}\n.control.has-icon .input:focus + .icon {\n    color: #7a7a7a;\n}\n.control.has-icon .input.is-small + .icon {\n    font-size: 0.75rem;\n}\n.control.has-icon .input.is-medium + .icon {\n    font-size: 1.25rem;\n}\n.control.has-icon .input.is-large + .icon {\n    font-size: 1.5rem;\n}\n.control.has-icon:not(.has-icon-right) .icon {\n    left: 0;\n}\n.control.has-icon:not(.has-icon-right) .input {\n    padding-left: 2.25em;\n}\n.control.has-icon.has-icon-right .icon {\n    right: 0;\n}\n.control.has-icon.has-icon-right .input {\n    padding-right: 2.25em;\n}\n.control.has-icons-left .input:focus ~ .icon,\n  .control.has-icons-left .select:focus ~ .icon,\n  .control.has-icons-left .bulma-select__container:focus ~ .icon, .control.has-icons-right .input:focus ~ .icon,\n  .control.has-icons-right .select:focus ~ .icon,\n  .control.has-icons-right .bulma-select__container:focus ~ .icon {\n    color: #7a7a7a;\n}\n.control.has-icons-left .input.is-small ~ .icon,\n  .control.has-icons-left .select.is-small ~ .icon,\n  .control.has-icons-left .is-small.bulma-select__container ~ .icon, .control.has-icons-right .input.is-small ~ .icon,\n  .control.has-icons-right .select.is-small ~ .icon,\n  .control.has-icons-right .is-small.bulma-select__container ~ .icon {\n    font-size: 0.75rem;\n}\n.control.has-icons-left .input.is-medium ~ .icon,\n  .control.has-icons-left .select.is-medium ~ .icon,\n  .control.has-icons-left .is-medium.bulma-select__container ~ .icon, .control.has-icons-right .input.is-medium ~ .icon,\n  .control.has-icons-right .select.is-medium ~ .icon,\n  .control.has-icons-right .is-medium.bulma-select__container ~ .icon {\n    font-size: 1.25rem;\n}\n.control.has-icons-left .input.is-large ~ .icon,\n  .control.has-icons-left .select.is-large ~ .icon,\n  .control.has-icons-left .is-large.bulma-select__container ~ .icon, .control.has-icons-right .input.is-large ~ .icon,\n  .control.has-icons-right .select.is-large ~ .icon,\n  .control.has-icons-right .is-large.bulma-select__container ~ .icon {\n    font-size: 1.5rem;\n}\n.control.has-icons-left .icon, .control.has-icons-right .icon {\n    color: #dbdbdb;\n    height: 2.25em;\n    pointer-events: none;\n    position: absolute;\n    top: 0;\n    width: 2.25em;\n    z-index: 4;\n}\n.control.has-icons-left .input,\n  .control.has-icons-left .select select,\n  .control.has-icons-left .bulma-select__container select,\n  .control.has-icons-left .select .bulma-select__placeholder,\n  .control.has-icons-left .bulma-select__container .bulma-select__placeholder {\n    padding-left: 2.25em;\n}\n.control.has-icons-left .icon.is-left {\n    left: 0;\n}\n.control.has-icons-right .input,\n  .control.has-icons-right .select select,\n  .control.has-icons-right .bulma-select__container select,\n  .control.has-icons-right .select .bulma-select__placeholder,\n  .control.has-icons-right .bulma-select__container .bulma-select__placeholder {\n    padding-right: 2.25em;\n}\n.control.has-icons-right .icon.is-right {\n    right: 0;\n}\n.control.is-loading::after {\n    animation: spinAround 500ms infinite linear;\n    border: 2px solid #dbdbdb;\n    border-radius: 290486px;\n    border-right-color: transparent;\n    border-top-color: transparent;\n    content: \"\";\n    display: block;\n    height: 1em;\n    position: relative;\n    width: 1em;\n    position: absolute !important;\n    right: 0.625em;\n    top: 0.625em;\n}\n.control.is-loading.is-small:after {\n    font-size: 0.75rem;\n}\n.control.is-loading.is-medium:after {\n    font-size: 1.25rem;\n}\n.control.is-loading.is-large:after {\n    font-size: 1.5rem;\n}\n.bulma-select__container {\n  position: relative;\n  width: 100%;\n}\n.bulma-select__container:after {\n    transition: all 0.2s ease;\n}\n.bulma-select__container--active:after {\n    transform: rotate(-225deg);\n    top: 60% !important;\n}\n.bulma-select__placeholder {\n  box-sizing: border-box;\n  text-align: left;\n  width: 100%;\n}\n.bulma-select__placeholder.is-hovered {\n    border-radius: 3px 3px 0 0;\n}\n.bulma-select__options {\n  -moz-appearance: none;\n  -webkit-appearance: none;\n  align-items: center;\n  border: 1px solid transparent;\n  border-radius: 3px;\n  box-shadow: none;\n  display: inline-flex;\n  font-size: 1rem;\n  height: 2.25em;\n  justify-content: flex-start;\n  line-height: 1.5;\n  padding-bottom: calc(0.375em - 1px);\n  padding-left: calc(0.625em - 1px);\n  padding-right: calc(0.625em - 1px);\n  padding-top: calc(0.375em - 1px);\n  position: relative;\n  vertical-align: top;\n  background-color: white;\n  border-color: #dbdbdb;\n  color: #363636;\n  display: block;\n  overflow: auto;\n  padding: 0;\n  z-index: 5;\n  width: 100%;\n  height: auto;\n  box-sizing: border-box;\n  border-top: 0;\n  border-radius: 0 0 3px 3px;\n  position: absolute;\n}\n.bulma-select__options:focus, .bulma-select__options.is-focused, .bulma-select__options:active, .bulma-select__options.is-active {\n    outline: none;\n}\n.bulma-select__options[disabled] {\n    cursor: not-allowed;\n}\n.bulma-select__options:hover, .bulma-select__options.is-hovered {\n    border-color: #b5b5b5;\n}\n.bulma-select__options:focus, .bulma-select__options.is-focused, .bulma-select__options:active, .bulma-select__options.is-active {\n    border-color: #00d1b2;\n}\n.bulma-select__options[disabled] {\n    background-color: whitesmoke;\n    border-color: whitesmoke;\n    box-shadow: none;\n    color: #7a7a7a;\n}\n.bulma-select__options[disabled]::-moz-placeholder {\n      color: rgba(54, 54, 54, 0.3);\n}\n.bulma-select__options[disabled]::-webkit-input-placeholder {\n      color: rgba(54, 54, 54, 0.3);\n}\n.bulma-select__options[disabled]:-moz-placeholder {\n      color: rgba(54, 54, 54, 0.3);\n}\n.bulma-select__options[disabled]:-ms-input-placeholder {\n      color: rgba(54, 54, 54, 0.3);\n}\n.bulma-select__option {\n  width: 100%;\n  text-align: left;\n  border-radius: 0;\n  display: block;\n}\n.vuebulmaselect-slide-fade-enter-active {\n  transition: all 0.2s ease;\n}\n.vuebulmaselect-slide-fade-leave-active {\n  transition: all 0.1s cubic-bezier(1, 0.5, 0.8, 1);\n}\n.vuebulmaselect-slide-fade-enter, .vuebulmaselect-slide-fade-leave-active {\n  padding-top: 10px;\n  opacity: 0;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 60 */
+/***/ (function(module, exports) {
+
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+// css base code, injected by the css-loader
+module.exports = function(useSourceMap) {
+	var list = [];
+
+	// return the list of modules as css string
+	list.toString = function toString() {
+		return this.map(function (item) {
+			var content = cssWithMappingToString(item, useSourceMap);
+			if(item[2]) {
+				return "@media " + item[2] + "{" + content + "}";
+			} else {
+				return content;
+			}
+		}).join("");
+	};
+
+	// import a list of modules into the list
+	list.i = function(modules, mediaQuery) {
+		if(typeof modules === "string")
+			modules = [[null, modules, ""]];
+		var alreadyImportedModules = {};
+		for(var i = 0; i < this.length; i++) {
+			var id = this[i][0];
+			if(typeof id === "number")
+				alreadyImportedModules[id] = true;
+		}
+		for(i = 0; i < modules.length; i++) {
+			var item = modules[i];
+			// skip already imported module
+			// this implementation is not 100% perfect for weird media query combinations
+			//  when a module is imported multiple times with different media queries.
+			//  I hope this will never occur (Hey this way we have smaller bundles)
+			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
+				if(mediaQuery && !item[2]) {
+					item[2] = mediaQuery;
+				} else if(mediaQuery) {
+					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
+				}
+				list.push(item);
+			}
+		}
+	};
+	return list;
+};
+
+function cssWithMappingToString(item, useSourceMap) {
+	var content = item[1] || '';
+	var cssMapping = item[3];
+	if (!cssMapping) {
+		return content;
+	}
+
+	if (useSourceMap && typeof btoa === 'function') {
+		var sourceMapping = toComment(cssMapping);
+		var sourceURLs = cssMapping.sources.map(function (source) {
+			return '/*# sourceURL=' + cssMapping.sourceRoot + source + ' */'
+		});
+
+		return [content].concat(sourceURLs).concat([sourceMapping]).join('\n');
+	}
+
+	return [content].join('\n');
+}
+
+// Adapted from convert-source-map (MIT)
+function toComment(sourceMap) {
+	// eslint-disable-next-line no-undef
+	var base64 = btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap))));
+	var data = 'sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64;
+
+	return '/*# ' + data + ' */';
+}
+
+
+/***/ }),
+/* 61 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*
+  MIT License http://www.opensource.org/licenses/mit-license.php
+  Author Tobias Koppers @sokra
+  Modified by Evan You @yyx990803
+*/
+
+var hasDocument = typeof document !== 'undefined'
+
+if (typeof DEBUG !== 'undefined' && DEBUG) {
+  if (!hasDocument) {
+    throw new Error(
+    'vue-style-loader cannot be used in a non-browser environment. ' +
+    "Use { target: 'node' } in your Webpack config to indicate a server-rendering environment."
+  ) }
+}
+
+var listToStyles = __webpack_require__(62)
+
+/*
+type StyleObject = {
+  id: number;
+  parts: Array<StyleObjectPart>
+}
+
+type StyleObjectPart = {
+  css: string;
+  media: string;
+  sourceMap: ?string
+}
+*/
+
+var stylesInDom = {/*
+  [id: number]: {
+    id: number,
+    refs: number,
+    parts: Array<(obj?: StyleObjectPart) => void>
+  }
+*/}
+
+var head = hasDocument && (document.head || document.getElementsByTagName('head')[0])
+var singletonElement = null
+var singletonCounter = 0
+var isProduction = false
+var noop = function () {}
+
+// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
+// tags it will allow on a page
+var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\b/.test(navigator.userAgent.toLowerCase())
+
+module.exports = function (parentId, list, _isProduction) {
+  isProduction = _isProduction
+
+  var styles = listToStyles(parentId, list)
+  addStylesToDom(styles)
+
+  return function update (newList) {
+    var mayRemove = []
+    for (var i = 0; i < styles.length; i++) {
+      var item = styles[i]
+      var domStyle = stylesInDom[item.id]
+      domStyle.refs--
+      mayRemove.push(domStyle)
+    }
+    if (newList) {
+      styles = listToStyles(parentId, newList)
+      addStylesToDom(styles)
+    } else {
+      styles = []
+    }
+    for (var i = 0; i < mayRemove.length; i++) {
+      var domStyle = mayRemove[i]
+      if (domStyle.refs === 0) {
+        for (var j = 0; j < domStyle.parts.length; j++) {
+          domStyle.parts[j]()
+        }
+        delete stylesInDom[domStyle.id]
+      }
+    }
+  }
+}
+
+function addStylesToDom (styles /* Array<StyleObject> */) {
+  for (var i = 0; i < styles.length; i++) {
+    var item = styles[i]
+    var domStyle = stylesInDom[item.id]
+    if (domStyle) {
+      domStyle.refs++
+      for (var j = 0; j < domStyle.parts.length; j++) {
+        domStyle.parts[j](item.parts[j])
+      }
+      for (; j < item.parts.length; j++) {
+        domStyle.parts.push(addStyle(item.parts[j]))
+      }
+      if (domStyle.parts.length > item.parts.length) {
+        domStyle.parts.length = item.parts.length
+      }
+    } else {
+      var parts = []
+      for (var j = 0; j < item.parts.length; j++) {
+        parts.push(addStyle(item.parts[j]))
+      }
+      stylesInDom[item.id] = { id: item.id, refs: 1, parts: parts }
+    }
+  }
+}
+
+function createStyleElement () {
+  var styleElement = document.createElement('style')
+  styleElement.type = 'text/css'
+  head.appendChild(styleElement)
+  return styleElement
+}
+
+function addStyle (obj /* StyleObjectPart */) {
+  var update, remove
+  var styleElement = document.querySelector('style[data-vue-ssr-id~="' + obj.id + '"]')
+
+  if (styleElement) {
+    if (isProduction) {
+      // has SSR styles and in production mode.
+      // simply do nothing.
+      return noop
+    } else {
+      // has SSR styles but in dev mode.
+      // for some reason Chrome can't handle source map in server-rendered
+      // style tags - source maps in <style> only works if the style tag is
+      // created and inserted dynamically. So we remove the server rendered
+      // styles and inject new ones.
+      styleElement.parentNode.removeChild(styleElement)
+    }
+  }
+
+  if (isOldIE) {
+    // use singleton mode for IE9.
+    var styleIndex = singletonCounter++
+    styleElement = singletonElement || (singletonElement = createStyleElement())
+    update = applyToSingletonTag.bind(null, styleElement, styleIndex, false)
+    remove = applyToSingletonTag.bind(null, styleElement, styleIndex, true)
+  } else {
+    // use multi-style-tag mode in all other cases
+    styleElement = createStyleElement()
+    update = applyToTag.bind(null, styleElement)
+    remove = function () {
+      styleElement.parentNode.removeChild(styleElement)
+    }
+  }
+
+  update(obj)
+
+  return function updateStyle (newObj /* StyleObjectPart */) {
+    if (newObj) {
+      if (newObj.css === obj.css &&
+          newObj.media === obj.media &&
+          newObj.sourceMap === obj.sourceMap) {
+        return
+      }
+      update(obj = newObj)
+    } else {
+      remove()
+    }
+  }
+}
+
+var replaceText = (function () {
+  var textStore = []
+
+  return function (index, replacement) {
+    textStore[index] = replacement
+    return textStore.filter(Boolean).join('\n')
+  }
+})()
+
+function applyToSingletonTag (styleElement, index, remove, obj) {
+  var css = remove ? '' : obj.css
+
+  if (styleElement.styleSheet) {
+    styleElement.styleSheet.cssText = replaceText(index, css)
+  } else {
+    var cssNode = document.createTextNode(css)
+    var childNodes = styleElement.childNodes
+    if (childNodes[index]) styleElement.removeChild(childNodes[index])
+    if (childNodes.length) {
+      styleElement.insertBefore(cssNode, childNodes[index])
+    } else {
+      styleElement.appendChild(cssNode)
+    }
+  }
+}
+
+function applyToTag (styleElement, obj) {
+  var css = obj.css
+  var media = obj.media
+  var sourceMap = obj.sourceMap
+
+  if (media) {
+    styleElement.setAttribute('media', media)
+  }
+
+  if (sourceMap) {
+    // https://developer.chrome.com/devtools/docs/javascript-debugging
+    // this makes source maps inside style tags work properly in Chrome
+    css += '\n/*# sourceURL=' + sourceMap.sources[0] + ' */'
+    // http://stackoverflow.com/a/26603875
+    css += '\n/*# sourceMappingURL=data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + ' */'
+  }
+
+  if (styleElement.styleSheet) {
+    styleElement.styleSheet.cssText = css
+  } else {
+    while (styleElement.firstChild) {
+      styleElement.removeChild(styleElement.firstChild)
+    }
+    styleElement.appendChild(document.createTextNode(css))
+  }
+}
+
+
+/***/ }),
+/* 62 */
+/***/ (function(module, exports) {
+
+/**
+ * Translates the list format produced by css-loader into something
+ * easier to manipulate.
+ */
+module.exports = function listToStyles (parentId, list) {
+  var styles = []
+  var newStyles = {}
+  for (var i = 0; i < list.length; i++) {
+    var item = list[i]
+    var id = item[0]
+    var css = item[1]
+    var media = item[2]
+    var sourceMap = item[3]
+    var part = {
+      id: parentId + ':' + i,
+      css: css,
+      media: media,
+      sourceMap: sourceMap
+    }
+    if (!newStyles[id]) {
+      styles.push(newStyles[id] = { id: id, parts: [part] })
+    } else {
+      newStyles[id].parts.push(part)
+    }
+  }
+  return styles
+}
+
+
+/***/ }),
+/* 63 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+// Export the component itself
+/* harmony default export */ __webpack_exports__["default"] = ({
+    name: 'v-select',
+    props: {
+        search: false,
+        // Select placeholder
+        placeholder: {
+            type: String,
+            default: 'Select...'
+        },
+        // Options
+        options: {
+            type: Array,
+            default: function _default() {
+                return [];
+            }
+        },
+        // Options label
+        label: {
+            type: String
+        },
+        // Max items displayed
+        maxItems: {
+            type: Number,
+            default: 5
+        },
+        id: '',
+        name: ''
+    },
+    // Component inner state
+    data: function data() {
+        //
+        return {
+            opened: false,
+            searchField: '',
+            valueField: '',
+            saveSearchField: '',
+            selected: undefined
+        };
+    },
+
+    // Computed properties
+    computed: {
+        // Container computed classes
+        containerClasses: function containerClasses() {
+            return ['bulma-select__container', { 'bulma-select__container--active': this.opened }];
+        },
+
+        // Placeholder computed classes
+        placeholderClasses: function placeholderClasses() {
+            return ['bulma-select__placeholder input', { 'is-hovered': this.opened }];
+        },
+
+        // Options computed classes
+        optionsClasses: function optionsClasses() {
+            return [{ 'is-hovered': this.opened }, 'bulma-select__options'];
+        },
+
+        // Options styles
+        optionsStyles: function optionsStyles() {
+            //
+            var styles = {};
+            //
+            if (this.options.length > this.maxItems) {
+                styles.height = 35 * this.maxItems + 'px';
+            }
+            // Return the styles
+            return styles;
+        },
+
+        // Selected item
+        selectedItem: function selectedItem() {
+            return this.options[this.selected];
+        },
+
+        // Text for the selected option
+        textSelected: function textSelected() {
+            if (this.options[this.selected] === undefined) {
+                return '';
+            }
+            return this.label !== undefined ? this.selectedItem[this.label] : this.selectedItem;
+        },
+
+        // Data for the selected option
+        valueSelected: function valueSelected() {
+            if (this.options[this.selected] === undefined) {
+                return '';
+            }
+            return this.value !== undefined ? this.selectedItem[this.value] : this.selectedItem;
+        }
+    },
+    // Methods
+    methods: {
+        // Toggle the opened property
+        toggleOpened: function toggleOpened() {
+            this.opened ? this.close() : this.open();
+        },
+
+        // Open the select
+        open: function open() {
+            // Primitive return
+            if (this.opened) {
+                return;
+            }
+            // Definitions
+            this.searchField = this.saveSearchField;
+            this.inputSearch();
+            this.opened = true;
+            this.$refs.search.focus();
+        },
+
+        // Close the select
+        close: function close() {
+            // Primitive return
+            if (!this.opened) {
+                return;
+            }
+            // Definitions
+            this.opened = false;
+            this.saveSearchField = this.searchField;
+            this.searchField = this.textSelected;
+            this.valueField = this.valueSelected;
+            this.$refs.search.blur();
+        },
+
+        // Set the selected using v-model value
+        selectVModel: function selectVModel() {
+            if (this.options.indexOf(this.value) === -1) {
+                return;
+            }
+            this.selected = this.options.indexOf(this.value);
+        },
+
+        // Select a value based on the index
+        selectOption: function selectOption(i) {
+            //
+            this.selected = i;
+            this.searchField = this.textSelected;
+            this.valueField = this.valueSelected;
+            this.saveSearchField = '';
+            // Emit!
+            this.$emit('input', this.options[this.selected]);
+            console.log(this.selected);
+        },
+
+        // Search items
+        inputSearch: function inputSearch() {
+            //
+            this.$emit('type', this.searchField);
+        }
+    },
+    // Watchers
+    watch: {
+        // Value changed
+        value: function value() {
+            this.selectVModel();
+        },
+
+        // Options also change
+        options: function options(_, old) {
+            //
+            var i = this.options.indexOf(old[this.selected]);
+            if (i > -1) {
+                this.selected = i;
+            }
+        }
+    },
+    // When the component is created
+    created: function created() {
+        // do it
+        this.selectVModel();
+    }
+});
+
+/***/ }),
+/* 64 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    class: _vm.containerClasses
+  }, [_c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.searchField),
+      expression: "searchField"
+    }],
+    ref: "search",
+    class: _vm.placeholderClasses,
+    attrs: {
+      "readonly": !_vm.search,
+      "placeholder": _vm.placeholder,
+      "id": _vm.id
+    },
+    domProps: {
+      "value": (_vm.searchField)
+    },
+    on: {
+      "blur": _vm.close,
+      "input": [function($event) {
+        if ($event.target.composing) { return; }
+        _vm.searchField = $event.target.value
+      }, _vm.inputSearch],
+      "click": function($event) {
+        if ($event.target !== $event.currentTarget) { return null; }
+        _vm.toggleOpened($event)
+      }
+    }
+  }), _vm._v(" "), _c('input', {
+    attrs: {
+      "required": "",
+      "type": "hidden",
+      "name": _vm.name
+    },
+    domProps: {
+      "value": _vm.valueField['value']
+    }
+  }), _vm._v(" "), _c('transition', {
+    attrs: {
+      "name": "vuebulmaselect-slide-fade"
+    }
+  }, [_c('div', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (_vm.opened),
+      expression: "opened"
+    }],
+    class: _vm.optionsClasses,
+    style: (_vm.optionsStyles)
+  }, [(_vm.options.length === 0) ? [_c('button', {
+    staticClass: "button is-white bulma-select__option",
+    attrs: {
+      "disabled": ""
+    }
+  }, [_vm._t("no-results", [_vm._v("No options found.")])], 2)] : _vm._l((_vm.options), function(option, i) {
+    return _c('option', {
+      class: ['button is-white', _vm.selected === i ? 'is-info' : '', 'bulma-select__option'],
+      on: {
+        "click": function($event) {
+          _vm.selectOption(i)
+        }
+      }
+    }, [_vm._v("\n                    " + _vm._s(_vm.label !== undefined ? option[_vm.label] : option) + "\n                ")])
+  })], 2)])], 1)
+},staticRenderFns: []}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-484443ea", module.exports)
+  }
+}
+
+/***/ }),
+/* 65 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
