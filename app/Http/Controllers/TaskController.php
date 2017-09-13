@@ -20,7 +20,7 @@ class TaskController extends Controller
      */
     public function index()
     {
-        $tasks = Task::latest()->with(['user', 'client'])->get();
+        $tasks = Task::latest()->with(['user', 'client'])->get()->sortBy('complete');
 
         return view('tasks.index', compact('tasks'));
     }
@@ -53,7 +53,7 @@ class TaskController extends Controller
             'created_by' => $createdBy
         ]);
 
-        return redirect('/home')->with('status', 'Success');
+        return redirect('/home')->with('status', 'Task added successfully!');
     }
 
     /**

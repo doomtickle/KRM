@@ -7,15 +7,14 @@
             </p>
             <p>
                 <span class="is-pulled-right">
-                    <small>Due: {{ Carbon\Carbon::parse($task->due_date)->format('F d, Y') }}
+                    @if($task->complete)
+                    <i class="fa fa-check-circle fa-2x" aria-hidden="true" style="color: green; margin-right: 10px;"></i>
+                    @else
+                    <small style="margin-right: 10px;">Due: {{ Carbon\Carbon::parse($task->due_date)->format('F d, Y') }}
+                    @endif
                     </small>
                 </span>
             </p>
-            <a class="card-header-icon">
-                <span class="icon">
-                    <i class="fa fa-angle-down"></i>
-                </span>
-            </a>
         </header>
         <div class="card-content">
             <div class="content">

@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\NoteRequest;
 use App\Note;
+use App\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class NoteController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of notes.
      *
      * @return \Illuminate\Http\Response
      */
@@ -21,17 +23,7 @@ class NoteController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
+     * Store a newly created note in storage.
      *
      * @param NoteRequest|Request $request
      * @return \Illuminate\Http\Response
@@ -39,23 +31,14 @@ class NoteController extends Controller
     public function store(NoteRequest $request)
     {
         $note = Note::create($request->all());
+        $note->diffForHumans = Carbon::parse($note->created_at)->diffForHumans();
+        $note->createdBy = User::find($note->user_id)->name;
 
         return response()->json($note);
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Note  $note
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Note $note)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
+     * Show the form for editing the note.
      *
      * @param  \App\Note  $note
      * @return \Illuminate\Http\Response
@@ -66,7 +49,7 @@ class NoteController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the note in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Note  $note
@@ -78,7 +61,7 @@ class NoteController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the note from storage.
      *
      * @param  \App\Note  $note
      * @return \Illuminate\Http\Response
