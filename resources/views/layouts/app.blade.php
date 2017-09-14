@@ -34,7 +34,7 @@
                 <div class="navbar-start">
                     <div class="navbar-item has-dropdown is-hoverable">
                         <a class="navbar-link is-active" href="{{ route('client.index') }}">
-                            Clients
+                            All Clients
                         </a>
                         <div class="navbar-dropdown ">
                             <a class="navbar-item " href="{{ route('client.create') }}">
@@ -43,7 +43,7 @@
                         </div>
                     </div>
                     <div class="navbar-item has-dropdown is-hoverable">
-                        <a class="navbar-link " href="{{ route('task.index') }}">Tasks</a>
+                        <a class="navbar-link " href="{{ route('task.index') }}">All Tasks</a>
                         <div id="taskDropdown" class="navbar-dropdown " data-style="width: 18rem;">
 
                             <a class="navbar-item" href="{{ route('user.tasks', auth()->user()->id) }}">
