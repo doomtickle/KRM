@@ -43,7 +43,11 @@
                     </div>
                     <footer class="card-footer">
                         <a href="{{ route('client.show', $client->id) }}" class="card-footer-item">Edit</a>
-                        <a class="card-footer-item">Delete</a>
+                        <a class="card-footer-item delete-button" data-client="{{ $client->id }}">Delete</a>
+                        <form action="{{ route('client.destroy', ['id' => $client->id]) }}" method="POST" id="delete-form-{{ $client->id }}">
+                            {{ csrf_field() }}
+                            {{ method_field('DELETE') }}
+                        </form>
                     </footer>
                 </div>
             </div>
@@ -52,3 +56,16 @@
     </div>
 </div>
 @endsection
+@section('scripts.footer')
+<script
+              src="https://code.jquery.com/jquery-3.2.1.min.js"
+              integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+              crossorigin="anonymous"></script>
+<script>
+    $(document).ready(function(){
+        $('.delete-button').on('click', function(){
+            var id = $(this).data("client");
+            $("#delete-form-" + id).submit();
+        });
+    });
+</script>

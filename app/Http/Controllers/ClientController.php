@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Client;
+use App\Note;
+use App\Task;
 use Illuminate\Http\Request;
 
 class ClientController extends Controller
@@ -99,6 +101,18 @@ class ClientController extends Controller
      */
     public function destroy(Client $client)
     {
-        //
+        $notes = Note::where('client_id', $client->id)->get();
+        foreach ($notes as $note) {
+            $note->delete();
+        }
+
+        $tasks = Task::where('client_id', $client->id)->get();
+        foreach ($tasks as $task) {
+            $task->delete();
+        }
+
+        $client->delete();
+
+        return redirect()->route('home');
     }
 }
